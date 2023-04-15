@@ -2,10 +2,10 @@
 //using System.Linq.Expressions;
 using System.Diagnostics;
 using System.IO.Ports;
-using static AudioControl.AudioManager;
 //using static System.Runtime.InteropServices.JavaScript.JSType;
 //using System.Security.Cryptography;
 using System.Management;
+using static AudioManager.AudioManager;
 
 namespace AudioControl
 {
@@ -125,6 +125,7 @@ namespace AudioControl
             if (volume < 50)
             {
                 //tune GAME
+                
                 SetApplicationVolumeByName(GAME, volume * 2);
                 SetApplicationVolumeByName(CHAT, 100);
                 lbl_game_vol.Text = (volume * 2).ToString();

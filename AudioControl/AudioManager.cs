@@ -5,14 +5,14 @@ using System.Runtime.InteropServices;
 // ReSharper disable SuspiciousTypeConversion.Global
 // ReSharper disable InconsistentNaming
 
-namespace AudioControl
+namespace AudioManager
 {
     /// <summary>
     /// Controls audio using the Windows CoreAudio API
     /// from: http://stackoverflow.com/questions/14306048/controling-volume-mixer
     /// and: http://netcoreaudio.codeplex.com/
-    /// https://gist.github.com/sverrirs
-    /// https://gist.github.com/sverrirs/d099b34b7f72bb4fb386
+    /// and: https://gist.github.com/sverrirs
+    /// and: https://gist.github.com/sverrirs/d099b34b7f72bb4fb386
     /// </summary>
 
 
