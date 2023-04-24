@@ -35,5 +35,5 @@ Perpixel | Mobile Basic Vol. 1 | conversation Icon
   - [x] Default: High
   - [ ] Customizable via C# application
 
-Maybe:
+##Optional
 - [ ] Screen overlay to see volume adjustments Ingame
