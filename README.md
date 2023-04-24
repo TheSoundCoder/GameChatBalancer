@@ -28,3 +28,10 @@ Additionally I used some icons from https://icon-icons.com:
 Designer | Iconpack | Icon
 ---------|----------|---------
 Perpixel | Mobile Basic Vol. 1 | conversation Icon
+
+
+# Next steps
+- Implement option for noise reduction (Off(0) - Low(1) - Medium(2) - High(3))
+
+Maybe:
+- Screen overlay to see volume asjustments Ingame
