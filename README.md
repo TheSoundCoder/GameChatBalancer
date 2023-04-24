@@ -32,7 +32,7 @@ Perpixel | Mobile Basic Vol. 1 | conversation Icon
 
 # Next steps
 - Implement options for noise reduction (Off(0) - Low(2) - High(3))
-  - Default: Medium
+  - Default: High
   - Customizable via C# application
 
 Maybe:
