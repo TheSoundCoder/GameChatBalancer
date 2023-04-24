@@ -34,6 +34,8 @@ Perpixel | Mobile Basic Vol. 1 | conversation Icon
 - [x] Implement options for noise reduction (Off(0) - Low(2) - High(3))
   - [x] Default: High
   - [ ] Customizable via C# application
+  
+  https://stackoverflow.com/questions/43175454/how-to-get-selected-value-from-dropdown-list-c-sharp-asp-net
 
 ## Optional
 - [ ] Screen overlay to see volume adjustments Ingame
