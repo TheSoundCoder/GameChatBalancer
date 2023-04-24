@@ -1,11 +1,14 @@
 //using Microsoft.VisualBasic;
 //using System.Linq.Expressions;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO.Ports;
 //using static System.Runtime.InteropServices.JavaScript.JSType;
 //using System.Security.Cryptography;
 using System.Management;
+using System.Windows.Forms;
 using static AudioManager.AudioManager;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace AudioControl
 {
@@ -46,12 +49,18 @@ namespace AudioControl
             fill_lb_GAME();
             fill_lb_CHAT();
             fill_lb_AudioProcesses();
+            fill_ddl_NoiseReduction();
             if (Properties.Settings.Default.ComPort == "") { Properties.Settings.Default.ComPort = "Auto"; }
             fill_ddl_ComPort();
 
-            USBandCOM.OpenComPort();
-            if (USBandCOM.sp_connected()) { GetVol(); }
             USBandCOM.Initialize_USB_Watcher();
+            USBandCOM.OpenComPort();
+            if (USBandCOM.sp_connected())
+            {
+                GetVol();
+                System.Threading.Thread.Sleep(1000);
+                Send_NoiseReducion_Value();
+            }
         }
 
         private void fill_lb_GAME()
@@ -90,10 +99,31 @@ namespace AudioControl
             ddl_ComPort.SelectedItem = Properties.Settings.Default.ComPort;
         }
 
+        private void fill_ddl_NoiseReduction()
+        {
+            var items = new BindingList<KeyValuePair<string, string>>();
+
+            items.Add(new KeyValuePair<string, string>("NR=0", "Off"));
+            items.Add(new KeyValuePair<string, string>("NR=2", "Low"));
+            items.Add(new KeyValuePair<string, string>("NR=3", "High"));
+            ddlNoiseReduction.DataSource = items;
+            ddlNoiseReduction.ValueMember = "Key";
+            ddlNoiseReduction.DisplayMember = "Value";
+            SendToLog("Stored Value: " + Properties.Settings.Default.NoiseReduction);
+            ddlNoiseReduction.Enabled = true;
+            ddlNoiseReduction.Text = Properties.Settings.Default.NoiseReduction;
+        }
+
         public void SendToLog(string msg)
         {
             textBox1.AppendText(msg + "\r\n");
         }
+
+        public void ConfirmNR()
+        {
+            cbNR.Checked = true;
+        }
+
 
         public bool Debug
         {
@@ -107,6 +137,11 @@ namespace AudioControl
             set { systrayCom.Text = value; }
         }
 
+        public void Send_NoiseReducion_Value()
+        {
+            cbNR.Checked = false;
+            USBandCOM.sp_SendData(ddlNoiseReduction.SelectedValue.ToString());
+        }
 
         private void btn_connect_Click(object sender, EventArgs e)
         {
@@ -125,7 +160,7 @@ namespace AudioControl
             if (volume < 50)
             {
                 //tune GAME
-                
+
                 SetApplicationVolumeByName(GAME, volume * 2);
                 SetApplicationVolumeByName(CHAT, 100);
                 lbl_game_vol.Text = (volume * 2).ToString();
@@ -312,6 +347,19 @@ namespace AudioControl
         private void label1_Click(object sender, EventArgs e)
         {
 
+        }
+
+        private void ddlNoiseReduction_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (!ddlNoiseReduction.Enabled) { return; }
+            Properties.Settings.Default.NoiseReduction = ddlNoiseReduction.Text;
+            //USBandCOM.sp_SendData(message);
+            //USBandCOM.CloseComPort();
+            if (USBandCOM.sp_connected()) { Send_NoiseReducion_Value(); }
+            if (Debug) { SendToLog("Key: " + ddlNoiseReduction.Text); }
+            if (Debug) { SendToLog("Value: " + ddlNoiseReduction.SelectedValue.ToString()); }
+            if (Debug) { SendToLog("Stored Value: " + Properties.Settings.Default.NoiseReduction); }
+            //SendToLog(ddlNoiseReduction.SelectedValue.ToString());
         }
     }
 }

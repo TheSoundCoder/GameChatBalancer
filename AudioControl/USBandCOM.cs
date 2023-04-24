@@ -142,20 +142,31 @@ namespace AudioControl
                 buffer += _serialPort.ReadExisting();
                 if (buffer != null && buffer != "")
                 {
-                    string[] packets1 = buffer.Split("\r\n");
-                    int arrlength = packets1.Length - 1;
-                    if (arrlength > 0)
-                    { MainForm.controlVolume(float.Parse(packets1[arrlength - 1]));
-                        if (MainForm.Debug) { MainForm.SendToLog("Value: " + packets1[arrlength - 1]);}
-                    }
-                    //SetMasterVolume(float.Parse(packets1[arrlength - 1])); }
-                    if (buffer.EndsWith("\n"))
+                    //string[] packets1 = buffer.Split("\r\n");
+                    //int arrlength = packets1.Length - 1;
+                    if (buffer.IndexOf("NR=")>-1)
                     {
+                        //confirmation that NoiseReduction was successfully set
+                        MainForm.ConfirmNR();
                         buffer = "";
-                    }
-                    else
-                    {
-                        buffer = packets1[arrlength];
+                    } else {
+                        //Extract latest volume level from strem
+                        string[] packets1 = buffer.Split("\r\n");
+                        int arrlength = packets1.Length - 1;
+                        if (arrlength > 0)
+                        {
+                            MainForm.controlVolume(float.Parse(packets1[arrlength - 1]));
+                            if (MainForm.Debug) { MainForm.SendToLog("Value: " + packets1[arrlength - 1]); }
+                        }
+                        //SetMasterVolume(float.Parse(packets1[arrlength - 1])); }
+                        if (buffer.EndsWith("\n"))
+                        {
+                            buffer = "";
+                        }
+                        else
+                        {
+                            buffer = packets1[arrlength];
+                        }
                     }
                 }
             }
@@ -232,18 +243,19 @@ namespace AudioControl
             {
                 MainForm.SendToLog("A USB device was disconnected.");
                 //Do I need to do anything? Yes. Check whether the connection is still open
-                CloseComPort();
-                OpenComPort();
-                if (sp_connected()) {sp_SendData("get");}
             }
             else if (e.NewEvent.SystemProperties["__CLASS"].Value.ToString() == "__InstanceCreationEvent")
             {
                 MainForm.SendToLog("A USB device was connected.");
-                CloseComPort();
-                OpenComPort();
-                if (sp_connected()) { sp_SendData("get"); }
             }
 
+            CloseComPort();
+            OpenComPort();
+            if (sp_connected()) {
+                sp_SendData("get");
+                System.Threading.Thread.Sleep(1000);    
+                MainForm.Send_NoiseReducion_Value();
+            }
             /*
             ManagementBaseObject instance = (ManagementBaseObject)e.NewEvent["TargetInstance"];
             foreach (var property in instance.Properties)

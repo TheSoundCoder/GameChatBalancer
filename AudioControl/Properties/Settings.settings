@@ -11,5 +11,8 @@
     <Setting Name="ComPort" Type="System.String" Scope="User">
       <Value Profile="(Default)">Auto</Value>
     </Setting>
+    <Setting Name="NoiseReduction" Type="System.String" Scope="User">
+      <Value Profile="(Default)">High</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

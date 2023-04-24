@@ -58,5 +58,17 @@ namespace AudioControl.Properties {
                 this["ComPort"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("High")]
+        public string NoiseReduction {
+            get {
+                return ((string)(this["NoiseReduction"]));
+            }
+            set {
+                this["NoiseReduction"] = value;
+            }
+        }
     }
 }

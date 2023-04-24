@@ -44,6 +44,9 @@
             textBox1 = new TextBox();
             button1 = new Button();
             tabPage1 = new TabPage();
+            cbNR = new CheckBox();
+            lblNoiseReduction = new Label();
+            ddlNoiseReduction = new ComboBox();
             lbl_chat_vol = new Label();
             lbl_game_vol = new Label();
             lbl_absoluteval = new Label();
@@ -71,11 +74,12 @@
             // 
             Settings.Items.AddRange(new ToolStripItem[] { systrayCom, systrayVolume, toolStripSeparator1, openToolStripMenuItem, closeToolStripMenuItem });
             Settings.Name = "contextMenuStrip1";
-            Settings.Size = new Size(161, 90);
+            Settings.Size = new Size(181, 112);
             Settings.Opening += Settings_Opening;
             // 
             // systrayCom
             // 
+            systrayCom.BackColor = SystemColors.ControlLightLight;
             systrayCom.BorderStyle = BorderStyle.None;
             systrayCom.Name = "systrayCom";
             systrayCom.ReadOnly = true;
@@ -83,6 +87,7 @@
             // 
             // systrayVolume
             // 
+            systrayVolume.BackColor = SystemColors.ControlLightLight;
             systrayVolume.BorderStyle = BorderStyle.None;
             systrayVolume.Name = "systrayVolume";
             systrayVolume.ReadOnly = true;
@@ -91,19 +96,19 @@
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(157, 6);
+            toolStripSeparator1.Size = new Size(177, 6);
             // 
             // openToolStripMenuItem
             // 
             openToolStripMenuItem.Name = "openToolStripMenuItem";
-            openToolStripMenuItem.Size = new Size(160, 22);
+            openToolStripMenuItem.Size = new Size(180, 22);
             openToolStripMenuItem.Text = "Show";
             openToolStripMenuItem.Click += openToolStripMenuItem_Click;
             // 
             // closeToolStripMenuItem
             // 
             closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            closeToolStripMenuItem.Size = new Size(160, 22);
+            closeToolStripMenuItem.Size = new Size(180, 22);
             closeToolStripMenuItem.Text = "Exit";
             closeToolStripMenuItem.Click += closeToolStripMenuItem_Click;
             // 
@@ -180,6 +185,9 @@
             // 
             // tabPage1
             // 
+            tabPage1.Controls.Add(cbNR);
+            tabPage1.Controls.Add(lblNoiseReduction);
+            tabPage1.Controls.Add(ddlNoiseReduction);
             tabPage1.Controls.Add(lbl_chat_vol);
             tabPage1.Controls.Add(lbl_game_vol);
             tabPage1.Controls.Add(lbl_absoluteval);
@@ -196,6 +204,37 @@
             tabPage1.TabIndex = 0;
             tabPage1.Text = "tabPage1";
             tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // cbNR
+            // 
+            cbNR.AutoSize = true;
+            cbNR.Enabled = false;
+            cbNR.Location = new Point(185, 226);
+            cbNR.Name = "cbNR";
+            cbNR.Size = new Size(15, 14);
+            cbNR.TabIndex = 17;
+            cbNR.UseVisualStyleBackColor = true;
+            // 
+            // lblNoiseReduction
+            // 
+            lblNoiseReduction.AutoSize = true;
+            lblNoiseReduction.Location = new Point(6, 225);
+            lblNoiseReduction.Name = "lblNoiseReduction";
+            lblNoiseReduction.Size = new Size(94, 15);
+            lblNoiseReduction.TabIndex = 16;
+            lblNoiseReduction.Text = "Noise Reduction";
+            // 
+            // ddlNoiseReduction
+            // 
+            ddlNoiseReduction.Enabled = false;
+            ddlNoiseReduction.FormattingEnabled = true;
+            ddlNoiseReduction.Items.AddRange(new object[] { "Off", "Low", "High" });
+            ddlNoiseReduction.Location = new Point(106, 222);
+            ddlNoiseReduction.Name = "ddlNoiseReduction";
+            ddlNoiseReduction.Size = new Size(74, 23);
+            ddlNoiseReduction.TabIndex = 15;
+            ddlNoiseReduction.Text = "High";
+            ddlNoiseReduction.SelectedIndexChanged += ddlNoiseReduction_SelectedIndexChanged;
             // 
             // lbl_chat_vol
             // 
@@ -304,7 +343,7 @@
             // 
             // lbl_HideTabs
             // 
-            lbl_HideTabs.Location = new Point(59, -5);
+            lbl_HideTabs.Location = new Point(77, -3);
             lbl_HideTabs.Name = "lbl_HideTabs";
             lbl_HideTabs.Size = new Size(280, 23);
             lbl_HideTabs.TabIndex = 11;
@@ -412,5 +451,8 @@
         private Label lbl_chat_vol;
         private Label lbl_game_vol;
         private Label lbl_absoluteval;
+        private Label lblNoiseReduction;
+        private ComboBox ddlNoiseReduction;
+        private CheckBox cbNR;
     }
 }
