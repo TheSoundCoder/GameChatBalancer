@@ -36,4 +36,4 @@ Perpixel | Mobile Basic Vol. 1 | conversation Icon
   - [ ] Customizable via C# application
 
 Maybe:
-[] Screen overlay to see volume adjustments Ingame
+[ ] Screen overlay to see volume adjustments Ingame
