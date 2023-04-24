@@ -36,6 +36,7 @@ Perpixel | Mobile Basic Vol. 1 | conversation Icon
   - [ ] Customizable via C# application
   
   https://stackoverflow.com/questions/43175454/how-to-get-selected-value-from-dropdown-list-c-sharp-asp-net
+  https://stackoverflow.com/questions/2729276/set-both-text-and-value-property-of-combobox-in-design-time
 
 ## Optional
 - [ ] Screen overlay to see volume adjustments Ingame
