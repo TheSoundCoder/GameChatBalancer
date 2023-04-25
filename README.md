@@ -27,7 +27,8 @@ The project consists of two components. A small **systray application** for your
   - 3.3V = red
   - Signal = green
 - The board is conected via an USB cable to the PC.
-
+- As listed in the Pricing indication I used a **Seeed Xiao SAMD21 Cortex M0+** instead of an Arduino. It comes cheap (5,60€), has a lot of analogue connectors and a very small footprint (20mm x 17,5mm x 3,5mm) to fit into a small housing.
+ 
 ## Schematic
 ![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer_schematic.png)
 
