@@ -24,6 +24,7 @@ The project consists of two components. A small **systray application** for your
 # Build Hardware
 https://github.com/fritzing
 
+# Installation
 
 # Licences
 Icons from https://icon-icons.com:
