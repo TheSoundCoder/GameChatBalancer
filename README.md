@@ -37,7 +37,7 @@ Perpixel | Mobile Basic Vol. 1 | conversation Icon
 Item | Price (€)|Link
 -----|------|-------
 Potentiometer Noname 10k|0,45|https://www.berrybase.de/en/drehpotentiometer-10k-937-liegend-mono-6mm-loetoesen?c=164
-Potentiometer Alpha RV16AF20KB10KM|2,99|https://www.conrad.de/de/p/alpha-rv16af20kb10km-dreh-potentiometer-mono-200-mw-10-k-1-st-1694304.html#productDownloads
+Potentiometer Alpha RV16AF20KB10KM (alternative)|2,99|https://www.conrad.de/de/p/alpha-rv16af20kb10km-dreh-potentiometer-mono-200-mw-10-k-1-st-1694304.html#productDownloads 
 Knob|0,65|https://www.berrybase.de/en/drehknopf-fuer-geraendelte-6-0mm-achse-mit-anzeige-16x16mm-schwarz/grau?c=164
 Microcontroller: Seeed Xiao SAMD21 Cortex M0+|5,60|https://www.berrybase.de/en/seeeduino-xiao-arduino-microcontroller-samd21-cortex-m0
 Kupferdraht isoliert|1,50|https://www.berrybase.de/en/kupferschaltdraht-isoliert-oe0-5mm-10m
