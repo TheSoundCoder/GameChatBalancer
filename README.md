@@ -42,6 +42,7 @@ Potentiometer Noname 10k (tolerance: +-20%)|0,45|https://www.berrybase.de/en/dre
 Knob|0,65|https://www.berrybase.de/en/drehknopf-fuer-geraendelte-6-0mm-achse-mit-anzeige-16x16mm-schwarz/grau?c=164
 Copper wire isolated|1,50|https://www.berrybase.de/en/kupferschaltdraht-isoliert-oe0-5mm-10m
 **Total**|**8,20 - 10,74**|
+If you use the listed microcontroller you will additionally need a **USB-C cable**.
 
 # Special Thanks
 First of all I would like to thank **sverrirs for his Gist AudioManager.cs** which accelerated the development and for sure saved me from some pain during the development. I used and modified AudioManager.cs to my needs so that GameChatBalancer is able to adjust the volume of more than one application by application name in one single call.
