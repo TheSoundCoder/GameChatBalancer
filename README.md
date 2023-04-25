@@ -45,3 +45,4 @@ First of all I would like to thank **sverrirs for his Gist AudioManager.cs** whi
 ## Optional
 - [ ] Screen overlay to see volume adjustments Ingame
 https://github.com/michel-pi/GameOverlay.Net
+- [ ] Migrate to modern UI
