@@ -18,7 +18,7 @@ The project consists of two components. A small **systray application** for your
    - Easy configuration via GUI - no extra configuration file editing needed
    - Auto-detect the Arduino based hardware
    - Adjust Noise reduction level of the Hardware
-
+   - User settings are stored automatically and restored during application startup.
 
 
 
