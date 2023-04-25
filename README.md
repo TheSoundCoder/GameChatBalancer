@@ -33,6 +33,9 @@ The project consists of two components. A small **systray application** for your
 ![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer_schematic.png)
 
 # Installation
+## Arduino
+
+## Systray application
 
 # Licences
 Icons from https://icon-icons.com:
