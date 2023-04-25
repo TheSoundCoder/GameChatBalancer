@@ -33,7 +33,7 @@ Designer | Iconpack | Icon
 Perpixel | Mobile Basic Vol. 1 | conversation Icon
 
 # Pricing indication
-**Please keep in mind that a very cheap potentiometer causes noise** so that noise reduction needs to be switched on. It absolutely makes sense to spend 2-3€ instead of 0,45€ as listed below. I use a ~ 3€ poti in my device and Noise Reduction switched off.
+**Please keep in mind that a very cheap potentiometer causes noise** so that noise reduction needs to be switched on. It absolutely makes sense to spend 2-3€ instead of 0,45€ as listed below. I use a ~ 3€ poti in my device and noise reduction switched off.
 Item | Price (€)|Link
 -----|------|-------
 Potentiometer Noname 10k|0,45|https://www.berrybase.de/en/drehpotentiometer-10k-937-liegend-mono-6mm-loetoesen?c=164
