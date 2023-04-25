@@ -36,13 +36,14 @@ Perpixel | Mobile Basic Vol. 1 | conversation Icon
 First of all I would like to thank **sverrirs for his Gist AudioManager.cs** which accelerated the development and for sure saved me from some pain during the development. I used and modified AudioManager.cs to my needs so that GameChatBalancer is able to adjust the volume of more than one application by application name in one single call.
 
 # Pricing indication
+Please keep in mind that a very cheap potentiometer causes noise so that noise reduction needs to be switched on. It absolutely makes sense to spend 2€ instead of 0,45€ as listed below
 Item | Price (€)|Link
 -----|------|-------
 Potentiometer 10k|0,45|https://www.berrybase.de/en/drehpotentiometer-10k-937-liegend-mono-6mm-loetoesen?c=164
 Knob|0,65|https://www.berrybase.de/en/drehknopf-fuer-geraendelte-6-0mm-achse-mit-anzeige-16x16mm-schwarz/grau?c=164
 Microcontroller: Seeed Xiao SAMD21 Cortex M0+|5,60|https://www.berrybase.de/en/seeeduino-xiao-arduino-microcontroller-samd21-cortex-m0
 Kupferdraht isoliert|1,50|https://www.berrybase.de/en/kupferschaltdraht-isoliert-oe0-5mm-10m
-Total|**8,20**|
+**Total|8,20**|
 
 
 # Issues
