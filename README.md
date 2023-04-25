@@ -21,7 +21,8 @@ The project consists of two components. A small **systray application** for your
    - Adjust Noise reduction level of the Hardware during runtime
    - User settings are stored automatically and restored during application startup.
 
-
+# Build Hardware
+https://github.com/fritzing
 
 
 # Licences and Thanks
