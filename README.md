@@ -9,13 +9,15 @@ The project consists of two components. A small **systray application** for your
 
 # Features
 1. Hardware
-   - Noise reduction if you are using cheap components - especially the potentiometer
    - Only sends data via the serial port if something changed - no permanent datastream
+   - Noise reduction in case you are using cheap components - especially the potentiometer
+     - Levels: Off, Low, Medium, High (default)
+     - Adjustable via Systray Application
 
 2. Systray Application
    - Easy configuration via GUI - no extra configuration file editing needed
    - Auto-detect the Arduino based hardware
-   - 
+   - Adjust Noise reduction level of the Hardware
 
 
 
