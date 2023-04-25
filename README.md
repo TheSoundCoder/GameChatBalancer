@@ -36,7 +36,7 @@ Perpixel | Mobile Basic Vol. 1 | conversation Icon
 First of all I would like to thank **sverrirs for his Gist AudioManager.cs** which accelerated the development and for sure saved me from some pain during the development. I used and modified AudioManager.cs to my needs so that GameChatBalancer is able to adjust the volume of more than one application by application name in one single call.
 
 # Pricing indication
-Please keep in mind that a very cheap potentiometer causes noise so that noise reduction needs to be switched on. It absolutely makes sense to spend 2€ instead of 0,45€ as listed below
+**Please keep in mind that a very cheap potentiometer causes noise** so that noise reduction needs to be switched on. It absolutely makes sense to spend 2€ instead of 0,45€ as listed below. I use a ~ 2€ poti in my device with a **tolerance** of +/-5% instead of a cheap potentiometer with a tolerance of +/-20%.
 Item | Price (€)|Link
 -----|------|-------
 Potentiometer 10k|0,45|https://www.berrybase.de/en/drehpotentiometer-10k-937-liegend-mono-6mm-loetoesen?c=164
