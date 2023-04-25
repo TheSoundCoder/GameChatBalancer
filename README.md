@@ -35,6 +35,12 @@ Perpixel | Mobile Basic Vol. 1 | conversation Icon
 # Special Thanks
 First of all I would like to thank **sverrirs for his Gist AudioManager.cs** which accelerated the development and for sure saved me from some pain during the development. I used and modified AudioManager.cs to my needs so that GameChatBalancer is able to adjust the volume of more than one application by application name in one single call.
 
+# Pricing indication
+Item | Price (€)|Link
+-----|------|-------
+Potentiometer|2|
+Seeed Xiao SAMD21 Cortex M0+|5,60|https://www.berrybase.de/en/seeeduino-xiao-arduino-microcontroller-samd21-cortex-m0
+
 # Issues
 - [x] Implement options for noise reduction (Off(0) - Low(1) - Medium(2) - High(3))
   - [x] Default: High
