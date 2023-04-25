@@ -33,11 +33,11 @@ Designer | Iconpack | Icon
 Perpixel | Mobile Basic Vol. 1 | conversation Icon
 
 # Pricing indication
-**Please keep in mind that a very cheap potentiometer causes noise** so that noise reduction needs to be switched on. It absolutely makes sense to spend 2€ instead of 0,45€ as listed below. I use a ~ 2€ poti in my device with a **tolerance** of +/-5% instead of a cheap potentiometer with a tolerance of +/-20%.
+**Please keep in mind that a very cheap potentiometer causes noise** so that noise reduction needs to be switched on. It absolutely makes sense to spend 2-3€ instead of 0,45€ as listed below. I use a ~ 3€ poti in my device and Noise Reduction switched off.
 Item | Price (€)|Link
 -----|------|-------
-Potentiometer 10k (tolerance: 20%)|0,45|https://www.berrybase.de/en/drehpotentiometer-10k-937-liegend-mono-6mm-loetoesen?c=164
-Potentiometer 10k (tolerance: 5%)|2,99|https://www.voelkner.de/products/1094753/Alpha-RV16AF-20-15K-B10K-RV16AF20KB10KM-Dreh-Potentiometer-Mono-200mW-10k.html
+Potentiometer Noname 10k|0,45|https://www.berrybase.de/en/drehpotentiometer-10k-937-liegend-mono-6mm-loetoesen?c=164
+Potentiometer Alpha RV16AF20KB10KM|2,99|https://www.conrad.de/de/p/alpha-rv16af20kb10km-dreh-potentiometer-mono-200-mw-10-k-1-st-1694304.html#productDownloads
 Knob|0,65|https://www.berrybase.de/en/drehknopf-fuer-geraendelte-6-0mm-achse-mit-anzeige-16x16mm-schwarz/grau?c=164
 Microcontroller: Seeed Xiao SAMD21 Cortex M0+|5,60|https://www.berrybase.de/en/seeeduino-xiao-arduino-microcontroller-samd21-cortex-m0
 Kupferdraht isoliert|1,50|https://www.berrybase.de/en/kupferschaltdraht-isoliert-oe0-5mm-10m
