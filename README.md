@@ -35,6 +35,7 @@ Perpixel | Mobile Basic Vol. 1 | conversation Icon
   - [x] Default: High
   - [x] Customizable via C# application
   - [x] Set / Get value during startup of the application
+  - [ ] [Optional] Auto-Adjust mode for noise reduction
   
   https://stackoverflow.com/questions/43175454/how-to-get-selected-value-from-dropdown-list-c-sharp-asp-net
   https://stackoverflow.com/questions/2729276/set-both-text-and-value-property-of-combobox-in-design-time
