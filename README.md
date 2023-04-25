@@ -32,9 +32,6 @@ Designer | Iconpack | Icon
 ---------|----------|---------
 Perpixel | Mobile Basic Vol. 1 | conversation Icon
 
-# Special Thanks
-First of all I would like to thank **sverrirs for his Gist AudioManager.cs** which accelerated the development and for sure saved me from some pain during the development. I used and modified AudioManager.cs to my needs so that GameChatBalancer is able to adjust the volume of more than one application by application name in one single call.
-
 # Pricing indication
 **Please keep in mind that a very cheap potentiometer causes noise** so that noise reduction needs to be switched on. It absolutely makes sense to spend 2€ instead of 0,45€ as listed below. I use a ~ 2€ poti in my device with a **tolerance** of +/-5% instead of a cheap potentiometer with a tolerance of +/-20%.
 Item | Price (€)|Link
@@ -45,6 +42,8 @@ Microcontroller: Seeed Xiao SAMD21 Cortex M0+|5,60|https://www.berrybase.de/en/s
 Kupferdraht isoliert|1,50|https://www.berrybase.de/en/kupferschaltdraht-isoliert-oe0-5mm-10m
 **Total|8,20**|
 
+# Special Thanks
+First of all I would like to thank **sverrirs for his Gist AudioManager.cs** which accelerated the development and for sure saved me from some pain during the development. I used and modified AudioManager.cs to my needs so that GameChatBalancer is able to adjust the volume of more than one application by application name in one single call.
 
 # Issues
 - [x] Implement options for noise reduction (Off(0) - Low(1) - Medium(2) - High(3))
