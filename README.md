@@ -31,10 +31,10 @@ Perpixel | Mobile Basic Vol. 1 | conversation Icon
 
 
 # Next steps
-- [x] Implement options for noise reduction (Off(0) - Low(2) - High(3))
+- [x] Implement options for noise reduction (Off(0) - Low(1) - Medium(2) - High(3))
   - [x] Default: High
   - [x] Customizable via C# application
-  - [ ] Set / Get value during startup of the application
+  - [x] Set / Get value during startup of the application
   
   https://stackoverflow.com/questions/43175454/how-to-get-selected-value-from-dropdown-list-c-sharp-asp-net
   https://stackoverflow.com/questions/2729276/set-both-text-and-value-property-of-combobox-in-design-time
