@@ -17,7 +17,7 @@ The project consists of two components. A small **systray application** for your
 2. Systray Application
    - Easy configuration via GUI - no extra configuration file editing needed
    - Auto-detect the Arduino based hardware
-   - The application recognises when the hardware is removed and will automatically reconnect when plugged in again
+   - The application recognises when the hardware is removed and will automatically reconnect when plugged in again (USB event based)
    - Adjust Noise reduction level of the Hardware during runtime
    - User settings are stored automatically and restored during application startup.
 
