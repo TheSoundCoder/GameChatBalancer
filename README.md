@@ -22,6 +22,9 @@ The project consists of two components. A small **systray application** for your
    - User settings are stored automatically and restored during application startup.
 
 # Build Hardware
+- The potentiometer is connected to an analog pin of your Arduino (or compatible) board. It is powered from the board's 5V (or 3.3V) output (see schematic)
+- The board is conected via an USB cable to the PC.
+## Schematic
 ![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer_schematic.png)
 
 # Installation
