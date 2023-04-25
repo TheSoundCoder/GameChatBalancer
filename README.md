@@ -22,7 +22,7 @@ The project consists of two components. A small **systray application** for your
    - User settings are stored automatically and restored during application startup.
 
 # Build Hardware
-https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer_schematic.png
+![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer_schematic.png)
 
 # Installation
 
