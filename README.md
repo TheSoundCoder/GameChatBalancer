@@ -25,14 +25,14 @@ The project consists of two components. A small **systray application** for your
 https://github.com/fritzing
 
 
-# Licences and Special Thanks
-First of all I would like to thank **sverrirs for his Gist AudioManager.cs** which accelerated the development and for sure saved me from some pain during the development. I used and modified AudioManager.cs to my needs so that GameChatBalancer is able to adjust the volume of more than one application by application name in one single call.
-
-Additionally I used some icons from https://icon-icons.com:
+# Licences
+Icons from https://icon-icons.com:
 Designer | Iconpack | Icon
 ---------|----------|---------
 Perpixel | Mobile Basic Vol. 1 | conversation Icon
 
+#Special Thanks
+First of all I would like to thank **sverrirs for his Gist AudioManager.cs** which accelerated the development and for sure saved me from some pain during the development. I used and modified AudioManager.cs to my needs so that GameChatBalancer is able to adjust the volume of more than one application by application name in one single call
 
 # Next steps
 - [x] Implement options for noise reduction (Off(0) - Low(1) - Medium(2) - High(3))
