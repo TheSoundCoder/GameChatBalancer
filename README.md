@@ -42,6 +42,7 @@ Potentiometer Noname 10k (tolerance: +-20%)|0,45|https://www.berrybase.de/en/dre
 Knob|0,65|https://www.berrybase.de/en/drehknopf-fuer-geraendelte-6-0mm-achse-mit-anzeige-16x16mm-schwarz/grau?c=164
 Copper wire isolated|1,50|https://www.berrybase.de/en/kupferschaltdraht-isoliert-oe0-5mm-10m
 **Total**|**8,20 - 10,74**|
+
 If you use the listed microcontroller you will additionally need a **USB-C cable**.
 
 # Special Thanks
