@@ -3,14 +3,13 @@ int analogPin = A10; // potentiometer wiper (middle terminal) connected to analo
 int val1 = 0;  // variable to store the value read
 int val1_old = 0;
 String incomingMsg = "";
-#define LastValues_SIZE 3 //the higher the number, the greate the noise reduction
-int LastValues[LastValues_SIZE] = {-1,-1,-1};
+int intNRLevel = 3; //the higher the number, the greate the noise reduction; 0=disabled
+int arrNoiseReduction[3] = {-1,-1,-1}; //Array used for NoiseReduction
 //String message = "";
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(115200);
-
 }
 
 void loop() {
@@ -22,22 +21,23 @@ void loop() {
     val1_old = val1;  //store current value as old value
     if (val1>200){val1=200;}  //only send values <= 100
     if (val1<0){val1=0;} //do not send negative values
-    if (!NoiseReduction(val1)) {Serial.println(String(val1/2));} //only send new value if it was not part of the last LastValues_SIZE values
+    if (!NoiseReduction(val1)) {Serial.println(String(val1/2));} //only send new value if it was not part of the last arrNoiseReduction values
   }
   Incoming();
 }
 
 bool NoiseReduction(int value){
-  //noise reduction is true if nothin should be sent
+  //noise reduction is true if nothing should be sent!
+  if (intNRLevel == 0) {return false;}  //Noise reduction is disabled -> return false so that value is sent.
   bool RetVal = true;
     if (!ValueIsPartOfArray(value)){
-      //If the value is not part of our Array, shift array and add the new value
+      //If the value is not part of our Array, shift array and add the new value; Return false so that the new value will be sent.
       RetVal = false;
-      for (int i=0; i < LastValues_SIZE; i++) {
-        if (i == LastValues_SIZE-1) {
-          LastValues[i] = value;
+      for (int i=0; i < intNRLevel; i++) {
+        if (i == intNRLevel-1) {
+          arrNoiseReduction[i] = value;
         } else {
-          LastValues[i] = LastValues[i+1];
+          arrNoiseReduction[i] = arrNoiseReduction[i+1];
         }
       }
     }
@@ -47,8 +47,8 @@ bool NoiseReduction(int value){
 bool ValueIsPartOfArray(int value){
   //Return true if the value is part of an array, else: false
   bool RetVal = false;
-  for (int i=0; i < LastValues_SIZE; i++) {
-    if (LastValues[i] == value){RetVal = true;}
+  for (int i=0; i < intNRLevel; i++) {
+    if (arrNoiseReduction[i] == value){RetVal = true;}
   }
   return RetVal;
 }
@@ -61,6 +61,10 @@ void Incoming(){
       Serial.println("ack");
     } else if (incomingMsg.indexOf("get")>-1){
       Serial.println(String(val1/2));
+    } else if (incomingMsg.indexOf("NR=")>-1){
+      intNRLevel = incomingMsg.substring(3,4).toInt();
+      Serial.println("NR=" + String(intNRLevel));
+      //Set intNRLevel
     } else {
     }
 
