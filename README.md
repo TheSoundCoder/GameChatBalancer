@@ -38,8 +38,8 @@ First of all I would like to thank **sverrirs for his Gist AudioManager.cs** whi
 # Pricing indication
 Item | Price (€)|Link
 -----|------|-------
-Potentiometer 10k|2|
-Knob|1|https://www.berrybase.de/en/drehknopf-fuer-geraendelte-6-0mm-achse-mit-anzeige-16x16mm-schwarz/grau?c=164
+Potentiometer 10k|0,45|https://www.berrybase.de/en/drehpotentiometer-10k-937-liegend-mono-6mm-loetoesen?c=164
+Knob|0,65|https://www.berrybase.de/en/drehknopf-fuer-geraendelte-6-0mm-achse-mit-anzeige-16x16mm-schwarz/grau?c=164
 Microcontroller: Seeed Xiao SAMD21 Cortex M0+|5,60|https://www.berrybase.de/en/seeeduino-xiao-arduino-microcontroller-samd21-cortex-m0
 Kupferdraht isoliert|1,50|https://www.berrybase.de/en/kupferschaltdraht-isoliert-oe0-5mm-10m
 
