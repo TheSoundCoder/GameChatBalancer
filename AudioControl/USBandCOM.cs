@@ -4,6 +4,7 @@
 using System.Diagnostics;
 using System.IO.Ports;
 using System.Management;
+using System.Text.RegularExpressions;
 //using System.Linq;
 //using System.Security.Policy;
 //using System.Text;
@@ -148,8 +149,14 @@ namespace AudioControl
                     {
                         //confirmation that NoiseReduction was successfully set
                         MainForm.ConfirmNR();
-                        buffer = "";
-                    } else {
+                        MainForm.SendToLog(buffer);
+                        buffer.Replace("NR=", "");
+                        buffer = Regex.Replace(buffer, "NR=.\\r\\n", "");
+                        MainForm.SendToLog(buffer);
+                        //buffer = "";
+                    }
+                    if (buffer != null && buffer != "")
+                    {
                         //Extract latest volume level from strem
                         string[] packets1 = buffer.Split("\r\n");
                         int arrlength = packets1.Length - 1;
@@ -252,8 +259,7 @@ namespace AudioControl
             CloseComPort();
             OpenComPort();
             if (sp_connected()) {
-                sp_SendData("get");
-                System.Threading.Thread.Sleep(1000);    
+                sp_SendData("get");   
                 MainForm.Send_NoiseReducion_Value();
             }
             /*

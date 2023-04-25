@@ -58,7 +58,6 @@ namespace AudioControl
             if (USBandCOM.sp_connected())
             {
                 GetVol();
-                System.Threading.Thread.Sleep(1000);
                 Send_NoiseReducion_Value();
             }
         }
@@ -104,7 +103,8 @@ namespace AudioControl
             var items = new BindingList<KeyValuePair<string, string>>();
 
             items.Add(new KeyValuePair<string, string>("NR=0", "Off"));
-            items.Add(new KeyValuePair<string, string>("NR=2", "Low"));
+            items.Add(new KeyValuePair<string, string>("NR=1", "Low"));
+            items.Add(new KeyValuePair<string, string>("NR=2", "Medium"));
             items.Add(new KeyValuePair<string, string>("NR=3", "High"));
             ddlNoiseReduction.DataSource = items;
             ddlNoiseReduction.ValueMember = "Key";
