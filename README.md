@@ -9,7 +9,11 @@ The project consists of two components. A small **systray application** for your
 # Table of contents
 - [Features](https://github.com/TheSoundCoder/AudioControl#Features)
 - [Build Hardware](https://github.com/TheSoundCoder/AudioControl#build-hardware)
-- [Build Hardware](https://github.com/TheSoundCoder/AudioControl#build-hardware)
+  - [Schematic](https://github.com/TheSoundCoder/AudioControl#schematic)
+- [Installation](https://github.com/TheSoundCoder/AudioControl#installation)
+- [Licences](https://github.com/TheSoundCoder/AudioControl#licences)
+- [Pricing indication](https://github.com/TheSoundCoder/AudioControl#pricing-indication)
+- [Special Thanks](https://github.com/TheSoundCoder/AudioControl#special-thanks)
 
 # Features
 1. Hardware
