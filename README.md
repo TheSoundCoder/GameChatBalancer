@@ -29,8 +29,8 @@ Everything you need to build your own GameChatBalancer ist listed in the [Pricin
   - GND = black
   - 5V / 3.3V = red
   - Signal = green
-- The board is conected via an USB cable to the PC.
-- As listed in the Pricing indication I used a **Seeed Xiao SAMD21 Cortex M0+** instead of an Arduino. It comes cheap (5,60€), has a lot of analogue connectors and a very small footprint (20mm x 17,5mm x 3,5mm) to fit into a small housing.
+- The board is conected via an USB cable to the PC. Make sure to check what kind of USB cable is needed for your board.
+- As listed in the Pricing indication I used a **Seeed Xiao SAMD21 Cortex M0+** instead of an Arduino. It comes cheap (5,60€), has a lot of analogue connectors and a very small footprint (20mm x 17,5mm x 3,5mm) to fit into a small housing. Last but not least it has a USB-C connector.
  
 ## Schematic
 In the schematic below, you find two options:
