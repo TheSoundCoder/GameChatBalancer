@@ -49,6 +49,7 @@ Icons from https://icon-icons.com:
 Designer | Iconpack | Icon Name | Image
 ---------|----------|---------|---------
 Perpixel | Mobile Basic Vol. 1 | conversation Icon | <img src="https://github.com/TheSoundCoder/AudioControl/blob/master/AudioControl/Resources/ico_chat3.png" width="48">
+ABC | ABC | ABC | <img src="https://github.com/TheSoundCoder/AudioControl/blob/master/AudioControl/Resources/ico_game2.png" width="48">
 
 # Pricing indication
 **Please keep in mind that a very cheap potentiometer causes noise** so that noise reduction needs to be switched on. It absolutely makes sense to spend 2-3€ instead of 0,45€ as listed below. I use a ~ 3€ poti with a **tolerance of +-5%** in my device and noise reduction switched off. Cheap potentiometers can have a tolerance of +-20%.
