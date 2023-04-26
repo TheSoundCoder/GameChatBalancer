@@ -10,9 +10,10 @@ The project consists of two components. A small **systray application** for your
 - [Features](https://github.com/TheSoundCoder/AudioControl#Features)
 - [Build Hardware](https://github.com/TheSoundCoder/AudioControl#build-hardware)
   - [Schematic](https://github.com/TheSoundCoder/AudioControl#schematic)
+  - [Material](https://github.com/TheSoundCoder/AudioControl#material)
 - [Installation](https://github.com/TheSoundCoder/AudioControl#installation)
 - [Licences](https://github.com/TheSoundCoder/AudioControl#licences)
-- [Pricing indication](https://github.com/TheSoundCoder/AudioControl#material)
+
 - [Special Thanks](https://github.com/TheSoundCoder/AudioControl#special-thanks)
 
 # Features
@@ -45,22 +46,7 @@ In the schematic below, you find two options:
 
 ![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer_schematic_2.png)
 
-# Installation
-## Arduino
-
-## Systray application
-
-# Licences
-Icons from https://icon-icons.com:
-Designer | Iconpack | Icon Name | Image
----------|----------|---------|---------
-Perpixel | Mobile Basic Vol. 1 | conversation Icon | <img src="https://github.com/TheSoundCoder/AudioControl/blob/master/AudioControl/Resources/ico_chat3.png" width="48">
-Iconicons | Icons - line | Game, controller icon | <img src="https://cdn.icon-icons.com/icons2/3831/PNG/512/game_controller_icon_234136.png" width="48">
-Yoyon Pujiyono | App User Interface | Equalizer | <img src="https://cdn.icon-icons.com/icons2/1997/PNG/512/equalizer_filter_filtering_mixer_sorting_icon_123287.png" width="48">
-Steve Shoger | Zondicons | Bug Icon | <img src="https://cdn.icon-icons.com/icons2/2065/PNG/512/bug_icon_125029.png" width="48">
-
-
-# Material
+## Material
 **Please keep in mind that a very cheap potentiometer causes noise** so that noise reduction needs to be switched on. It absolutely makes sense to spend 2-3€ instead of 0,45€ as listed below. I use a ~ 3€ poti with a **tolerance of +-5%** in my device and noise reduction switched off. Cheap potentiometers can have a tolerance of +-20%.
 
 **Important**: make sure to buy a **linear** potentiometer, not a logarithmic one!
@@ -75,6 +61,21 @@ Copper wire isolated|1,50|https://www.berrybase.de/en/kupferschaltdraht-isoliert
 **Total**|**8,20 - 10,74**|
 
 If you use the listed microcontroller you will additionally need a **USB-C cable**.
+
+# Installation
+## Arduino
+
+## Systray application
+
+# Licences
+Icons from https://icon-icons.com:
+Designer | Iconpack | Icon Name | Image
+---------|----------|---------|---------
+Perpixel | Mobile Basic Vol. 1 | conversation Icon | <img src="https://github.com/TheSoundCoder/AudioControl/blob/master/AudioControl/Resources/ico_chat3.png" width="48">
+Iconicons | Icons - line | Game, controller icon | <img src="https://cdn.icon-icons.com/icons2/3831/PNG/512/game_controller_icon_234136.png" width="48">
+Yoyon Pujiyono | App User Interface | Equalizer | <img src="https://cdn.icon-icons.com/icons2/1997/PNG/512/equalizer_filter_filtering_mixer_sorting_icon_123287.png" width="48">
+Steve Shoger | Zondicons | Bug Icon | <img src="https://cdn.icon-icons.com/icons2/2065/PNG/512/bug_icon_125029.png" width="48">
+
 
 # Special Thanks
 First of all I would like to thank **sverrirs for his Gist AudioManager.cs** which accelerated the development and for sure saved me from some pain during the development. I used and modified AudioManager.cs to my needs so that GameChatBalancer is able to adjust the volume of more than one application by application name in one single call.
