@@ -51,7 +51,9 @@ Perpixel | Mobile Basic Vol. 1 | conversation Icon
 
 # Pricing indication
 **Please keep in mind that a very cheap potentiometer causes noise** so that noise reduction needs to be switched on. It absolutely makes sense to spend 2-3€ instead of 0,45€ as listed below. I use a ~ 3€ poti with a **tolerance of +-5%** in my device and noise reduction switched off. Cheap potentiometers can have a tolerance of +-20%.
+
 **Important**: make sure to buy a **linear** potentiometer, not a logarithmic one!
+
 Item | Price (€)|Link
 -----|------|-------
 Microcontroller: Seeed Xiao SAMD21 Cortex M0+|5,60|https://www.berrybase.de/en/seeeduino-xiao-arduino-microcontroller-samd21-cortex-m0
