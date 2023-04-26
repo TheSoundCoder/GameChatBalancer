@@ -33,6 +33,7 @@ The project consists of two components. A small **systray application** for your
 In the schematic below, you find two options:
 1. Left is the setup with the Seeed Xiao SAMD21 Cortex M0+. **Ensure to connect the potentiometer to the 3.3V output** of the board as the 5V will probably kill the board's microcontroller.
 2. Right is the setup with an Arduino.
+
 ![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer_schematic_2.png)
 
 # Installation
