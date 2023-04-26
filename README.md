@@ -1,5 +1,7 @@
-# GameChatBalancer
+#Table of contents
+- 
 
+# GameChatBalancer
 GameChatBalancer is an **opensource hardware audio balancer** for Windows PCs. The functionality is inspired by the Chatmix function of some available headsets.
 
 GameChatBalancer lets you use an Arduino (or similar boards) based knob or slider to **balance the volume of chat-software and games** so that you can **easily
