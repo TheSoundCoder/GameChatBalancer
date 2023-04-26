@@ -8,6 +8,7 @@ The project consists of two components. A small **systray application** for your
 
 # Table of contents
 - [Features](https://github.com/TheSoundCoder/AudioControl#Features)
+- [Build Hardware](https://github.com/TheSoundCoder/AudioControl#build-hardware)
 
 # Features
 1. Hardware
