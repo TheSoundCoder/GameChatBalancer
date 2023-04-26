@@ -80,7 +80,7 @@ I decided to design and 3D-print one by myself. If you like the "design" you can
 # Pictures / Video
 
 # Licences
-Icons from https://icon-icons.com:
+Icons used under [Creativecommons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/legalcode) from https://icon-icons.com:
 Designer | Iconpack | Icon Name | Image
 ---------|----------|---------|---------
 Perpixel | Mobile Basic Vol. 1 | conversation Icon | <img src="https://github.com/TheSoundCoder/AudioControl/blob/master/AudioControl/Resources/ico_chat3.png" width="48">
