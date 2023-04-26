@@ -1,5 +1,5 @@
 #Table of contents
-- 
+- https://github.com/TheSoundCoder/AudioControl#GameChatBalancer
 
 # GameChatBalancer
 GameChatBalancer is an **opensource hardware audio balancer** for Windows PCs. The functionality is inspired by the Chatmix function of some available headsets.
