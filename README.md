@@ -20,7 +20,7 @@ The project consists of two components. A small **systray application** for your
    - Easy configuration via GUI - Assign applications via **drag and drop**
    - Assign **multiple applications** to the "Game" and "Chat" category
    - **Auto-detect** the Arduino based hardware
-   - The application recognises when the hardware is removed and will automatically reconnect when plugged in again (USB event based)
+   - The application recognises when the hardware is removed and will automatically reconnect when plugged in again (**USB event based**)
    - User settings are stored automatically and restored during application startup.
 
 # Build Hardware
