@@ -64,12 +64,20 @@ Copper wire isolated|1,50|https://www.berrybase.de/en/kupferschaltdraht-isoliert
 If you use the listed microcontroller you will additionally need a **USB-C cable**.
 
 ## Housing
-You can use anything as a "house" for your controller. I decided to design and 3D-print one by myself. If you like the "design" you can download it [here](https://github.com/TheSoundCoder/AudioControl/tree/master/assets/3d-model).
+You can use anything as a housing for your controller - even a matchbox if you do not have a 3D-Printer.
+
+I decided to design and 3D-print one by myself. If you like the "design" you can download either the STL files or GCODE files [here](https://github.com/TheSoundCoder/AudioControl/tree/master/assets/3d-model).
+
+<img src="https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer3.jpg" height="300"> <img src="https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer2.jpg" height="300">
 
 # Installation
 ## Arduino
 
 ## Systray application
+
+# Manual
+
+# Pictures / Video
 
 # Licences
 Icons from https://icon-icons.com:
@@ -77,8 +85,9 @@ Designer | Iconpack | Icon Name | Image
 ---------|----------|---------|---------
 Perpixel | Mobile Basic Vol. 1 | conversation Icon | <img src="https://github.com/TheSoundCoder/AudioControl/blob/master/AudioControl/Resources/ico_chat3.png" width="48">
 Iconicons | Icons - line | Game, controller icon | <img src="https://cdn.icon-icons.com/icons2/3831/PNG/512/game_controller_icon_234136.png" width="48">
-Yoyon Pujiyono | App User Interface | Equalizer | <img src="https://cdn.icon-icons.com/icons2/1997/PNG/512/equalizer_filter_filtering_mixer_sorting_icon_123287.png" width="48">
+CoreUI | CoreUI Free | Equalizer Icon | <img src="https://cdn.icon-icons.com/icons2/2385/PNG/512/equalizer_icon_144361.png" width="48">
 Steve Shoger | Zondicons | Bug Icon | <img src="https://cdn.icon-icons.com/icons2/2065/PNG/512/bug_icon_125029.png" width="48">
+Yannick | General Icons | Refresh Icon | <img src="https://cdn.icon-icons.com/icons2/562/PNG/512/refresh-page-arrow-button_icon-icons.com_53909.png" width="48">
 
 
 # Special Thanks
