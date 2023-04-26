@@ -11,6 +11,7 @@ The project consists of two components. A small **systray application** for your
 - [Build Hardware](https://github.com/TheSoundCoder/AudioControl#build-hardware)
   - [Schematic](https://github.com/TheSoundCoder/AudioControl#schematic)
   - [Material](https://github.com/TheSoundCoder/AudioControl#material)
+  - [Housing](https://github.com/TheSoundCoder/AudioControl#housing)
 - [Installation](https://github.com/TheSoundCoder/AudioControl#installation)
 - [Licences](https://github.com/TheSoundCoder/AudioControl#licences)
 
@@ -61,6 +62,9 @@ Copper wire isolated|1,50|https://www.berrybase.de/en/kupferschaltdraht-isoliert
 **Total**|**8,20 - 10,74**|
 
 If you use the listed microcontroller you will additionally need a **USB-C cable**.
+
+## Housing
+You can use anything as a "house" for your controller. I decided to design and 3D-print one by myself. If you like the "design" you can download it [here](https://github.com/TheSoundCoder/AudioControl/tree/master/assets/3d-model).
 
 # Installation
 ## Arduino
