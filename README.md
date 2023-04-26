@@ -12,7 +12,7 @@ The project consists of two components. A small **systray application** for your
   - [Schematic](https://github.com/TheSoundCoder/AudioControl#schematic)
 - [Installation](https://github.com/TheSoundCoder/AudioControl#installation)
 - [Licences](https://github.com/TheSoundCoder/AudioControl#licences)
-- [Pricing indication](https://github.com/TheSoundCoder/AudioControl#pricing-indication)
+- [Pricing indication](https://github.com/TheSoundCoder/AudioControl#material)
 - [Special Thanks](https://github.com/TheSoundCoder/AudioControl#special-thanks)
 
 # Features
@@ -60,7 +60,7 @@ Yoyon Pujiyono | App User Interface | Equalizer | <img src="https://cdn.icon-ico
 Steve Shoger | Zondicons | Bug Icon | <img src="https://cdn.icon-icons.com/icons2/2065/PNG/512/bug_icon_125029.png" width="48">
 
 
-# Pricing indication
+# Material
 **Please keep in mind that a very cheap potentiometer causes noise** so that noise reduction needs to be switched on. It absolutely makes sense to spend 2-3€ instead of 0,45€ as listed below. I use a ~ 3€ poti with a **tolerance of +-5%** in my device and noise reduction switched off. Cheap potentiometers can have a tolerance of +-20%.
 
 **Important**: make sure to buy a **linear** potentiometer, not a logarithmic one!
