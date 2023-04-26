@@ -30,6 +30,7 @@ namespace AudioControl
             // Handle the ApplicationExit event to know when the application is exiting.
             Application.ApplicationExit += new EventHandler(this.OnApplicationExit);
             USBandCOM.HandOverForm(this);
+            HandOverForm(this); //AudioManager
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -78,6 +79,14 @@ namespace AudioControl
         {
             lb_AudioProcesses.Items.Clear();
             lb_AudioProcesses.Items.AddRange(GetAudioApplications(false).Split("\r\n").Distinct().ToArray());
+            foreach (var item in lb_CHAT.Items)
+            {
+                lb_AudioProcesses.Items.Remove(item);
+            }
+            foreach (var item in lb_GAME.Items)
+            {
+                lb_AudioProcesses.Items.Remove(item);
+            }
             lb_AudioProcesses.Items.Remove("Idle");
             lb_AudioProcesses.Items.Remove("");
         }
@@ -109,7 +118,6 @@ namespace AudioControl
             ddlNoiseReduction.DataSource = items;
             ddlNoiseReduction.ValueMember = "Key";
             ddlNoiseReduction.DisplayMember = "Value";
-            SendToLog("Stored Value: " + Properties.Settings.Default.NoiseReduction);
             ddlNoiseReduction.Enabled = true;
             ddlNoiseReduction.Text = Properties.Settings.Default.NoiseReduction;
         }
@@ -160,7 +168,6 @@ namespace AudioControl
             if (volume < 50)
             {
                 //tune GAME
-
                 SetApplicationVolumeByName(GAME, volume * 2);
                 SetApplicationVolumeByName(CHAT, 100);
                 lbl_game_vol.Text = (volume * 2).ToString();
@@ -223,6 +230,7 @@ namespace AudioControl
             this.Show();
             this.WindowState = FormWindowState.Normal;
             this.TopMost = true;
+            fill_lb_AudioProcesses();
         }
 
         private void Form1_Move(object sender, EventArgs e)
@@ -274,7 +282,8 @@ namespace AudioControl
                 e.Effect = DragDropEffects.Move;
                 ListBox lb = sender as ListBox;
                 if (!lb.Items.Contains(lb_item)) { lb.Items.Add(lb_item); }
-                if (source_LB.Name != lb_AudioProcesses.Name) { source_LB.Items.Remove(lb_item); }
+                //if (source_LB.Name != lb_AudioProcesses.Name) { source_LB.Items.Remove(lb_item); }
+                source_LB.Items.Remove(lb_item);
                 source_LB = null;
                 lb_item = null;
 
@@ -309,7 +318,7 @@ namespace AudioControl
 
         private void lb_GAME_MouseUp(object sender, MouseEventArgs e)
         {
-            textBox1.AppendText("Mouse up\r\n");
+            //textBox1.AppendText("Mouse up\r\n");
         }
 
         private void btn_settings_Click(object sender, EventArgs e)
@@ -360,6 +369,16 @@ namespace AudioControl
             if (Debug) { SendToLog("Value: " + ddlNoiseReduction.SelectedValue.ToString()); }
             if (Debug) { SendToLog("Stored Value: " + Properties.Settings.Default.NoiseReduction); }
             //SendToLog(ddlNoiseReduction.SelectedValue.ToString());
+        }
+
+        private void btn_AudioProcesses_refresh_Click(object sender, EventArgs e)
+        {
+            fill_lb_AudioProcesses();
+        }
+
+        private void cb_Debug_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cb_Debug.Checked == true) { debug = true; } else { debug = false; }
         }
     }
 }

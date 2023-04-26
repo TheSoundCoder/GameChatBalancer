@@ -38,12 +38,16 @@
             closeToolStripMenuItem = new ToolStripMenuItem();
             trayicon = new NotifyIcon(components);
             tabPage2 = new TabPage();
+            cb_Debug = new CheckBox();
+            textBox1 = new TextBox();
             btn_ComPort_Refresh = new Button();
             ddl_ComPort = new ComboBox();
             lbl_ComPort = new Label();
-            textBox1 = new TextBox();
             button1 = new Button();
             tabPage1 = new TabPage();
+            lbl_Hardware = new Label();
+            btn_AudioProcesses_refresh = new Button();
+            label1 = new Label();
             cbNR = new CheckBox();
             lblNoiseReduction = new Label();
             ddlNoiseReduction = new ComboBox();
@@ -74,7 +78,7 @@
             // 
             Settings.Items.AddRange(new ToolStripItem[] { systrayCom, systrayVolume, toolStripSeparator1, openToolStripMenuItem, closeToolStripMenuItem });
             Settings.Name = "contextMenuStrip1";
-            Settings.Size = new Size(181, 112);
+            Settings.Size = new Size(161, 90);
             Settings.Opening += Settings_Opening;
             // 
             // systrayCom
@@ -96,19 +100,19 @@
             // toolStripSeparator1
             // 
             toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Size = new Size(177, 6);
+            toolStripSeparator1.Size = new Size(157, 6);
             // 
             // openToolStripMenuItem
             // 
             openToolStripMenuItem.Name = "openToolStripMenuItem";
-            openToolStripMenuItem.Size = new Size(180, 22);
+            openToolStripMenuItem.Size = new Size(160, 22);
             openToolStripMenuItem.Text = "Show";
             openToolStripMenuItem.Click += openToolStripMenuItem_Click;
             // 
             // closeToolStripMenuItem
             // 
             closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            closeToolStripMenuItem.Size = new Size(180, 22);
+            closeToolStripMenuItem.Size = new Size(160, 22);
             closeToolStripMenuItem.Text = "Exit";
             closeToolStripMenuItem.Click += closeToolStripMenuItem_Click;
             // 
@@ -121,26 +125,44 @@
             // 
             // tabPage2
             // 
-            tabPage2.Controls.Add(btn_ComPort_Refresh);
-            tabPage2.Controls.Add(ddl_ComPort);
-            tabPage2.Controls.Add(lbl_ComPort);
+            tabPage2.Controls.Add(cb_Debug);
             tabPage2.Controls.Add(textBox1);
-            tabPage2.Controls.Add(button1);
             tabPage2.Location = new Point(4, 5);
             tabPage2.Name = "tabPage2";
             tabPage2.Padding = new Padding(3);
-            tabPage2.Size = new Size(508, 251);
+            tabPage2.Size = new Size(508, 338);
             tabPage2.TabIndex = 1;
             tabPage2.Text = "tabPage2";
             tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // cb_Debug
+            // 
+            cb_Debug.AutoSize = true;
+            cb_Debug.Location = new Point(6, 6);
+            cb_Debug.Name = "cb_Debug";
+            cb_Debug.RightToLeft = RightToLeft.Yes;
+            cb_Debug.Size = new Size(61, 19);
+            cb_Debug.TabIndex = 2;
+            cb_Debug.Text = "Debug";
+            cb_Debug.UseVisualStyleBackColor = true;
+            cb_Debug.CheckedChanged += cb_Debug_CheckedChanged;
+            // 
+            // textBox1
+            // 
+            textBox1.Location = new Point(6, 31);
+            textBox1.Multiline = true;
+            textBox1.Name = "textBox1";
+            textBox1.ScrollBars = ScrollBars.Vertical;
+            textBox1.Size = new Size(496, 301);
+            textBox1.TabIndex = 0;
             // 
             // btn_ComPort_Refresh
             // 
             btn_ComPort_Refresh.BackgroundImage = (Image)resources.GetObject("btn_ComPort_Refresh.BackgroundImage");
             btn_ComPort_Refresh.BackgroundImageLayout = ImageLayout.Stretch;
-            btn_ComPort_Refresh.Location = new Point(194, 216);
+            btn_ComPort_Refresh.Location = new Point(186, 299);
             btn_ComPort_Refresh.Name = "btn_ComPort_Refresh";
-            btn_ComPort_Refresh.Size = new Size(29, 27);
+            btn_ComPort_Refresh.Size = new Size(29, 29);
             btn_ComPort_Refresh.TabIndex = 4;
             btn_ComPort_Refresh.UseVisualStyleBackColor = true;
             btn_ComPort_Refresh.Click += btn_ComPort_Refresh_Click;
@@ -148,9 +170,9 @@
             // ddl_ComPort
             // 
             ddl_ComPort.FormattingEnabled = true;
-            ddl_ComPort.Location = new Point(67, 220);
+            ddl_ComPort.Location = new Point(106, 304);
             ddl_ComPort.Name = "ddl_ComPort";
-            ddl_ComPort.Size = new Size(121, 23);
+            ddl_ComPort.Size = new Size(74, 23);
             ddl_ComPort.Sorted = true;
             ddl_ComPort.TabIndex = 3;
             ddl_ComPort.SelectedIndexChanged += ddl_ComPort_SelectedIndexChanged;
@@ -158,24 +180,15 @@
             // lbl_ComPort
             // 
             lbl_ComPort.AutoSize = true;
-            lbl_ComPort.Location = new Point(6, 223);
+            lbl_ComPort.Location = new Point(6, 307);
             lbl_ComPort.Name = "lbl_ComPort";
             lbl_ComPort.Size = new Size(55, 15);
             lbl_ComPort.TabIndex = 2;
             lbl_ComPort.Text = "ComPort";
             // 
-            // textBox1
-            // 
-            textBox1.Location = new Point(6, 6);
-            textBox1.Multiline = true;
-            textBox1.Name = "textBox1";
-            textBox1.ScrollBars = ScrollBars.Vertical;
-            textBox1.Size = new Size(496, 157);
-            textBox1.TabIndex = 0;
-            // 
             // button1
             // 
-            button1.Location = new Point(192, 169);
+            button1.Location = new Point(221, 299);
             button1.Name = "button1";
             button1.Size = new Size(115, 31);
             button1.TabIndex = 1;
@@ -185,12 +198,19 @@
             // 
             // tabPage1
             // 
+            tabPage1.Controls.Add(lbl_Hardware);
+            tabPage1.Controls.Add(btn_AudioProcesses_refresh);
+            tabPage1.Controls.Add(label1);
+            tabPage1.Controls.Add(btn_ComPort_Refresh);
             tabPage1.Controls.Add(cbNR);
+            tabPage1.Controls.Add(ddl_ComPort);
             tabPage1.Controls.Add(lblNoiseReduction);
+            tabPage1.Controls.Add(lbl_ComPort);
             tabPage1.Controls.Add(ddlNoiseReduction);
             tabPage1.Controls.Add(lbl_chat_vol);
             tabPage1.Controls.Add(lbl_game_vol);
             tabPage1.Controls.Add(lbl_absoluteval);
+            tabPage1.Controls.Add(button1);
             tabPage1.Controls.Add(trackBar1);
             tabPage1.Controls.Add(lb_CHAT);
             tabPage1.Controls.Add(lb_AudioProcesses);
@@ -200,16 +220,45 @@
             tabPage1.Location = new Point(4, 5);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
-            tabPage1.Size = new Size(508, 251);
+            tabPage1.Size = new Size(508, 338);
             tabPage1.TabIndex = 0;
             tabPage1.Text = "tabPage1";
             tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // lbl_Hardware
+            // 
+            lbl_Hardware.AutoSize = true;
+            lbl_Hardware.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
+            lbl_Hardware.Location = new Point(6, 230);
+            lbl_Hardware.Name = "lbl_Hardware";
+            lbl_Hardware.Size = new Size(185, 25);
+            lbl_Hardware.TabIndex = 19;
+            lbl_Hardware.Text = "Hardware properties";
+            // 
+            // btn_AudioProcesses_refresh
+            // 
+            btn_AudioProcesses_refresh.BackgroundImage = (Image)resources.GetObject("btn_AudioProcesses_refresh.BackgroundImage");
+            btn_AudioProcesses_refresh.BackgroundImageLayout = ImageLayout.Stretch;
+            btn_AudioProcesses_refresh.Location = new Point(229, 106);
+            btn_AudioProcesses_refresh.Name = "btn_AudioProcesses_refresh";
+            btn_AudioProcesses_refresh.Size = new Size(29, 29);
+            btn_AudioProcesses_refresh.TabIndex = 18;
+            btn_AudioProcesses_refresh.UseVisualStyleBackColor = true;
+            btn_AudioProcesses_refresh.Click += btn_AudioProcesses_refresh_Click;
+            // 
+            // label1
+            // 
+            label1.BackColor = SystemColors.MenuText;
+            label1.Location = new Point(1, 224);
+            label1.Name = "label1";
+            label1.Size = new Size(501, 1);
+            label1.TabIndex = 12;
             // 
             // cbNR
             // 
             cbNR.AutoSize = true;
             cbNR.Enabled = false;
-            cbNR.Location = new Point(185, 226);
+            cbNR.Location = new Point(185, 271);
             cbNR.Name = "cbNR";
             cbNR.Size = new Size(15, 14);
             cbNR.TabIndex = 17;
@@ -218,7 +267,7 @@
             // lblNoiseReduction
             // 
             lblNoiseReduction.AutoSize = true;
-            lblNoiseReduction.Location = new Point(6, 225);
+            lblNoiseReduction.Location = new Point(6, 270);
             lblNoiseReduction.Name = "lblNoiseReduction";
             lblNoiseReduction.Size = new Size(94, 15);
             lblNoiseReduction.TabIndex = 16;
@@ -229,7 +278,7 @@
             ddlNoiseReduction.Enabled = false;
             ddlNoiseReduction.FormattingEnabled = true;
             ddlNoiseReduction.Items.AddRange(new object[] { "Off", "Low", "High" });
-            ddlNoiseReduction.Location = new Point(106, 222);
+            ddlNoiseReduction.Location = new Point(106, 267);
             ddlNoiseReduction.Name = "ddlNoiseReduction";
             ddlNoiseReduction.Size = new Size(74, 23);
             ddlNoiseReduction.TabIndex = 15;
@@ -259,7 +308,7 @@
             // lbl_absoluteval
             // 
             lbl_absoluteval.AutoSize = true;
-            lbl_absoluteval.Location = new Point(234, 197);
+            lbl_absoluteval.Location = new Point(239, 197);
             lbl_absoluteval.Name = "lbl_absoluteval";
             lbl_absoluteval.Size = new Size(19, 15);
             lbl_absoluteval.TabIndex = 12;
@@ -275,6 +324,7 @@
             trackBar1.Name = "trackBar1";
             trackBar1.Size = new Size(324, 45);
             trackBar1.TabIndex = 11;
+            trackBar1.Value = 50;
             // 
             // lb_CHAT
             // 
@@ -343,7 +393,7 @@
             // 
             // lbl_HideTabs
             // 
-            lbl_HideTabs.Location = new Point(77, -3);
+            lbl_HideTabs.Location = new Point(73, -5);
             lbl_HideTabs.Name = "lbl_HideTabs";
             lbl_HideTabs.Size = new Size(280, 23);
             lbl_HideTabs.TabIndex = 11;
@@ -357,7 +407,7 @@
             tabControl1.Location = new Point(73, 12);
             tabControl1.Name = "tabControl1";
             tabControl1.SelectedIndex = 0;
-            tabControl1.Size = new Size(516, 260);
+            tabControl1.Size = new Size(516, 347);
             tabControl1.TabIndex = 7;
             // 
             // btn_log
@@ -387,7 +437,7 @@
             lbl_vertical_line.BackColor = SystemColors.MenuText;
             lbl_vertical_line.Location = new Point(73, 18);
             lbl_vertical_line.Name = "lbl_vertical_line";
-            lbl_vertical_line.Size = new Size(1, 250);
+            lbl_vertical_line.Size = new Size(1, 350);
             lbl_vertical_line.TabIndex = 10;
             // 
             // Form1
@@ -395,7 +445,7 @@
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
-            ClientSize = new Size(593, 274);
+            ClientSize = new Size(593, 356);
             Controls.Add(lbl_HideTabs);
             Controls.Add(lbl_vertical_line);
             Controls.Add(btn_settings);
@@ -454,5 +504,9 @@
         private Label lblNoiseReduction;
         private ComboBox ddlNoiseReduction;
         private CheckBox cbNR;
+        private Button btn_AudioProcesses_refresh;
+        private Label label1;
+        private CheckBox cb_Debug;
+        private Label lbl_Hardware;
     }
 }

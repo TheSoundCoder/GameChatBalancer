@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using AudioControl;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 //using System.Security.Cryptography;
 
@@ -24,6 +25,14 @@ namespace AudioManager
         /// Gets the current master volume in scalar values (percentage)
         /// </summary>
         /// <returns>-1 in case of an error, if successful the value will be between 0 and 100</returns>
+
+        static AudioControl.Form1 MainForm;     //holds a referende to Form1
+        public static void HandOverForm(Form1 f)
+        {
+            MainForm = f;
+        }
+
+
         public static float GetMasterVolume()
         {
             IAudioEndpointVolume masterVol = null;
@@ -564,6 +573,7 @@ namespace AudioManager
                             Guid guid = Guid.Empty;
                             volumeControl = ctl as ISimpleAudioVolume;
                             volumeControl.SetMasterVolume(level / 100, ref guid);
+                            if (MainForm.Debug) { MainForm.SendToLog(cAppName.ToString() + ".Volume=" + level.ToString()); }
                         }
                     }
                     finally

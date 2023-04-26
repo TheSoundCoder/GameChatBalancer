@@ -137,7 +137,7 @@ namespace AudioControl
         private static void sp_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             _serialPort.DataReceived -= new SerialDataReceivedEventHandler(sp_DataReceived);
-            if (MainForm.Debug) { MainForm.SendToLog("Starting continous read."); }
+            //if (MainForm.Debug) { MainForm.SendToLog("Starting continous read."); }
             while (_serialPort.BytesToRead > 0)
             {
                 buffer += _serialPort.ReadExisting();
@@ -149,10 +149,8 @@ namespace AudioControl
                     {
                         //confirmation that NoiseReduction was successfully set
                         MainForm.ConfirmNR();
-                        MainForm.SendToLog(buffer);
                         buffer.Replace("NR=", "");
                         buffer = Regex.Replace(buffer, "NR=.\\r\\n", "");
-                        MainForm.SendToLog(buffer);
                         //buffer = "";
                     }
                     if (buffer != null && buffer != "")
@@ -162,8 +160,8 @@ namespace AudioControl
                         int arrlength = packets1.Length - 1;
                         if (arrlength > 0)
                         {
-                            MainForm.controlVolume(float.Parse(packets1[arrlength - 1]));
                             if (MainForm.Debug) { MainForm.SendToLog("Value: " + packets1[arrlength - 1]); }
+                            MainForm.controlVolume(float.Parse(packets1[arrlength - 1]));
                         }
                         //SetMasterVolume(float.Parse(packets1[arrlength - 1])); }
                         if (buffer.EndsWith("\n"))
@@ -177,7 +175,7 @@ namespace AudioControl
                     }
                 }
             }
-            if (MainForm.Debug) { MainForm.SendToLog("Ending continous read."); }
+            //if (MainForm.Debug) { MainForm.SendToLog("Ending continous read."); }
             _serialPort.DataReceived += new SerialDataReceivedEventHandler(sp_DataReceived);
 
             /*
