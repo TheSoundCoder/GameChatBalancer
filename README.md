@@ -24,7 +24,7 @@ The project consists of two components. A small **systray application** for your
    - User settings are stored automatically and restored during application startup.
 
 # Build Hardware
-Everything you need to build your own GameChatBalancer ist listed in the - [Pricing indication](https://github.com/TheSoundCoder/AudioControl#Pricing indication)
+Everything you need to build your own GameChatBalancer ist listed in the [Pricing indication](https://github.com/TheSoundCoder/AudioControl#pricing-indication).
 - The potentiometer is connected to an analog pin of your Arduino (or compatible) board. It is powered from the board's 5V (or 3.3V for a Seeed board) output (see schematic)
   - GND = black
   - 5V / 3.3V = red
