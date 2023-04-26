@@ -49,8 +49,8 @@ Icons from https://icon-icons.com:
 Designer | Iconpack | Icon Name | Image
 ---------|----------|---------|---------
 Perpixel | Mobile Basic Vol. 1 | conversation Icon | <img src="https://github.com/TheSoundCoder/AudioControl/blob/master/AudioControl/Resources/ico_chat3.png" width="48">
-Iconicons | Icons - line | Game, controller icon | <img src="https://github.com/TheSoundCoder/AudioControl/blob/master/AudioControl/Resources/ico_game2.png" width="48">
-Yoyon Pujiyono | App User Interface | Equalizer | <img src="https://github.com/TheSoundCoder/AudioControl/blob/master/assets/equalizer.png" width="48">
+Iconicons | Icons - line | Game, controller icon | <img src="https://cdn.icon-icons.com/icons2/3831/PNG/512/game_controller_icon_234136.png" width="48">
+Yoyon Pujiyono | App User Interface | Equalizer | <img src="https://cdn.icon-icons.com/icons2/1997/PNG/512/equalizer_filter_filtering_mixer_sorting_icon_123287.png" width="48">
 Steve Shoger | Zondicons | Bug Icon | <img src="https://cdn.icon-icons.com/icons2/2065/PNG/512/bug_icon_125029.png" width="48">
 
 
