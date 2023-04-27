@@ -143,7 +143,7 @@
   <data name="btn_ComPort_Refresh.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vwAADr8BOAVTJAAABCZJREFUaEPtmrtPFFEYxXdn0FjYiFbLH4CQaDSYgP+ClVLhoxIfiRZCq4WFlSVq
+        vAAADrwBlbxySQAABCZJREFUaEPtmrtPFFEYxXdn0FjYiFbLH4CQaDSYgP+ClVLhoxIfiRZCq4WFlSVq
         YmWljZUl+Iq9JJLYLtRorFQwkQX0d+behd3hu8vsY4ZmT3Kyu/Od7zH33rl3du6UeoShqBRdLZfiJ3x+
         iErxMvwZleNNWEu+l+Iqtvdo5qTFp+JcDw7HKWSWwhbhVlwe+NcO5eN8oxliDbqQxaBCKz4l+bpVWCck
         1pp6T7FdinxwmNa6r2RWEb0gsX8rB7kOuZS9wyjBl6ykeZBcX8h50qXuGvEkAX9ZifKkeoPcF30RnYHu
@@ -167,7 +167,7 @@
   <data name="btn_AudioProcesses_refresh.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vgAADr4B6kKxwAAABCZJREFUaEPtmrtPFFEYxXdn0FjYiFbLH4CQaDSYgP+ClVLhoxIfiRZCq4WFlSVq
+        vAAADrwBlbxySQAABCZJREFUaEPtmrtPFFEYxXdn0FjYiFbLH4CQaDSYgP+ClVLhoxIfiRZCq4WFlSVq
         YmWljZUl+Iq9JJLYLtRorFQwkQX0d+behd3hu8vsY4ZmT3Kyu/Od7zH33rl3du6UeoShqBRdLZfiJ3x+
         iErxMvwZleNNWEu+l+Iqtvdo5qTFp+JcDw7HKWSWwhbhVlwe+NcO5eN8oxliDbqQxaBCKz4l+bpVWCck
         1pp6T7FdinxwmNa6r2RWEb0gsX8rB7kOuZS9wyjBl6ykeZBcX8h50qXuGvEkAX9ZifKkeoPcF30RnYHu

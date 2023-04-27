@@ -45,6 +45,7 @@
             lbl_ComPort = new Label();
             button1 = new Button();
             tabPage1 = new TabPage();
+            cb_invert = new CheckBox();
             lbl_Hardware = new Label();
             btn_AudioProcesses_refresh = new Button();
             label1 = new Label();
@@ -198,6 +199,7 @@
             // 
             // tabPage1
             // 
+            tabPage1.Controls.Add(cb_invert);
             tabPage1.Controls.Add(lbl_Hardware);
             tabPage1.Controls.Add(btn_AudioProcesses_refresh);
             tabPage1.Controls.Add(label1);
@@ -225,11 +227,22 @@
             tabPage1.Text = "tabPage1";
             tabPage1.UseVisualStyleBackColor = true;
             // 
+            // cb_invert
+            // 
+            cb_invert.AutoSize = true;
+            cb_invert.Location = new Point(274, 269);
+            cb_invert.Name = "cb_invert";
+            cb_invert.Size = new Size(56, 19);
+            cb_invert.TabIndex = 20;
+            cb_invert.Text = "Invert";
+            cb_invert.UseVisualStyleBackColor = true;
+            cb_invert.CheckedChanged += cb_invert_CheckedChanged;
+            // 
             // lbl_Hardware
             // 
             lbl_Hardware.AutoSize = true;
             lbl_Hardware.Font = new Font("Segoe UI", 14.25F, FontStyle.Regular, GraphicsUnit.Point);
-            lbl_Hardware.Location = new Point(6, 230);
+            lbl_Hardware.Location = new Point(6, 228);
             lbl_Hardware.Name = "lbl_Hardware";
             lbl_Hardware.Size = new Size(185, 25);
             lbl_Hardware.TabIndex = 19;
@@ -239,7 +252,7 @@
             // 
             btn_AudioProcesses_refresh.BackgroundImage = (Image)resources.GetObject("btn_AudioProcesses_refresh.BackgroundImage");
             btn_AudioProcesses_refresh.BackgroundImageLayout = ImageLayout.Stretch;
-            btn_AudioProcesses_refresh.Location = new Point(229, 106);
+            btn_AudioProcesses_refresh.Location = new Point(229, 101);
             btn_AudioProcesses_refresh.Name = "btn_AudioProcesses_refresh";
             btn_AudioProcesses_refresh.Size = new Size(29, 29);
             btn_AudioProcesses_refresh.TabIndex = 18;
@@ -249,7 +262,7 @@
             // label1
             // 
             label1.BackColor = SystemColors.MenuText;
-            label1.Location = new Point(1, 224);
+            label1.Location = new Point(1, 218);
             label1.Name = "label1";
             label1.Size = new Size(501, 1);
             label1.TabIndex = 12;
@@ -308,7 +321,7 @@
             // lbl_absoluteval
             // 
             lbl_absoluteval.AutoSize = true;
-            lbl_absoluteval.Location = new Point(239, 197);
+            lbl_absoluteval.Location = new Point(234, 185);
             lbl_absoluteval.Name = "lbl_absoluteval";
             lbl_absoluteval.Size = new Size(19, 15);
             lbl_absoluteval.TabIndex = 12;
@@ -319,7 +332,7 @@
             // trackBar1
             // 
             trackBar1.Enabled = false;
-            trackBar1.Location = new Point(87, 167);
+            trackBar1.Location = new Point(81, 154);
             trackBar1.Maximum = 100;
             trackBar1.Name = "trackBar1";
             trackBar1.Size = new Size(324, 45);
@@ -508,5 +521,6 @@
         private Label label1;
         private CheckBox cb_Debug;
         private Label lbl_Hardware;
+        private CheckBox cb_invert;
     }
 }

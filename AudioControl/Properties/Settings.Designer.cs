@@ -70,5 +70,17 @@ namespace AudioControl.Properties {
                 this["NoiseReduction"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool Invert {
+            get {
+                return ((bool)(this["Invert"]));
+            }
+            set {
+                this["Invert"] = value;
+            }
+        }
     }
 }

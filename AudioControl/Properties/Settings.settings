@@ -14,5 +14,8 @@
     <Setting Name="NoiseReduction" Type="System.String" Scope="User">
       <Value Profile="(Default)">High</Value>
     </Setting>
+    <Setting Name="Invert" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

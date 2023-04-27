@@ -51,6 +51,7 @@ namespace AudioControl
             fill_lb_CHAT();
             fill_lb_AudioProcesses();
             fill_ddl_NoiseReduction();
+            cb_invert.Checked = Properties.Settings.Default.Invert;
             if (Properties.Settings.Default.ComPort == "") { Properties.Settings.Default.ComPort = "Auto"; }
             fill_ddl_ComPort();
 
@@ -162,6 +163,7 @@ namespace AudioControl
         public void controlVolume(float volume)
         {
             //if (Debug) { textBox1.AppendText(volume.ToString() + "\r\n"); }
+            if (cb_invert.Checked) { volume = 100 - volume; }
             systrayVolume.Text = volume.ToString();
             trackBar1.Value = (int)volume;
             lbl_absoluteval.Text = volume.ToString();
@@ -379,6 +381,19 @@ namespace AudioControl
         private void cb_Debug_CheckedChanged(object sender, EventArgs e)
         {
             if (cb_Debug.Checked == true) { debug = true; } else { debug = false; }
+        }
+
+        private void cb_invert_CheckedChanged(object sender, EventArgs e)
+        {
+            Properties.Settings.Default.Invert = cb_invert.Checked;
+            if (cb_invert.Checked == true)
+            {
+                controlVolume(float.Parse(lbl_absoluteval.Text));
+            }
+            else
+            {
+                controlVolume(100 - float.Parse(lbl_absoluteval.Text));
+            }
         }
     }
 }
