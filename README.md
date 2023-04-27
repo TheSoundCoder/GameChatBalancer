@@ -30,6 +30,7 @@ The project consists of two components. A small **systray application** for your
    - **Auto-detect** the Arduino based hardware
    - The application recognises when the hardware is removed and will automatically reconnect when plugged in again (**USB event based**)
    - User settings are stored automatically and restored during application startup.
+   - Invert the values received by the hardware in case your wiring is mixed up.
 
 # Build Hardware
 Everything you need to build your own GameChatBalancer ist listed in the [Pricing indication](https://github.com/TheSoundCoder/AudioControl#pricing-indication).
