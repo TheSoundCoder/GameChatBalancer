@@ -1,9 +1,9 @@
-int analogPin = A10; // potentiometer wiper (middle terminal) connected to analog pin 3
-                    // outside leads to ground and +5V
+int analogPin = A0; // potentiometer wiper (middle terminal) connected to analog pin 0
+
 int val1 = 0;  // variable to store the value read
 int val1_old = 0;
 String incomingMsg = "";
-int intNRLevel = 3; //the higher the number, the greate the noise reduction; 0=disabled
+int intNRLevel = 3; //the higher the number, the greate the noise reduction; 0=disabled. DO NOT CHANGE. This can be modified using the Systray application
 int arrNoiseReduction[3] = {-1,-1,-1}; //Array used for NoiseReduction
 //String message = "";
 
@@ -57,17 +57,13 @@ void Incoming(){
   if (Serial.available() > 0) {
     // read the incoming byte:
     incomingMsg = Serial.readString();    
-    if (incomingMsg.indexOf("syn")>-1){
-      Serial.println("ack");
-    } else if (incomingMsg.indexOf("get")>-1){
-      Serial.println(String(val1/2));
-    } else if (incomingMsg.indexOf("NR=")>-1){
+    if (incomingMsg.indexOf("syn")>-1){Serial.println("ack");}  //used to autodetect the device
+    if (incomingMsg.indexOf("get")>-1){Serial.println(String(val1/2));} //send current value on request
+    if (incomingMsg.indexOf("NR=")>-1){ //Acknowledge Noise reduction set on request
       intNRLevel = incomingMsg.substring(3,4).toInt();
       Serial.println("NR=" + String(intNRLevel));
       //Set intNRLevel
-    } else {
     }
-
   }
 }
 
