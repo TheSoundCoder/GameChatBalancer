@@ -90,6 +90,10 @@ CoreUI | CoreUI Free | Equalizer Icon | <img src="https://cdn.icon-icons.com/ico
 Steve Shoger | Zondicons | Bug Icon | <img src="https://cdn.icon-icons.com/icons2/2065/PNG/512/bug_icon_125029.png" width="48">
 Yannick | General Icons | Refresh Icon | <img src="https://cdn.icon-icons.com/icons2/562/PNG/512/refresh-page-arrow-button_icon-icons.com_53909.png" width="48">
 
+# Roadmap
+Depending on my free time I would like to make the complete setup flexible so that additional potentiometers are supported. Those can then be used to (e.g.):
+- Control the master volume of your PC
+- Assign single or multiple applications to a potentiometer
 
 # Special Thanks
 First of all I would like to thank **sverrirs for his Gist AudioManager.cs** which accelerated the development and for sure saved me from some pain during the development. I used and modified AudioManager.cs to my needs so that GameChatBalancer is able to adjust the volume of more than one application by application name in one single call.
