@@ -30,6 +30,7 @@ The project consists of two components. A small **systray application** for your
    - **Auto-detect** the Arduino based hardware
    - The application recognises when the hardware is removed and will automatically reconnect when plugged in again (**USB event based**)
    - User settings are stored automatically and restored during application startup.
+   - Invert the values received by the hardware in case your wiring is mixed up.
 
 # Build Hardware
 Everything you need to build your own GameChatBalancer ist listed in the [Pricing indication](https://github.com/TheSoundCoder/AudioControl#pricing-indication).
@@ -64,22 +65,37 @@ Copper wire isolated|1,50|https://www.berrybase.de/en/kupferschaltdraht-isoliert
 If you use the listed microcontroller you will additionally need a **USB-C cable**.
 
 ## Housing
-You can use anything as a "house" for your controller. I decided to design and 3D-print one by myself. If you like the "design" you can download it [here](https://github.com/TheSoundCoder/AudioControl/tree/master/assets/3d-model).
+You can use anything as a housing for your controller - even a matchbox if you do not have a 3D-Printer.
+
+I decided to design and 3D-print one by myself. If you like the "design" you can download either the STL files or GCODE files [here](https://github.com/TheSoundCoder/AudioControl/tree/master/assets/3d-model).
+
+<img src="https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer3.jpg" height="300"> <img src="https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer2.jpg" height="300">
 
 # Installation
 ## Arduino
 
 ## Systray application
 
+# Manual
+
+# Pictures / Video
+
 # Licences
-Icons from https://icon-icons.com:
+Icons used under [Creativecommons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/legalcode) from https://icon-icons.com:
 Designer | Iconpack | Icon Name | Image
 ---------|----------|---------|---------
 Perpixel | Mobile Basic Vol. 1 | conversation Icon | <img src="https://github.com/TheSoundCoder/AudioControl/blob/master/AudioControl/Resources/ico_chat3.png" width="48">
 Iconicons | Icons - line | Game, controller icon | <img src="https://cdn.icon-icons.com/icons2/3831/PNG/512/game_controller_icon_234136.png" width="48">
-Yoyon Pujiyono | App User Interface | Equalizer | <img src="https://cdn.icon-icons.com/icons2/1997/PNG/512/equalizer_filter_filtering_mixer_sorting_icon_123287.png" width="48">
+CoreUI | CoreUI Free | Equalizer Icon | <img src="https://cdn.icon-icons.com/icons2/2385/PNG/512/equalizer_icon_144361.png" width="48">
 Steve Shoger | Zondicons | Bug Icon | <img src="https://cdn.icon-icons.com/icons2/2065/PNG/512/bug_icon_125029.png" width="48">
+Yannick | General Icons | Refresh Icon | <img src="https://cdn.icon-icons.com/icons2/562/PNG/512/refresh-page-arrow-button_icon-icons.com_53909.png" width="48">
 
+# Roadmap
+Depending on my free time I would like to make the complete setup flexible so that additional potentiometers are supported. Those can then be used to (e.g.):
+- Control the master volume of your PC
+- Assign single or multiple applications to a potentiometer
+
+From controlling the audio volume this is very easy to implement. I am currently thinking of how the Systray UI and configuration of the Arduino can be done flexible so that no new sketch needs to be uploaded.
 
 # Special Thanks
 First of all I would like to thank **sverrirs for his Gist AudioManager.cs** which accelerated the development and for sure saved me from some pain during the development. I used and modified AudioManager.cs to my needs so that GameChatBalancer is able to adjust the volume of more than one application by application name in one single call.
@@ -95,3 +111,4 @@ First of all I would like to thank **sverrirs for his Gist AudioManager.cs** whi
 - [ ] Screen overlay to see volume adjustments Ingame
 https://github.com/michel-pi/GameOverlay.Net
 - [ ] Migrate to modern UI
+    - https://social.msdn.microsoft.com/Forums/es-ES/65a2064f-2d6a-4ecc-8076-60c72cb7070d/wpf-c-save-controls-created-at-runtime?forum=wpf
