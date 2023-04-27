@@ -111,4 +111,4 @@ First of all I would like to thank **sverrirs for his Gist AudioManager.cs** whi
 - [ ] Screen overlay to see volume adjustments Ingame
 https://github.com/michel-pi/GameOverlay.Net
 - [ ] Migrate to modern UI
-- [](https://social.msdn.microsoft.com/Forums/es-ES/65a2064f-2d6a-4ecc-8076-60c72cb7070d/wpf-c-save-controls-created-at-runtime?forum=wpf)
+- https://social.msdn.microsoft.com/Forums/es-ES/65a2064f-2d6a-4ecc-8076-60c72cb7070d/wpf-c-save-controls-created-at-runtime?forum=wpf
