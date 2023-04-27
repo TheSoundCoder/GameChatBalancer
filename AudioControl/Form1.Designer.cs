@@ -468,7 +468,7 @@
             MaximizeBox = false;
             Name = "Form1";
             ShowInTaskbar = false;
-            Text = "AudioControl - Settings";
+            Text = "GameChat Balancer - Settings";
             WindowState = FormWindowState.Minimized;
             Load += Form1_Load;
             Move += Form1_Move;
