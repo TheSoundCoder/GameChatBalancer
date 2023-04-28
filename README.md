@@ -111,7 +111,7 @@ Clicking on **Show** will open the GUI so that you can configure for which appli
 
 <div style:"position:relative">
   <p>Hello</p>
-  <div style="position:absolute; width:20px; height:20px; left:0px; top:0px; background-color:red; opacity:0.5"></div>
+  <div style="background-color:red; opacity:0.5"></div>
 </div>
 
 
