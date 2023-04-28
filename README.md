@@ -69,7 +69,7 @@ You can use anything as a housing for your controller - even a matchbox if you d
 
 I decided to design and 3D-print one by myself. If you like the "design" you can download either the STL files or GCODE files [here](https://github.com/TheSoundCoder/AudioControl/tree/master/assets/3d-model).
 
-<img src="https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer3.jpg" height="300"> <img src="https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer2.jpg" height="300">
+<img src="https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer3.jpg" height="300"> <img src="https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer2.jpg" height="300" style="fillColor: 'ff0000'">
 
 # Installation
 
