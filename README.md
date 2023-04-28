@@ -104,7 +104,26 @@ Clicking on **Show** will open the GUI so that you can configure for which appli
 
 ![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GCB_settings.png)
 
+## Settings
+You can set all needed options to make GameChatBalancer work on the settings page. 
+### Hardware properties
+
+### Audio setup
+
+
+
+## Debug
+
 # Pictures / Video
+
+See the application in action:
+
+https://user-images.githubusercontent.com/130736237/235218694-252510ab-6273-4d05-bc87-e7d56919cefa.mp4
+
+This is how it look like in the Windows Audio mixer:
+
+https://user-images.githubusercontent.com/130736237/235218894-d49eed7c-69e4-4d56-9448-dae65230d700.mp4
+
 
 # Licences
 Icons used under [Creativecommons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/legalcode) from https://icon-icons.com:
