@@ -105,7 +105,9 @@ Clicking on **Show** will open the GUI so that you can configure for which appli
 ![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GCB_settings.png)
 
 ## Settings
-You can set all needed options to make GameChatBalancer work on the settings page. 
+You can fully control and customize GameChatBalancer to your needs in the settings area.
+If your DIY hardware is connected to the PC GameChatBalancer should automatically detect it and connect to it. 
+
 ### Hardware properties
 
 ### Audio setup
