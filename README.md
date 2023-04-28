@@ -106,7 +106,7 @@ Clicking on **Show** will open the GUI so that you can configure for which appli
 
 # Pictures / Video
 ![](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/assets/GCBalancer.mp4)
-
+[![Watch the video](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GCB_settings.png)](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/assets/GCBalancer.mp4)
 
 
 <div style:"position:relative">
