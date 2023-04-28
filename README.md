@@ -106,8 +106,6 @@ Clicking on **Show** will open the GUI so that you can configure for which appli
 
 # Pictures / Video
 
-https://github.com/TheSoundCoder/GameChatBalancer/blob/master/assets/GCBalancer.mp4
-
 # Licences
 Icons used under [Creativecommons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/legalcode) from https://icon-icons.com:
 Designer | Iconpack | Icon Name | Image
