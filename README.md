@@ -106,10 +106,15 @@ Clicking on **Show** will open the GUI so that you can configure for which appli
 
 # Pictures / Video
 ![](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/assets/GCBalancer.mp4)
-<p><div style:"position:relative">
+
+
+
+<div style:"position:relative">
   <div style="position:absolute; width:20px; height:20px; left:0px; top:0px; background-color:red; opacity:0.5"/>
 </div>
-<img src="https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GCB_settings.png"></p>
+<img src="https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GCB_settings.png">
+
+
 
 # Licences
 Icons used under [Creativecommons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/legalcode) from https://icon-icons.com:
