@@ -107,7 +107,7 @@ Clicking on **Show** will open the GUI so that you can configure for which appli
 # Pictures / Video
 ![](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/assets/GCBalancer.mp4)
 <img src="https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GCB_settings.png" usemap="#mymap">
-<map name="mymap"><area shape="rect" coords="34,44,270,350" style="fillColor: 'ff0000'></map>
+<map name="mymap"><area shape="rect" coords="34,44,270,350" style="fillColor: 'ff0000'"></map>
 
 # Licences
 Icons used under [Creativecommons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/legalcode) from https://icon-icons.com:
