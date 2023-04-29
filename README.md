@@ -69,16 +69,63 @@ You can use anything as a housing for your controller - even a matchbox if you d
 
 I decided to design and 3D-print one by myself. If you like the "design" you can download either the STL files or GCODE files [here](https://github.com/TheSoundCoder/AudioControl/tree/master/assets/3d-model).
 
-<img src="https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer3.jpg" height="300"> <img src="https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer2.jpg" height="300">
+<img src="https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer3.jpg" height="300"> <img src="https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer2.jpg" height="300" style="fillColor: 'ff0000'">
 
 # Installation
+
 ## Arduino
+**Prerequisite**: You should have the **Arduino IDE** installed on your PC. You can download it [here](https://www.arduino.cc/en/software).
+- Download the file **GCBalancer.ino** from the latest release of this project (you should find it at the right side under "Releases").
+- Open the downloaded sketch AudioControl.ino with the installed Arduino IDE
+- Follow the instructions "How to upload a sketch with the Arduino IDE 2" from the [Arduino website] (https://docs.arduino.cc/software/ide-v2/tutorials/getting-started/ide-v2-uploading-a-sketch)
+
+### Test
+After uploading the sketch, open the serial monitor of thr Arduino IDE by choosing *Tools* ->  *Serial Monitor* (or by pressing `strg` + `shift` + `M`).
+
+If you turn the potentiometer (or move the slider) you should see **values between 0 and 100** coming in. If this is true: Congratulations! Your device is working as it should.
+
+**Close the serial monitor.** Keeping it open might prevent you from uploading a sketch in the future.
 
 ## Systray application
+- Download the file **GCBalancer_win.zip** from the latest release of this project (you should find it at the right side under "Releases").
+- Store the content of the ZIP file in any folder of your choice.
+- Run **GCBalancer.exe** from the folder above.
+- **Optional**: Add GCBalancer.exe to **Autostart** if you want to run it at system startup.
+  - Press `Win` + `R` to open the Run menu
+  - Type shell:startup and press enter
+  - Right click and create a new link to GCBalancer.exe
 
 # Manual
+The application will start in the systray:
+
+![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GCB_Systray_Expanded.png)
+
+Clicking on **Show** will open the GUI so that you can configure for which applications you want to modify the volume:
+
+![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GCB_settings.png)
+
+## Settings
+You can fully control and customize GameChatBalancer to your needs in the settings area.
+If your DIY hardware is connected to the PC GameChatBalancer should automatically detect it and connect to it. 
+
+### Hardware properties
+
+### Audio setup
+
+
+
+## Debug
 
 # Pictures / Video
+
+See the application in action:
+
+https://user-images.githubusercontent.com/130736237/235218694-252510ab-6273-4d05-bc87-e7d56919cefa.mp4
+
+This is how it look like in the Windows Audio mixer:
+
+https://user-images.githubusercontent.com/130736237/235218894-d49eed7c-69e4-4d56-9448-dae65230d700.mp4
+
 
 # Licences
 Icons used under [Creativecommons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/legalcode) from https://icon-icons.com:
@@ -106,6 +153,12 @@ First of all I would like to thank **sverrirs for his Gist AudioManager.cs** whi
   - [x] Customizable via C# application
   - [x] Set / Get value during startup of the application
   - [ ] [Optional] Auto-Adjust mode for noise reduction
+- COM handling modifizieren
+  - Liste aktualisieren wenn USB event
+  - aktuelle Auswahl hinzufügen
+  - reconnect
+  - IsInitialized valiable
+  - Reconnecting variable
 
 ## Optional
 - [ ] Screen overlay to see volume adjustments Ingame
