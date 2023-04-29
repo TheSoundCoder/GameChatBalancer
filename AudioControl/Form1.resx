@@ -140,30 +140,6 @@
         BIWhEAiFoSgUhaEkJIWhRCKFoXQuhaF0LoU=
 </value>
   </data>
-  <data name="btn_ComPort_Refresh.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vAAADrwBlbxySQAABCZJREFUaEPtmrtPFFEYxXdn0FjYiFbLH4CQaDSYgP+ClVLhoxIfiRZCq4WFlSVq
-        YmWljZUl+Iq9JJLYLtRorFQwkQX0d+behd3hu8vsY4ZmT3Kyu/Od7zH33rl3du6UeoShqBRdLZfiJ3x+
-        iErxMvwZleNNWEu+l+Iqtvdo5qTFp+JcDw7HKWSWwhbhVlwe+NcO5eN8oxliDbqQxaBCKz4l+bpVWCck
-        1pp6T7FdinxwmNa6r2RWEb0gsX8rB7kOuZS9wyjBl6ykeZBcX8h50qXuGvEkAX9ZifKkeoPcF30RnYHu
-        vEWgTStBmuhWGMfP8LmC61l4HGooDEBdpKexTfnrp8rstG3FaaRy43MHXxPYHvqveyFHArScXbDXKOgV
-        8glYThyzYxzfl8TYSMdtJPZt6yRUvBrB/0wjGTYtW54ACwhHnL4rDBNrnpjBHlEt1HTJ63eKl80faoIu
-        2N/pIHVi+0OAm17bMxBzmtjBqVk1IRtJiqdX6sed9y6YKsOzDbbvaM45aS4YI8eqlVvE9iN97Xg/B87u
-        fqOxkb74Xk1trcCQCp9Emt4nQQVHc5Hi+Dr2PFs+DfVEpgXT6zWFxE8tgZjHmN8P5LzOSew71Xq5bsxC
-        rR+99ZrCQU1frZoa6YXRrGUkQA1zEeN+D6ipabYJ0YvjRcvoF6nCkRSfYaUWpefPiL3iYjsvQZFop3hR
-        DlctAye1Qrx2bw+6QtZh00jNPnOWgePPfNxC0G7L1ynHD5ZBPeNj545Oixd9iD766KOPg4IWjs4ZvSPE
-        URcpP5DnSiD/x5I1t2YhC91rYh92KfJF6Faf4086OgEcnxM3duFzR5nWXrHqSBZbyxCiVkuKf+QDF4UJ
-        a5XmpLawDWU+ARz0kOmei1kcaLBXgXoWE4FlTBPxX4q/ljgUi5Pkrtk1RbOJwjI2Ui2P6kIiLhgUuRCo
-        SQ8ZTiQiS5AmgaYTcYEg5w0KNe9QGVa7t/qWIE1/xmPOoxCcU85ALWvYdzdCLJFFHFeRF/EHX+P+m1WD
-        SM888DqHvYLwQ11/Enn2hFq+RfHxEprmxbNZEH3i0ATC4IYGtvU8rgk/5v9YOUVserg76tQN2BVEb/h5
-        xB+9hEOrntB9yDzCYafvCnrivKCYVi5RtVDTpNc3A4FW1xd81U7KDgiaZYNjA9+XyMdhO08wpJ3QIkUM
-        c56vUzVQy13nZoAgj5MPA/4ksm4xVYmlje4pXE/BY1CNom0mbTGdwXYZjbaYdG+z75945cbnNr7dIBlO
-        wQ2PEPFpuvW1NK2onMFh0wEYp4Vus2q22XvBdolDdKc2utvujawk9ho5NM/n+j9Drxow1nv6qsG6rg3F
-        dimKwSCtNUPyz7Cblz10V6k95QNFhUL0uo1epdHrNlWo121qkJkked1mWTY/U+mx5ZBz7Qal0n/z/16S
-        JMAFuwAAAABJRU5ErkJggg==
-</value>
-  </data>
   <data name="btn_AudioProcesses_refresh.BackgroundImage" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO

@@ -44,7 +44,7 @@ namespace AudioControl
             string answer = "";
             foreach (string ComPort in SerialPort.GetPortNames())
             {
-                if (MainForm.Debug) { MainForm.SendToLog("Trying Port " + ComPort); }
+                MainForm.SendToLog("Trying Port " + ComPort);
                 //_serialPort = new SerialPort();
                 if (_serialPort.IsOpen) { CloseComPort(); }
                 _serialPort.PortName = ComPort;//Set your board COM
@@ -60,12 +60,12 @@ namespace AudioControl
                         _serialPort.WriteLine("syn");
                         System.Threading.Thread.Sleep(WaitTime);
                         answer = _serialPort.ReadExisting();
-                        if (MainForm.Debug) { MainForm.SendToLog("Answer after 1500ms: " + answer); }
+                        MainForm.SendToLog("Answer after 1500ms: " + answer.Replace("\r\n",""));
                     }
                 }
                 catch
                 {
-                    if (MainForm.Debug) { MainForm.SendToLog(ComPort + " not available."); }
+                    MainForm.SendToLog(ComPort + " not available.");
                 }
                 finally { if (_serialPort.IsOpen) { CloseComPort(); } }
                 if (answer.IndexOf("ack") > -1)
@@ -106,13 +106,14 @@ namespace AudioControl
                 try
                 {
                     _serialPort.Open();
-                    if (MainForm.Debug) { MainForm.SendToLog("Connected to: " + cComPort); }
+                    MainForm.SendToLog("Connected to: " + cComPort);
                     RetVal = true;
                     MainForm.SystrayCom = cComPort;
+                    MainForm.Connected = true;
                 }
                 catch
                 {
-                    if (MainForm.Debug) { MainForm.SendToLog("Connection failed"); }
+                    MainForm.SendToLog("Connection failed");
                 }
                 finally { }
             }
@@ -126,11 +127,26 @@ namespace AudioControl
             _serialPort.DataReceived -= new SerialDataReceivedEventHandler(sp_DataReceived); //event based reading
             buffer = "";
             MainForm.SystrayCom = "disconnected";
+            MainForm.Connected = false;
         }
 
         public static void sp_SendData(string Data)
         {
             _serialPort.WriteLine(Data);
+        }
+
+        private static void sp_Reconnect()
+        {
+            CloseComPort();
+            MainForm.Initialized = false;       //if not set to false, Fill_ddl_ComPort() will also Open the connection -> suppress
+            MainForm.Fill_ddl_ComPort();        //refill DDL for ComPort selection
+            MainForm.Initialized = true;
+            OpenComPort();
+            if (sp_connected())
+            {
+                sp_SendData("get");
+                MainForm.Send_NoiseReducion_Value();
+            }
         }
 
         
@@ -149,6 +165,7 @@ namespace AudioControl
                     {
                         //confirmation that NoiseReduction was successfully set
                         MainForm.ConfirmNR();
+                        MainForm.SendToLog("Noise reduction confirmed by Hardware.");
                         buffer.Replace("NR=", "");
                         buffer = Regex.Replace(buffer, "NR=.\\r\\n", "");
                         //buffer = "";
@@ -248,18 +265,18 @@ namespace AudioControl
             {
                 MainForm.SendToLog("A USB device was disconnected.");
                 //Do I need to do anything? Yes. Check whether the connection is still open
+                sp_Reconnect();
             }
             else if (e.NewEvent.SystemProperties["__CLASS"].Value.ToString() == "__InstanceCreationEvent")
             {
                 MainForm.SendToLog("A USB device was connected.");
+                if (!MainForm.Connected)
+                {
+                    sp_Reconnect();
+                }
             }
 
-            CloseComPort();
-            OpenComPort();
-            if (sp_connected()) {
-                sp_SendData("get");   
-                MainForm.Send_NoiseReducion_Value();
-            }
+
             /*
             ManagementBaseObject instance = (ManagementBaseObject)e.NewEvent["TargetInstance"];
             foreach (var property in instance.Properties)

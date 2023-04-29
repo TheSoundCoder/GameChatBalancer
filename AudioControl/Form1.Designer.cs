@@ -40,11 +40,10 @@
             tabPage2 = new TabPage();
             cb_Debug = new CheckBox();
             textBox1 = new TextBox();
-            btn_ComPort_Refresh = new Button();
             ddl_ComPort = new ComboBox();
             lbl_ComPort = new Label();
-            button1 = new Button();
             tabPage1 = new TabPage();
+            cb_connected = new CheckBox();
             cb_invert = new CheckBox();
             lbl_Hardware = new Label();
             btn_AudioProcesses_refresh = new Button();
@@ -89,6 +88,7 @@
             systrayCom.Name = "systrayCom";
             systrayCom.ReadOnly = true;
             systrayCom.Size = new Size(100, 16);
+            systrayCom.Text = "Not connected";
             // 
             // systrayVolume
             // 
@@ -157,21 +157,10 @@
             textBox1.Size = new Size(496, 301);
             textBox1.TabIndex = 0;
             // 
-            // btn_ComPort_Refresh
-            // 
-            btn_ComPort_Refresh.BackgroundImage = (Image)resources.GetObject("btn_ComPort_Refresh.BackgroundImage");
-            btn_ComPort_Refresh.BackgroundImageLayout = ImageLayout.Stretch;
-            btn_ComPort_Refresh.Location = new Point(186, 299);
-            btn_ComPort_Refresh.Name = "btn_ComPort_Refresh";
-            btn_ComPort_Refresh.Size = new Size(29, 29);
-            btn_ComPort_Refresh.TabIndex = 4;
-            btn_ComPort_Refresh.UseVisualStyleBackColor = true;
-            btn_ComPort_Refresh.Click += btn_ComPort_Refresh_Click;
-            // 
             // ddl_ComPort
             // 
             ddl_ComPort.FormattingEnabled = true;
-            ddl_ComPort.Location = new Point(106, 304);
+            ddl_ComPort.Location = new Point(106, 269);
             ddl_ComPort.Name = "ddl_ComPort";
             ddl_ComPort.Size = new Size(74, 23);
             ddl_ComPort.Sorted = true;
@@ -181,29 +170,19 @@
             // lbl_ComPort
             // 
             lbl_ComPort.AutoSize = true;
-            lbl_ComPort.Location = new Point(6, 307);
+            lbl_ComPort.Location = new Point(6, 272);
             lbl_ComPort.Name = "lbl_ComPort";
             lbl_ComPort.Size = new Size(55, 15);
             lbl_ComPort.TabIndex = 2;
             lbl_ComPort.Text = "ComPort";
             // 
-            // button1
-            // 
-            button1.Location = new Point(221, 299);
-            button1.Name = "button1";
-            button1.Size = new Size(115, 31);
-            button1.TabIndex = 1;
-            button1.Text = "(Re-) Connect";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += btn_connect_Click;
-            // 
             // tabPage1
             // 
+            tabPage1.Controls.Add(cb_connected);
             tabPage1.Controls.Add(cb_invert);
             tabPage1.Controls.Add(lbl_Hardware);
             tabPage1.Controls.Add(btn_AudioProcesses_refresh);
             tabPage1.Controls.Add(label1);
-            tabPage1.Controls.Add(btn_ComPort_Refresh);
             tabPage1.Controls.Add(cbNR);
             tabPage1.Controls.Add(ddl_ComPort);
             tabPage1.Controls.Add(lblNoiseReduction);
@@ -212,7 +191,6 @@
             tabPage1.Controls.Add(lbl_chat_vol);
             tabPage1.Controls.Add(lbl_game_vol);
             tabPage1.Controls.Add(lbl_absoluteval);
-            tabPage1.Controls.Add(button1);
             tabPage1.Controls.Add(trackBar1);
             tabPage1.Controls.Add(lb_CHAT);
             tabPage1.Controls.Add(lb_AudioProcesses);
@@ -227,10 +205,21 @@
             tabPage1.Text = "tabPage1";
             tabPage1.UseVisualStyleBackColor = true;
             // 
+            // cb_connected
+            // 
+            cb_connected.AutoSize = true;
+            cb_connected.Enabled = false;
+            cb_connected.Location = new Point(185, 271);
+            cb_connected.Name = "cb_connected";
+            cb_connected.Size = new Size(84, 19);
+            cb_connected.TabIndex = 21;
+            cb_connected.Text = "Connected";
+            cb_connected.UseVisualStyleBackColor = true;
+            // 
             // cb_invert
             // 
             cb_invert.AutoSize = true;
-            cb_invert.Location = new Point(274, 269);
+            cb_invert.Location = new Point(406, 269);
             cb_invert.Name = "cb_invert";
             cb_invert.Size = new Size(56, 19);
             cb_invert.TabIndex = 20;
@@ -271,16 +260,17 @@
             // 
             cbNR.AutoSize = true;
             cbNR.Enabled = false;
-            cbNR.Location = new Point(185, 271);
+            cbNR.Location = new Point(185, 308);
             cbNR.Name = "cbNR";
-            cbNR.Size = new Size(15, 14);
+            cbNR.Size = new Size(100, 19);
             cbNR.TabIndex = 17;
+            cbNR.Text = "NR confirmed";
             cbNR.UseVisualStyleBackColor = true;
             // 
             // lblNoiseReduction
             // 
             lblNoiseReduction.AutoSize = true;
-            lblNoiseReduction.Location = new Point(6, 270);
+            lblNoiseReduction.Location = new Point(6, 309);
             lblNoiseReduction.Name = "lblNoiseReduction";
             lblNoiseReduction.Size = new Size(94, 15);
             lblNoiseReduction.TabIndex = 16;
@@ -291,7 +281,7 @@
             ddlNoiseReduction.Enabled = false;
             ddlNoiseReduction.FormattingEnabled = true;
             ddlNoiseReduction.Items.AddRange(new object[] { "Off", "Low", "High" });
-            ddlNoiseReduction.Location = new Point(106, 267);
+            ddlNoiseReduction.Location = new Point(106, 306);
             ddlNoiseReduction.Name = "ddlNoiseReduction";
             ddlNoiseReduction.Size = new Size(74, 23);
             ddlNoiseReduction.TabIndex = 15;
@@ -323,9 +313,8 @@
             lbl_absoluteval.AutoSize = true;
             lbl_absoluteval.Location = new Point(234, 185);
             lbl_absoluteval.Name = "lbl_absoluteval";
-            lbl_absoluteval.Size = new Size(19, 15);
+            lbl_absoluteval.Size = new Size(0, 15);
             lbl_absoluteval.TabIndex = 12;
-            lbl_absoluteval.Text = "99";
             lbl_absoluteval.TextAlign = ContentAlignment.MiddleCenter;
             lbl_absoluteval.Click += label1_Click;
             // 
@@ -495,7 +484,6 @@
         private ToolStripSeparator toolStripSeparator1;
         private TabPage tabPage2;
         private TextBox textBox1;
-        private Button button1;
         private TabPage tabPage1;
         private ListBox lb_CHAT;
         private ListBox lb_AudioProcesses;
@@ -509,7 +497,6 @@
         private Label lbl_HideTabs;
         private ComboBox ddl_ComPort;
         private Label lbl_ComPort;
-        private Button btn_ComPort_Refresh;
         private TrackBar trackBar1;
         private Label lbl_chat_vol;
         private Label lbl_game_vol;
@@ -522,5 +509,6 @@
         private CheckBox cb_Debug;
         private Label lbl_Hardware;
         private CheckBox cb_invert;
+        private CheckBox cb_connected;
     }
 }

@@ -21,6 +21,7 @@ namespace AudioControl
         string CHAT = Properties.Settings.Default.CHAT;    //List of Voice apps comma separated
 
         bool debug = false;
+        bool initialized = false;
         public object lb_item = null;
         ListBox source_LB = null;
 
@@ -53,7 +54,8 @@ namespace AudioControl
             fill_ddl_NoiseReduction();
             cb_invert.Checked = Properties.Settings.Default.Invert;
             if (Properties.Settings.Default.ComPort == "") { Properties.Settings.Default.ComPort = "Auto"; }
-            fill_ddl_ComPort();
+            SendToLog("Filling ComPortList");
+            Fill_ddl_ComPort();
 
             USBandCOM.Initialize_USB_Watcher();
             USBandCOM.OpenComPort();
@@ -62,6 +64,8 @@ namespace AudioControl
                 GetVol();
                 Send_NoiseReducion_Value();
             }
+
+            initialized = true;
         }
 
         private void fill_lb_GAME()
@@ -92,8 +96,9 @@ namespace AudioControl
             lb_AudioProcesses.Items.Remove("");
         }
 
-        private void fill_ddl_ComPort()
+        public void Fill_ddl_ComPort()
         {
+            SendToLog("Updating DDL_ComPort");
             string strOptions = "";
             string strSelection = Properties.Settings.Default.ComPort;
             strOptions += "Auto,";
@@ -105,13 +110,12 @@ namespace AudioControl
             ddl_ComPort.Items.Clear();
             ddl_ComPort.Items.AddRange(strOptions.Split(",").Distinct().ToArray());
             ddl_ComPort.Items.Remove("");
-            ddl_ComPort.SelectedItem = Properties.Settings.Default.ComPort;
+            ddl_ComPort.SelectedItem = strSelection;
         }
 
         private void fill_ddl_NoiseReduction()
         {
             var items = new BindingList<KeyValuePair<string, string>>();
-
             items.Add(new KeyValuePair<string, string>("NR=0", "Off"));
             items.Add(new KeyValuePair<string, string>("NR=1", "Low"));
             items.Add(new KeyValuePair<string, string>("NR=2", "Medium"));
@@ -125,7 +129,7 @@ namespace AudioControl
 
         public void SendToLog(string msg)
         {
-            textBox1.AppendText(msg + "\r\n");
+            if (debug) { textBox1.AppendText(msg + "\r\n"); }
         }
 
         public void ConfirmNR()
@@ -140,23 +144,30 @@ namespace AudioControl
             set { debug = value; }
         }
 
+        public bool Initialized
+        {
+            get => initialized;
+            set { initialized = value; }
+        }
+
         public string SystrayCom
         {
             get => systrayCom.Text;
             set { systrayCom.Text = value; }
         }
 
-        public void Send_NoiseReducion_Value()
+        public bool Connected
         {
-            cbNR.Checked = false;
-            USBandCOM.sp_SendData(ddlNoiseReduction.SelectedValue.ToString());
+            get => cb_connected.Checked;
+            set { cb_connected.Checked = value; }
         }
 
-        private void btn_connect_Click(object sender, EventArgs e)
+
+        public void Send_NoiseReducion_Value()
         {
-            USBandCOM.CloseComPort();
-            USBandCOM.OpenComPort();
-            if (USBandCOM.sp_connected()) { GetVol(); }
+            SendToLog("Noise reduction set to: " + ddlNoiseReduction.SelectedValue.ToString());
+            cbNR.Checked = false;
+            USBandCOM.sp_SendData(ddlNoiseReduction.SelectedValue.ToString());
         }
 
 
@@ -346,13 +357,14 @@ namespace AudioControl
 
         private void ddl_ComPort_SelectedIndexChanged(object sender, EventArgs e)
         {
+            SendToLog("DDL_ComPort Selection changed");
             Properties.Settings.Default.ComPort = ddl_ComPort.SelectedItem.ToString();
             Properties.Settings.Default.Save();
-        }
-
-        private void btn_ComPort_Refresh_Click(object sender, EventArgs e)
-        {
-            fill_ddl_ComPort();
+            if (!initialized) { return; }
+            //muss hier noch etwas getan werden währen eines Updates? (Beim Neubefüllen der DDL?)
+            USBandCOM.CloseComPort();
+            USBandCOM.OpenComPort();
+            if (USBandCOM.sp_connected()) { GetVol(); Send_NoiseReducion_Value(); }
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -362,14 +374,14 @@ namespace AudioControl
 
         private void ddlNoiseReduction_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (!ddlNoiseReduction.Enabled) { return; }
+            if (!initialized) { return; }
             Properties.Settings.Default.NoiseReduction = ddlNoiseReduction.Text;
             //USBandCOM.sp_SendData(message);
             //USBandCOM.CloseComPort();
             if (USBandCOM.sp_connected()) { Send_NoiseReducion_Value(); }
-            if (Debug) { SendToLog("Key: " + ddlNoiseReduction.Text); }
-            if (Debug) { SendToLog("Value: " + ddlNoiseReduction.SelectedValue.ToString()); }
-            if (Debug) { SendToLog("Stored Value: " + Properties.Settings.Default.NoiseReduction); }
+            SendToLog("Key: " + ddlNoiseReduction.Text);
+            SendToLog("Value: " + ddlNoiseReduction.SelectedValue.ToString());
+            SendToLog("Stored Value: " + Properties.Settings.Default.NoiseReduction);
             //SendToLog(ddlNoiseReduction.SelectedValue.ToString());
         }
 
