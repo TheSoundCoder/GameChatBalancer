@@ -1,4 +1,4 @@
-# GameChatBalancer - Get started
+# GameChatBalancer - Manual
 
 ## Installation
 
@@ -27,9 +27,9 @@ If you turn the potentiometer (or move the slider) you should see **values betwe
 # Manual - Systray application
 The application will start in the systray:
 
-![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GCB_Systray_Expanded.png)
+![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/Manual/GCB_Systray_Expanded.png)
 
-Clicking on **Show** will open the GUI so that you can configure for which applications you want to modify the volume:
+A right click will open the context menu. Clicking on **Show** will open the GUI so that you can configure GameChatBalancer:
 
 ![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GCB_settings.png)
 
