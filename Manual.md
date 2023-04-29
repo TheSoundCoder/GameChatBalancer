@@ -27,7 +27,7 @@ The application will start in the systray:
 
 ![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/Manual/GCB_Systray_Expanded.png)
 
-A right click will open the context menu. The first row shows the **connection status** to your DIY hardware device. The second row shows the **last recieved value** from the hardware.
+A right click will open the context menu. The first row shows the **connection status** (COM4) to your DIY hardware device. The second row shows the **last recieved value** (59) from the hardware.
 
 Clicking on **Show** will open the GUI so that you can configure GameChatBalancer:
 
