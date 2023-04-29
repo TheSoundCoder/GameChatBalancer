@@ -45,6 +45,13 @@ We will start with the hardware properties as this might be of interest on the f
 ### Hardware properties
 ![](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/assets/Manual/GCB_settings_hwproperties.png)
 
+#### ComPort
+In the Hardware properties area, you can choose the **COM port** for your DIY hardware. Usually it should be a COM port greater than COM2. **I recomment to leave this setting to "Auto"**. In this case GameChatBalancer will auto-detect your DIY hardware by doing a basic handshake (syn <> ack).
+
+If your device is properly connected the checkbox "Connected" will be ticked. Otherwise in a disconnected state this checkbox will be empty. 
+
+#### Noise reduction
+
 
 ### Audio settings
 You can fully control and customize GameChatBalancer to your needs in the settings area.
