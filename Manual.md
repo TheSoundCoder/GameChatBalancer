@@ -31,16 +31,17 @@ The application will start in the systray:
 
 A right click will open the context menu. Clicking on **Show** will open the GUI so that you can configure GameChatBalancer:
 
-![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GCB_settings.png)
+![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/Manual/GCB_settings.png)
+
+The two symbols on the left ("Equalizer" and "Bug") let you switch between the [Settings](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/Manual.md#settings) and [Debug](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/Manual.md#debug) area.
 
 ## Settings
-You can fully control and customize GameChatBalancer to your needs in the settings area.
-If your DIY hardware is connected to the PC GameChatBalancer should automatically detect it and connect to it. 
 
 ### Hardware properties
 
-### Audio setup
-
+### Audio settings
+You can fully control and customize GameChatBalancer to your needs in the settings area.
+If your DIY hardware is connected to the PC GameChatBalancer should automatically detect it and connect to it. 
 
 
 ## Debug
