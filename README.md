@@ -96,25 +96,7 @@ If you turn the potentiometer (or move the slider) you should see **values betwe
   - Right click and create a new link to GCBalancer.exe
 
 # Manual
-The application will start in the systray:
-
-![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GCB_Systray_Expanded.png)
-
-Clicking on **Show** will open the GUI so that you can configure for which applications you want to modify the volume:
-
-![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GCB_settings.png)
-
-## Settings
-You can fully control and customize GameChatBalancer to your needs in the settings area.
-If your DIY hardware is connected to the PC GameChatBalancer should automatically detect it and connect to it. 
-
-### Hardware properties
-
-### Audio setup
-
-
-
-## Debug
+If you want to get details how to handle the Systray application. Please have a look at the dedicated [manual](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/Manual.md).
 
 # Pictures / Video
 
