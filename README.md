@@ -153,6 +153,12 @@ First of all I would like to thank **sverrirs for his Gist AudioManager.cs** whi
   - [x] Customizable via C# application
   - [x] Set / Get value during startup of the application
   - [ ] [Optional] Auto-Adjust mode for noise reduction
+- COM handling modifizieren
+  - Liste aktualisieren wenn USB event
+  - aktuelle Auswahl hinzufügen
+  - reconnect
+  - IsInitialized valiable
+  - Reconnecting variable
 
 ## Optional
 - [ ] Screen overlay to see volume adjustments Ingame
