@@ -39,9 +39,11 @@ The two symbols on the left ("Equalizer" and "Bug") let you switch between the [
 The settings area is your **command center** for this application. It has two main areas:
 - Hardware properties
 - Audio settings
+
 We will start with the hardware properties as this might be of interest on the first startup.
 
 ### Hardware properties
+![](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/assets/Manual/GCB_settings_hwproperties.png)
 
 
 ### Audio settings
