@@ -45,12 +45,12 @@ We will start with the hardware properties as this might be of interest on the f
 ### Hardware properties
 ![](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/assets/Manual/GCB_settings_hwproperties.png)
 
-#### ComPort
+#### ComPort (blue)
 In the Hardware properties area, you can choose the **COM port** for your DIY hardware. Usually it should be a COM port greater than COM2. **I recomment to leave this setting to "Auto"**. In this case GameChatBalancer will auto-detect your DIY hardware by doing a basic handshake (syn <> ack).
 
 If your device is properly connected the checkbox "Connected" will be ticked. Otherwise in a disconnected state this checkbox will be empty. 
 
-#### Noise reduction
+#### Noise reduction (green)
 Cheap potentiometers / sliders can cause noise.
 
 **What is noise?** - The Arduino / Seeed XIAO microcontroller reads the analog resistor value of oyur potentiometer resulting in values between 0-1023. If you do not touch your potentiometer this value should be static. If you turn your potentiometer to the middle position this value should be ~512. A cheap potentiometer has a higher tolerance meaning that this value will not be static but will vary for eyample between 508 and 516.
