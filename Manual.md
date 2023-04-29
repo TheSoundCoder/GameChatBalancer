@@ -53,7 +53,7 @@ If your device is properly connected the checkbox "Connected" will be ticked. Ot
 #### Noise reduction (green)
 Cheap potentiometers / sliders can cause noise.
 
-*What is noise?* - The Arduino / Seeed XIAO microcontroller reads the analog resistor value of oyur potentiometer resulting in values between 0-1023. If you do not touch your potentiometer this value should be static. If you turn your potentiometer to the middle position this value should be ~512. A cheap potentiometer has a higher tolerance meaning that this value will not be static but will vary for example between 508 and 516.
+*What is noise?* - The Arduino / Seeed XIAO microcontroller reads the analog resistor value of your potentiometer resulting in values between 0 and 1023. If you do not touch your potentiometer this value should be static. If you turn your potentiometer to the middle position this value should be ~512. A cheap potentiometer has a higher tolerance meaning that this value will not be static but will vary for example between 508 and 516.
 
 *Why is noise bad?* - To reduce the traffic on the Com port and to reduce the CPU load of your PC, the Arduino sketch is implemented in a way so that a new value is only sent to the pc if it does not exactly match the value before. No turn on the potentiometer -> No change in values -> No data is sent to the PC -> GameChantBalancer Systray application keeps sleeping.
 Noise will cause a constant stream of new values between the Arduino and your PC and might cause an increased CPU load as the volume settings for applications are constantly modified.
