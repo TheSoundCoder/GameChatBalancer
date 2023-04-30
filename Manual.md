@@ -1,7 +1,7 @@
 # GameChatBalancer - Build
 
 ## What you need
-You can find links to products I used and a rogh cost indication in the [Readme.md](https://github.com/TheSoundCoder/GameChatBalancer/edit/master/README.md#material).
+You can find links to products I used and a rogh cost indication in the [Readme.md](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/README.md#material).
 
 - 1 Arduino or compatible microcontroller. I recommend a **Seeed Xiao SAMD21 Cortex M0+**
 - 1 Linear potentiometer with a low tolarance for the best result. I used a **Alpha RV16AF20KB10KM** (tolerance: +-5%) 
@@ -12,7 +12,7 @@ You can find links to products I used and a rogh cost indication in the [Readme.
 - some kind of housing for the microcontroller and the potentiometer
 
 ## How to connect
-- The potentiometer is connected to an analog pin of your Arduino (or compatible) board. It is powered from the board's 5V (or 3.3V for a Seeed board) output (see schematic)
+- The potentiometer is connected to an **analog pin (A\*)** of your Arduino (or compatible) board. It is powered from the board's 5V (or 3.3V for a Seeed board) output (see schematic)
   - GND = black
   - 5V / 3.3V = red
   - Signal = green
@@ -25,7 +25,7 @@ In the schematic below, you find two options:
 
 ![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer_schematic_2.png)
 
-If you connect everything exactly as shown in the schematic, the potentiometer will be connected to the **A0 pin** of your microcontroller. If you used another A? pin, you need to change the sketch before uploading it to your board. See [below](https://github.com/TheSoundCoder/GameChatBalancer/edit/master/Manual.md#changeanaloguepin)
+If you connect everything exactly as shown in the schematic, the potentiometer will be connected to the **A0 pin** of your microcontroller. If you used another A? pin, you need to change the sketch before uploading it to your board. See [below](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/Manual.md#changeanaloguepin)
 
 # GameChatBalancer - Installation
 
@@ -35,7 +35,11 @@ If you connect everything exactly as shown in the schematic, the potentiometer w
 - Open the downloaded sketch AudioControl.ino with the installed Arduino IDE
 - Follow the instructions "How to upload a sketch with the Arduino IDE 2" from the [Arduino website] (https://docs.arduino.cc/software/ide-v2/tutorials/getting-started/ide-v2-uploading-a-sketch)
 
-### Change analogue pin
+### Change analog pin
+You can change the used analog pin in **line 1** of the sketch. Change the value to whereever the **middle pin** of your potentiometer is connected to.
+
+![Sketch](https://user-images.githubusercontent.com/130736237/235370434-3a052883-85e2-4aa0-8d43-80c4657d75c4.png)
+
 
 ### Test
 After uploading the sketch, open the serial monitor of thr Arduino IDE by choosing *Tools* ->  *Serial Monitor* (or by pressing `strg` + `shift` + `M`).
