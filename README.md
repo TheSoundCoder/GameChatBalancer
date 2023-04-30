@@ -92,7 +92,7 @@ If you turn the potentiometer (or move the slider) you should see **values betwe
 - Run **GCBalancer.exe** from the folder above.
 - **Optional**: Add GCBalancer.exe to **Autostart** if you want to run it at system startup.
   - Press `Win` + `R` to open the Run menu
-  - Type shell:startup and press enter
+  - Type *shell:startup* and press `enter`
   - Right click and create a new link to GCBalancer.exe
 
 # Manual
