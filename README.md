@@ -77,7 +77,7 @@ I decided to design and 3D-print one by myself. If you like the "design" you can
 **Prerequisite**: You should have the **Arduino IDE** installed on your PC. You can download it [here](https://www.arduino.cc/en/software).
 - Download the file **GCBalancer.ino** from the latest release of this project (you should find it at the right side under "Releases").
 - Open the downloaded sketch GCBalancer.ino with the installed Arduino IDE
-- Follow the instructions "How to upload a sketch with the Arduino IDE 2" from the [Arduino website] (https://docs.arduino.cc/software/ide-v2/tutorials/getting-started/ide-v2-uploading-a-sketch)
+- Follow the instructions "How to upload a sketch with the Arduino IDE 2" from the [Arduino website](https://docs.arduino.cc/software/ide-v2/tutorials/getting-started/ide-v2-uploading-a-sketch)
 
 ### Test
 After uploading the sketch, open the serial monitor of thr Arduino IDE by choosing *Tools* ->  *Serial Monitor* (or by pressing `strg` + `shift` + `M`).
