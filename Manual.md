@@ -81,7 +81,7 @@ We will start with the hardware properties as this might be of interest on the f
 ![](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/assets/Manual/GCB_settings_hwproperties.png)
 
 #### ComPort (blue)
-In the Hardware properties area, you can choose the **COM port** for your DIY hardware. Usually it should be a COM port greater than COM2. **I recomment to leave this setting to "Auto"**. In this case GameChatBalancer will auto-detect your DIY hardware by doing a basic handshake (syn <> ack).
+In the Hardware properties area, you can choose the **COM port** for your DIY hardware. Usually it should be a COM port greater than COM2. **I recomment to leave this setting to "Auto"**. In this case GameChatBalancer will **auto-detect your DIY hardware by doing a basic handshake** (syn <> ack).
 
 If your device is properly connected the checkbox "Connected" will be ticked. Otherwise in a disconnected state this checkbox will be empty. 
 
@@ -102,15 +102,15 @@ Noise will cause a constant stream of new values between the Arduino and your PC
 6. If the debug window shows a lot of altering values coming in, change to a higher noise reduction level.
 7. Return with #3, except you already reached the noise reduction level "High". ;-)
 
-*What is the downside of noise reduction?* - If noise reduction set to medium or high, the application will "drop" 1 value at level medium und 2 values (at level high) if yout change the direction when turning the potentiometer. The reason is that those values are buffered and not sent by the microcontroller. At level high it will look as follows (example).
+*What is the downside of noise reduction?* - If noise reduction set to medium or high, the application will "drop" 1 value at level medium und 2 values (at level high) **if you change the direction when turning the potentiometer**. The reason is that those values are buffered and not sent by the microcontroller. At level high it will look as follows (example):
 - Initial value 50
 - You turn the potentiometer left until you reach 45
-- You start turing the potentiometer right. The first value will be 48 intead if 46 as 45, 46 and 47 are in the local buffer.
+- You start turing the potentiometer right. The first value will be **48 instead of 46** as 45, 46 and 47 are in the local buffer.
 
 
 ### Audio settings
-You can fully control and customize GameChatBalancer to your needs in the settings area.
-If your DIY hardware is connected to the PC GameChatBalancer should automatically detect it and connect to it. 
+
+
 
 
 ## Debug
