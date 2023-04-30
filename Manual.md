@@ -109,8 +109,20 @@ Noise will cause a constant stream of new values between the Arduino and your PC
 
 
 ### Audio settings
+The audio settings are located above the Hardware properties.
 
+![](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/assets/Manual/GCB_settings_programs.png)
 
+You can assign applications to the **chat** (yellow) or **game** (green) category by **dragging and dropping** them from the list of **available programs** (blue). ([see Video](https://github.com/TheSoundCoder/GameChatBalancer/edit/master/README.md#pictures--video))
+
+If a program you want to assign is not listed in the blue area:
+- start the program 
+- press the refresh icon below the listbox
+- assign the program via drag & drop
+
+If you want to switch the sides (or messed up ground and power during the built) you can invert the functionality by chacking the **"Invert" checkbox** in the Hardware properties.
+
+![](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/assets/Manual/GCB_settings_slider.png)
 
 
 ## Debug
