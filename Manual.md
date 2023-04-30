@@ -93,9 +93,28 @@ Cheap potentiometers / sliders can cause noise.
 *Why is noise bad?* - To reduce the traffic on the Com port and to reduce the CPU load of your PC, the Arduino sketch is implemented in a way so that a new value is only sent to the pc if it does not exactly match the value before. No turn on the potentiometer -> No change in values -> No data is sent to the PC -> GameChantBalancer Systray application keeps sleeping.
 Noise will cause a constant stream of new values between the Arduino and your PC and might cause an increased CPU load as the volume settings for applications are constantly modified.
 
+*Which level of noise reduction should I use?* - If you want to validate if the chosen noise reduction level matches the quality of your potentiometer, use the  [Debug](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/Manual.md#debug) area as follows.
+1. Enable debugging
+2. Start with debug set to off.
+3. Wait until the microcontroller confirms the chosen debug level. (Checkbox "NR confirmed" (Settings - Hardware properties) is checked.)
+4. Change to the Debug area
+5. **Do not turn the potentiometer or move the slider**
+6. If the debug window shows a lot of altering values coming in, change to a higher noise reduction level.
+7. Return with #3, except you already reached the noise reduction level "High". ;-)
+
+*What is the downside of noise reduction?* - If noise reduction set to medium or high, the application will "drop" 1 value at level medium und 2 values (at level high) if yout change the direction when turning the potentiometer. The reason is that those values are buffered and not sent by the microcontroller. At level high it will look as follows (example).
+- Initial value 50
+- You turn the potentiometer left until you reach 45
+- You start turing the potentiometer right. The first value will be 48 intead if 46 as 45, 46 and 47 are in the local buffer.
+
+
 ### Audio settings
 You can fully control and customize GameChatBalancer to your needs in the settings area.
 If your DIY hardware is connected to the PC GameChatBalancer should automatically detect it and connect to it. 
 
 
 ## Debug
+You can see debug messages in the debug area of the application. To enable debug messages just activate the highlighted checkbox.
+
+![](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/assets/Manual/GCB_debug1.png)
+
