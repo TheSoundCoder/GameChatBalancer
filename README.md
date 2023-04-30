@@ -107,20 +107,7 @@ From controlling the audio volume this is very easy to implement. I am currently
 First of all I would like to thank **@sverrirs for his Gist AudioManager.cs** which accelerated the development and for sure saved me from some pain during the development. I used and modified AudioManager.cs to my needs so that GameChatBalancer is able to adjust the volume of more than one application by application name in one single call.
 
 # Issues
-- [x] Implement options for noise reduction (Off(0) - Low(1) - Medium(2) - High(3))
-  - [x] Default: High
-  - [x] Customizable via C# application
-  - [x] Set / Get value during startup of the application
-  - [ ] [Optional] Auto-Adjust mode for noise reduction
-- COM handling modifizieren
-  - Liste aktualisieren wenn USB event
-  - aktuelle Auswahl hinzufügen
-  - reconnect
-  - IsInitialized valiable
-  - Reconnecting variable
-
-## Optional
 - [ ] Screen overlay to see volume adjustments Ingame
-https://github.com/michel-pi/GameOverlay.Net
+    - https://github.com/michel-pi/GameOverlay.Net
 - [ ] Migrate to modern UI
     - https://social.msdn.microsoft.com/Forums/es-ES/65a2064f-2d6a-4ecc-8076-60c72cb7070d/wpf-c-save-controls-created-at-runtime?forum=wpf
