@@ -71,32 +71,9 @@ I decided to design and 3D-print one by myself. If you like the "design" you can
 
 <img src="https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer3.jpg" height="300"> <img src="https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer2.jpg" height="300" style="fillColor: 'ff0000'">
 
-# Installation
+# Make your own GameChatBalancer
 
-## Arduino
-**Prerequisite**: You should have the **Arduino IDE** installed on your PC. You can download it [here](https://www.arduino.cc/en/software).
-- Download the file **GCBalancer.ino** from the latest release of this project (you should find it at the right side under "Releases").
-- Open the downloaded sketch GCBalancer.ino with the installed Arduino IDE
-- Follow the instructions "How to upload a sketch with the Arduino IDE 2" from the [Arduino website](https://docs.arduino.cc/software/ide-v2/tutorials/getting-started/ide-v2-uploading-a-sketch)
-
-### Test
-After uploading the sketch, open the serial monitor of thr Arduino IDE by choosing *Tools* ->  *Serial Monitor* (or by pressing `strg` + `shift` + `M`).
-
-If you turn the potentiometer (or move the slider) you should see **values between 0 and 100** coming in. If this is true: Congratulations! Your device is working as it should.
-
-**Close the serial monitor.** Keeping it open might prevent you from uploading a sketch in the future.
-
-## Systray application
-- Download the file **GCBalancer_win.zip** from the latest release of this project (you should find it at the right side under "Releases").
-- Store the content of the ZIP file in any folder of your choice.
-- Run **GCBalancer.exe** from the folder above.
-- **Optional**: Add GCBalancer.exe to **Autostart** if you want to run it at system startup.
-  - Press `Win` + `R` to open the Run menu
-  - Type *shell:startup* and press `enter`
-  - Right click and create a new link to GCBalancer.exe
-
-# Manual
-If you want to get details how to handle the Systray application. Please have a look at the dedicated [manual](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/Manual.md).
+If you want to build your own GameChatBalancer or get details how to handle the Systray application. Please have a look at the dedicated [manual](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/Manual.md).
 
 # Pictures / Video
 
