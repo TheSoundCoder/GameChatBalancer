@@ -1,3 +1,30 @@
+# GameChatBalancer - Build
+
+## What you need
+You can find links to products I used and a rogh cost indication in the [Readme.md](https://github.com/TheSoundCoder/GameChatBalancer/edit/master/README.md#material).
+
+- 1 Arduino or compatible microcontroller. I recommend a **Seeed Xiao SAMD21 Cortex M0+**
+- 1 Linear potentiometer with a low tolarance for the best result. I used a **Alpha RV16AF20KB10KM** (tolerance: +-5%) 
+- 1 Knob, which will be set on top of the potentiometer
+- 20-30 cm isolated copper wire
+- 1 USB cable matching the connection of your microcontroller of choice. The Seeed board has a USB-C connector.
+- soldering iron to connect the potentiometer to your microcontroller
+- some kind of housing for the microcontroller and the potentiometer
+
+## How to connect
+- The potentiometer is connected to an analog pin of your Arduino (or compatible) board. It is powered from the board's 5V (or 3.3V for a Seeed board) output (see schematic)
+  - GND = black
+  - 5V / 3.3V = red
+  - Signal = green
+- The board is conected via an USB cable to the PC.
+
+### Schematic
+In the schematic below, you find two options:
+1. Left is the setup with the Seeed Xiao SAMD21 Cortex M0+. **Ensure to connect the potentiometer to the 3.3V output** of the board as the 5V will probably kill the board's microcontroller.
+2. Right is the setup with an Arduino.
+
+![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer_schematic_2.png)
+
 # GameChatBalancer - Installation
 
 ## Arduino
