@@ -7,15 +7,15 @@ tune the audio volume while playing** without any interruption by just turning a
 The project consists of two components. A small **systray application** for your PC and an Arduino based **cheap to build** hardware.
 
 # Table of contents
-- [Features](https://github.com/TheSoundCoder/AudioControl#Features)
-- [Build Hardware](https://github.com/TheSoundCoder/AudioControl#build-hardware)
-  - [Schematic](https://github.com/TheSoundCoder/AudioControl#schematic)
-  - [Material](https://github.com/TheSoundCoder/AudioControl#material)
-  - [Housing](https://github.com/TheSoundCoder/AudioControl#housing)
-- [Make your own GameChatBalancer](https://github.com/TheSoundCoder/AudioControl#makeyourownGameChatBalancer)
-- [Licences](https://github.com/TheSoundCoder/AudioControl#licences)
-- [Roadmap](https://github.com/TheSoundCoder/AudioControl#roadmap)
-- [Special Thanks](https://github.com/TheSoundCoder/AudioControl#specialthanks)
+- [Features](https://github.com/TheSoundCoder/GameChatBalancer#Features)
+- [Build Hardware](https://github.com/TheSoundCoder/GameChatBalancer#build-hardware)
+  - [Schematic](https://github.com/TheSoundCoder/GameChatBalancer#schematic)
+  - [Material](https://github.com/TheSoundCoder/GameChatBalancer#material)
+  - [Housing](https://github.com/TheSoundCoder/GameChatBalancer#housing)
+- [Make your own GameChatBalancer](https://github.com/TheSoundCoder/GameChatBalancer#make-your-own-gamechatbalancer)
+- [Licences](https://github.com/TheSoundCoder/GameChatBalancer#licences)
+- [Roadmap](https://github.com/TheSoundCoder/GameChatBalancer#roadmap)
+- [Special Thanks](https://github.com/TheSoundCoder/GameChatBalancer#specialthanks)
 
 # Features
 1. Hardware
