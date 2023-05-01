@@ -1,8 +1,8 @@
 # GameChatBalancer
-GameChatBalancer is an **opensource hardware audio balancer** for Windows PCs. The functionality is inspired by the Chatmix function of some available headsets.
+GameChatBalancer is an **opensource hardware audio balancer** for Windows PCs. The functionality is inspired by the Chatmix / Gamevoice mix function of some available headsets.
 
-GameChatBalancer lets you use an Arduino (or similar boards) based knob or slider to **balance the volume of chat-software and games** so that you can **easily
-tune the audio volume while playing** without any interruption by just turning a knob or moving a single slider.
+GameChatBalancer lets you use an Arduino (or compatible) based knob or slider to **balance the volume of chat-software and games** so that you can **easily
+tune the audio volume while playing** without any interruption by just turning a knob or moving a slider.
 
 The project consists of two components. A small **systray application** for your PC and an Arduino based **cheap to build** hardware.
 
@@ -12,14 +12,14 @@ The project consists of two components. A small **systray application** for your
   - [Schematic](https://github.com/TheSoundCoder/AudioControl#schematic)
   - [Material](https://github.com/TheSoundCoder/AudioControl#material)
   - [Housing](https://github.com/TheSoundCoder/AudioControl#housing)
-- [Installation](https://github.com/TheSoundCoder/AudioControl#installation)
+- [Make your own GameChatBalancer](https://github.com/TheSoundCoder/AudioControl#makeyourownGameChatBalancer)
 - [Licences](https://github.com/TheSoundCoder/AudioControl#licences)
-
-- [Special Thanks](https://github.com/TheSoundCoder/AudioControl#special-thanks)
+- [Roadmap](https://github.com/TheSoundCoder/AudioControl#roadmap)
+- [Special Thanks](https://github.com/TheSoundCoder/AudioControl#specialthanks)
 
 # Features
 1. Hardware
-   - Only sends data via the serial port if something changed - no permanent datastream
+   - Only sends data via the serial port if the chose volume level changed -> **no permanent datastream**
    - **Noise reduction** in case you are using cheap components - especially the potentiometer
      - Levels: Off, Low, Medium, High (default)
      - Adjustable at runtime via Systray Application
@@ -28,9 +28,20 @@ The project consists of two components. A small **systray application** for your
    - Easy configuration via GUI - Assign applications via **drag and drop**
    - Assign **multiple applications** to the "Game" and "Chat" category
    - **Auto-detect** the Arduino based hardware
-   - The application recognises when the hardware is removed and will automatically reconnect when plugged in again (**USB event based**)
-   - User settings are stored automatically and restored during application startup.
-   - Invert the values received by the hardware in case your wiring is mixed up.
+   - The application detects when the hardware is removed and will automatically reconnect when plugged in again (**USB event based**)
+   - User settings are stored automatically and restored during application startup
+   - Invert the values received by the hardware in case your wiring is mixed up
+
+
+See the application in action:
+
+https://user-images.githubusercontent.com/130736237/235218694-252510ab-6273-4d05-bc87-e7d56919cefa.mp4
+
+
+This is how it look like in the Windows Audio mixer:
+
+https://user-images.githubusercontent.com/130736237/235218894-d49eed7c-69e4-4d56-9448-dae65230d700.mp4
+
 
 # Build Hardware
 Everything you need to build your own GameChatBalancer ist listed in the [Pricing indication](https://github.com/TheSoundCoder/AudioControl#pricing-indication).
@@ -38,20 +49,21 @@ Everything you need to build your own GameChatBalancer ist listed in the [Pricin
   - GND = black
   - 5V / 3.3V = red
   - Signal = green
-- The board is conected via an USB cable to the PC. Make sure to check what kind of USB cable is needed for your board.
-- As listed in the Pricing indication I used a **Seeed Xiao SAMD21 Cortex M0+** instead of an Arduino. It comes cheap (5,60€), has a lot of analogue connectors and a very small footprint (20mm x 17,5mm x 3,5mm) to fit into a small housing. Last but not least it has a USB-C connector.
+- The board is conected via an USB cable to the PC. **Make sure to check what kind of USB cable is needed for your board.**
+- As listed in the Pricing indication I used a **Seeed Xiao SAMD21 Cortex M0+** instead of an Arduino. It comes cheap (5,60€), has a lot of analog connectors and a very small footprint (20mm x 17,5mm x 3,5mm) so that it fits into a small housing. Last but not least it has a USB-C connector.
  
 ## Schematic
-In the schematic below, you find two options:
-1. Left is the setup with the Seeed Xiao SAMD21 Cortex M0+. **Ensure to connect the potentiometer to the 3.3V output** of the board as the 5V will probably kill the board's microcontroller.
-2. Right is the setup with an Arduino.
+In the schematic below, you can find two options:
+1. *Left* is the setup with the *Seeed Xiao SAMD21 Cortex M0+*. **Ensure to connect the potentiometer to the 3.3V output** of the board as the 5V will probably kill the board's microcontroller.
+2. *Right* is the setup with an *Arduino*.
 
 ![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer_schematic_2.png)
 
 ## Material
-**Please keep in mind that a very cheap potentiometer causes noise** so that noise reduction needs to be switched on. It absolutely makes sense to spend 2-3€ instead of 0,45€ as listed below. I use a ~ 3€ poti with a **tolerance of +-5%** in my device and noise reduction switched off. Cheap potentiometers can have a tolerance of +-20%.
+**Please keep in mind that a cheap potentiometer can cause noise**, so that noise reduction needs to be switched on in the Systray application.
+I use a ~ 3€ poti with a **low tolerance of +-5%** in my device and noise reduction switched off. Cheap potentiometers usually have a tolerance of +-20%.
 
-**Important**: make sure to buy a **linear** potentiometer, not a logarithmic one!
+**Important**: make sure to buy a **linear** potentiometer, not a logarithmic one! 
 
 Item | Price (€)|Link
 -----|------|-------
@@ -65,7 +77,7 @@ Copper wire isolated|1,50|https://www.berrybase.de/en/kupferschaltdraht-isoliert
 If you use the listed microcontroller you will additionally need a **USB-C cable**.
 
 ## Housing
-You can use anything as a housing for your controller - even a matchbox if you do not have a 3D-Printer.
+You can use anything as a housing for your GameChatBalancer - even a matchbox if you do not have a 3D-Printer.
 
 I decided to design and 3D-print one by myself. If you like the "design" you can download either the STL files or GCODE files [here](https://github.com/TheSoundCoder/AudioControl/tree/master/assets/3d-model).
 
@@ -73,17 +85,7 @@ I decided to design and 3D-print one by myself. If you like the "design" you can
 
 # Make your own GameChatBalancer
 
-If you want to build your own GameChatBalancer or get details how to handle the Systray application. Please have a look at the dedicated [manual](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/Manual.md).
-
-# Pictures / Video
-
-See the application in action:
-
-https://user-images.githubusercontent.com/130736237/235218694-252510ab-6273-4d05-bc87-e7d56919cefa.mp4
-
-This is how it look like in the Windows Audio mixer:
-
-https://user-images.githubusercontent.com/130736237/235218894-d49eed7c-69e4-4d56-9448-dae65230d700.mp4
+If you want to build your own GameChatBalancer or get details on how to handle the systray application. Please have a look at the dedicated [manual](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/Manual.md).
 
 
 # Licences
@@ -97,17 +99,11 @@ Steve Shoger | Zondicons | Bug Icon | <img src="https://cdn.icon-icons.com/icons
 Yannick | General Icons | Refresh Icon | <img src="https://cdn.icon-icons.com/icons2/562/PNG/512/refresh-page-arrow-button_icon-icons.com_53909.png" width="48">
 
 # Roadmap
-Depending on my free time I would like to make the complete setup flexible so that additional potentiometers are supported. Those can then be used to (e.g.):
+Depending on my free time I would like to make the complete setup flexible so that additional potentiometers are supported. Those could be used to (e.g.):
 - Control the master volume of your PC
 - Assign single or multiple applications to a potentiometer
 
-From controlling the audio volume this is very easy to implement. I am currently thinking of how the Systray UI and configuration of the Arduino can be done flexible so that no new sketch needs to be uploaded.
+I am currently thinking of how the Systray UI and configuration of the Arduino can be done flexible so that no new sketch needs to be uploaded if the overall configuration changes.
 
 # Special Thanks
 First of all I would like to thank **@sverrirs for his Gist AudioManager.cs** which accelerated the development and for sure saved me from some pain during the development. I used and modified AudioManager.cs to my needs so that GameChatBalancer is able to adjust the volume of more than one application by application name in one single call.
-
-# Issues
-- [ ] Screen overlay to see volume adjustments Ingame
-    - https://github.com/michel-pi/GameOverlay.Net
-- [ ] Migrate to modern UI
-    - https://social.msdn.microsoft.com/Forums/es-ES/65a2064f-2d6a-4ecc-8076-60c72cb7070d/wpf-c-save-controls-created-at-runtime?forum=wpf
