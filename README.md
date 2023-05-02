@@ -108,7 +108,7 @@ I am currently thinking of how the Systray UI and configuration of the Arduino c
 # Special Thanks
 I would like to thank **@sverrirs for his Gist AudioManager.cs** which accelerated the development and for sure saved me from some pain during the development. I used and modified AudioManager.cs to my needs so that GameChatBalancer is able to adjust the volume of more than one application by application name in one single call.
 
-# Help wanted
+# Help & Feedback wanted
 I created a first issue where help would be very welcome. Maybe it is not an easy one, but if somebody has a good idea or would like to contribute to it, this would be very welcome. This is my first (public) repo, so please be patient with me.
 
 Feedback is also more than welcome. Please let me know if you (dis-) LIKE something or if you see issues in the code have good hints how to improve.
