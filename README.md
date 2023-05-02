@@ -16,6 +16,7 @@ The project consists of two components. A small **systray application** for your
 - [Licences](https://github.com/TheSoundCoder/GameChatBalancer#licences)
 - [Roadmap](https://github.com/TheSoundCoder/GameChatBalancer#roadmap)
 - [Special Thanks](https://github.com/TheSoundCoder/GameChatBalancer#special-thanks)
+- [Help & Feedback](https://github.com/TheSoundCoder/GameChatBalancer/#help--feedback-wanted)
 
 # Features
 1. Hardware
