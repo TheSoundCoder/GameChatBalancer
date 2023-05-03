@@ -1,7 +1,7 @@
 # GameChatBalancer - Build
 
 ## What you need
-You can find links to products I used and a rogh cost indication in the [Readme.md](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/README.md#material).
+You need the following things to bould your own GameChatBalancer:
 
 - 1 Arduino or compatible microcontroller. I recommend a **Seeed Xiao SAMD21 Cortex M0+**
 - 1 Linear potentiometer with a low tolarance for the best result. I used a **Alpha RV16AF20KB10KM** (tolerance: +-5%) 
@@ -10,6 +10,8 @@ You can find links to products I used and a rogh cost indication in the [Readme.
 - 1 USB cable matching the connection of your microcontroller of choice. The Seeed board has a USB-C connector.
 - soldering iron to connect the potentiometer to your microcontroller
 - some kind of housing for the microcontroller and the potentiometer
+
+Have a look at the [Readme.md](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/README.md#material) to get an cost overview and links to products.
 
 ## How to connect
 - The potentiometer is connected to an **analog pin (A\*)** of your Arduino (or compatible) board. It is powered from the board's 5V (or 3.3V for a Seeed board) output (see schematic)
@@ -25,18 +27,18 @@ In the schematic below, you find two options:
 
 ![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer_schematic_2.png)
 
-If you connect everything exactly as shown in the schematic, the potentiometer will be connected to the **A0 pin** of your microcontroller. If you used another A? pin, you need to change the sketch before uploading it to your board. See [below](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/Manual.md#changeanaloguepin)
+If you connect everything exactly as shown in the schematic, the potentiometer will be connected to the **A0 pin** of your microcontroller. If you used another Analog pin, you need to change the sketch before uploading it to your board. See [below](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/Manual.md#changeanaloguepin)
 
 # GameChatBalancer - Installation
 
 ## Arduino
 **Prerequisite**: You should have the **Arduino IDE** installed on your PC. You can download it [here](https://www.arduino.cc/en/software).
 - Download the file **GCBalancer.ino** from the latest release of this project (you should find it at the right side under "Releases").
-- Open the downloaded sketch AudioControl.ino with the installed Arduino IDE
+- Open the downloaded sketch GCBalancer.ino with the installed Arduino IDE
 - Follow the instructions "How to upload a sketch with the Arduino IDE 2" from the [Arduino website] (https://docs.arduino.cc/software/ide-v2/tutorials/getting-started/ide-v2-uploading-a-sketch)
 
 ### Change analog pin
-You can change the used analog pin in **line 1** of the sketch. Change the value to whereever the **middle pin** of your potentiometer is connected to.
+You can change the used analog pin in **line 1** of the sketch. Change the value to whatever the **output pin** of your potentiometer (green line in the shematic above) is connected to.
 
 ![Sketch](https://user-images.githubusercontent.com/130736237/235370434-3a052883-85e2-4aa0-8d43-80c4657d75c4.png)
 
@@ -83,29 +85,32 @@ We will start with the hardware properties as this might be of interest on the f
 #### ComPort (blue)
 In the Hardware properties area, you can choose the **COM port** for your DIY hardware. Usually it should be a COM port greater than COM2. **I recomment to leave this setting to "Auto"**. In this case GameChatBalancer will **auto-detect your DIY hardware by doing a basic handshake** (syn <> ack).
 
-If your device is properly connected the checkbox "Connected" will be ticked. Otherwise in a disconnected state this checkbox will be empty. 
+If your device is properly connected the checkbox "Connected" will be checked. Otherwise in a disconnected state this checkbox will be unchecked. 
 
 #### Noise reduction (green)
-Cheap potentiometers / sliders can cause noise.
+Here you can set the Noise reduction level for your Arduino. Changing this setting will be confirmed by the hardware. In this case the Checkbox "NR confirmed" will be checked.
 
-*What is noise?* - The Arduino / Seeed XIAO microcontroller reads the analog resistor value of your potentiometer resulting in values between 0 and 1023. If you do not touch your potentiometer this value should be static. If you turn your potentiometer to the middle position this value should be ~512. A cheap potentiometer has a higher tolerance meaning that this value will not be static but will vary for example between 508 and 516.
+As cheap potentiometers / sliders can cause noise, it is important to modify this setting to the quality of used components. 
 
-*Why is noise bad?* - To reduce the traffic on the Com port and to reduce the CPU load of your PC, the Arduino sketch is implemented in a way so that a new value is only sent to the pc if it does not exactly match the value before. No turn on the potentiometer -> No change in values -> No data is sent to the PC -> GameChantBalancer Systray application keeps sleeping.
+*What is noise?* - The Arduino / Seeed XIAO microcontroller reads the analog resistor value of your potentiometer, resulting in values between 0 and 1023. If you do not touch your potentiometer, this value should be static. If you turn your potentiometer to the middle position, this value should be ~512. A cheap potentiometer has a higher tolerance, meaning that this value will not be static, but will vary for example between 508 and 516.
+
+*Why is noise bad?* - To **reduce the traffic on the Com port and to reduce the CPU load of your PC**, the Arduino sketch is implemented to only send a value to the PC, if it deviates from the previously sent value.
+No turn on the potentiometer -> No change in values -> No data is sent to the PC -> GameChantBalancer Systray application keeps sleeping.
 Noise will cause a constant stream of new values between the Arduino and your PC and might cause an increased CPU load as the volume settings for applications are constantly modified.
 
 *Which level of noise reduction should I use?* - If you want to validate if the chosen noise reduction level matches the quality of your potentiometer, use the  [Debug](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/Manual.md#debug) area as follows.
 1. Enable debugging
-2. Start with debug set to off.
+2. Start with *Noise reduction* set to *off*.
 3. Wait until the microcontroller confirms the chosen debug level. (Checkbox "NR confirmed" (Settings - Hardware properties) is checked.)
 4. Change to the Debug area
 5. **Do not turn the potentiometer or move the slider**
 6. If the debug window shows a lot of altering values coming in, change to a higher noise reduction level.
 7. Return with #3, except you already reached the noise reduction level "High". ;-)
 
-*What is the downside of noise reduction?* - If noise reduction set to medium or high, the application will "drop" 1 value at level medium und 2 values (at level high) **if you change the direction when turning the potentiometer**. The reason is that those values are buffered and not sent by the microcontroller. At level high it will look as follows (example):
+*What is the downside of noise reduction?* - If noise reduction is set to medium or high, the application will "drop" 1 value at level medium und 2 values at level high **if you change the direction when turning the potentiometer**. The reason is that those values are buffered and not sent by the microcontroller. At level high it will look as follows (example):
 - Initial value 50
-- You turn the potentiometer left until you reach 45
-- You start turing the potentiometer right. The first value will be **48 instead of 46** as 45, 46 and 47 are in the local buffer.
+- Turn the potentiometer left until you reach 45
+- Start turing the potentiometer right. The first value will be **48 instead of 46** as 45, 46 and 47 are in the local buffer for noise reduction.
 
 
 ### Audio settings
@@ -117,10 +122,10 @@ You can assign applications to the **chat** (yellow) or **game** (green) categor
 
 If a program you want to assign is not listed in the blue area:
 - **start the program** 
-- press the **refresh icon** below the listbox
+- press the **refresh icon** below the listbox - your program should appear now
 - assign the program via drag & drop
 
-If you want to switch the sides (or mixed up ground and power wires during the built) you can invert the functionality by checking the **"Invert" checkbox** in the Hardware properties.
+If you mixed up the ground and power wires during the built, you can invert the behaviour of the potentiometer by checking the **"Invert" checkbox** in the Hardware properties.
 
 ![](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/assets/Manual/GCB_settings_slider.png)
 
