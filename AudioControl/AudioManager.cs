@@ -431,7 +431,6 @@ namespace AudioManager
                         ctl.GetProcessId(out cpid);
                         cAppName = Process.GetProcessById(cpid).ProcessName;
                     }
-                    catch { }
                     finally
                     {
                         if (ctl != null) Marshal.ReleaseComObject(ctl);
@@ -444,9 +443,6 @@ namespace AudioManager
                     {
                         RetVal += cAppName + "\r\n";
                     }
-
-
-
                 }
             }
             catch { }
