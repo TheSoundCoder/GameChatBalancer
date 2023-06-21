@@ -1,5 +1,6 @@
 ﻿using AudioControl;
 using System.Diagnostics;
+using System.Linq.Expressions;
 using System.Runtime.InteropServices;
 //using System.Security.Cryptography;
 
@@ -377,8 +378,8 @@ namespace AudioManager
                     }
 
                 }
-                return RetVal;
             }
+            catch { }
             finally
             {
                 if (sessionEnumerator != null) Marshal.ReleaseComObject(sessionEnumerator);
@@ -386,7 +387,7 @@ namespace AudioManager
                 if (speakers != null) Marshal.ReleaseComObject(speakers);
                 if (deviceEnumerator != null) Marshal.ReleaseComObject(deviceEnumerator);
             }
-
+            return RetVal;
         }
 
 
@@ -430,6 +431,7 @@ namespace AudioManager
                         ctl.GetProcessId(out cpid);
                         cAppName = Process.GetProcessById(cpid).ProcessName;
                     }
+                    catch { }
                     finally
                     {
                         if (ctl != null) Marshal.ReleaseComObject(ctl);
@@ -446,8 +448,8 @@ namespace AudioManager
 
 
                 }
-                return RetVal;
             }
+            catch { }
             finally
             {
                 if (sessionEnumerator != null) Marshal.ReleaseComObject(sessionEnumerator);
@@ -455,7 +457,7 @@ namespace AudioManager
                 if (speakers != null) Marshal.ReleaseComObject(speakers);
                 if (deviceEnumerator != null) Marshal.ReleaseComObject(deviceEnumerator);
             }
-
+            return RetVal;
         }
 
         
@@ -576,6 +578,7 @@ namespace AudioManager
                             if (MainForm.Debug) { MainForm.SendToLog(cAppName.ToString() + ".Volume=" + level.ToString()); }
                         }
                     }
+                    catch { }
                     finally
                     {
                         if (ctl != null) Marshal.ReleaseComObject(ctl);
@@ -583,6 +586,7 @@ namespace AudioManager
                     }
                 }
             }
+            catch { }
             finally
             {
                 if (sessionEnumerator != null) Marshal.ReleaseComObject(sessionEnumerator);
