@@ -1,83 +1,47 @@
-# GameChatBalancer
-GameChatBalancer is an **opensource hardware audio balancer** for Windows PCs. The functionality is inspired by the Chatmix function of some available headsets.
+# GameChatBalancer - Build
 
-GameChatBalancer lets you use an Arduino (or similar boards) based knob or slider to **balance the volume of chat-software and games** so that you can **easily
-tune the audio volume while playing** without any interruption by just turning a knob or moving a single slider.
+## What you need
+You need the following things to bould your own GameChatBalancer:
 
-The project consists of two components. A small **systray application** for your PC and an Arduino based **cheap to build** hardware.
+- 1 Arduino or compatible microcontroller. I recommend a **Seeed Xiao SAMD21 Cortex M0+**
+- 1 Linear potentiometer with a low tolarance for the best result. I used a **Alpha RV16AF20KB10KM** (tolerance: +-5%) 
+- 1 Knob, which will be set on top of the potentiometer
+- 20-30 cm isolated copper wire
+- 1 USB cable matching the connection of your microcontroller of choice. The Seeed board has a USB-C connector.
+- soldering iron to connect the potentiometer to your microcontroller
+- some kind of housing for the microcontroller and the potentiometer
 
-# Table of contents
-- [Features](https://github.com/TheSoundCoder/AudioControl#Features)
-- [Build Hardware](https://github.com/TheSoundCoder/AudioControl#build-hardware)
-  - [Schematic](https://github.com/TheSoundCoder/AudioControl#schematic)
-  - [Material](https://github.com/TheSoundCoder/AudioControl#material)
-  - [Housing](https://github.com/TheSoundCoder/AudioControl#housing)
-- [Installation](https://github.com/TheSoundCoder/AudioControl#installation)
-- [Licences](https://github.com/TheSoundCoder/AudioControl#licences)
+Have a look at the [Readme.md](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/README.md#material) to get an cost overview and links to products.
 
-- [Special Thanks](https://github.com/TheSoundCoder/AudioControl#special-thanks)
-
-# Features
-1. Hardware
-   - Only sends data via the serial port if something changed - no permanent datastream
-   - **Noise reduction** in case you are using cheap components - especially the potentiometer
-     - Levels: Off, Low, Medium, High (default)
-     - Adjustable at runtime via Systray Application
-
-2. Systray Application
-   - Easy configuration via GUI - Assign applications via **drag and drop**
-   - Assign **multiple applications** to the "Game" and "Chat" category
-   - **Auto-detect** the Arduino based hardware
-   - The application recognises when the hardware is removed and will automatically reconnect when plugged in again (**USB event based**)
-   - User settings are stored automatically and restored during application startup.
-   - Invert the values received by the hardware in case your wiring is mixed up.
-
-# Build Hardware
-Everything you need to build your own GameChatBalancer ist listed in the [Pricing indication](https://github.com/TheSoundCoder/AudioControl#pricing-indication).
-- The potentiometer is connected to an analog pin of your Arduino (or compatible) board. It is powered from the board's 5V (or 3.3V for a Seeed board) output (see schematic)
+## How to connect
+- The potentiometer is connected to an **analog pin (A\*)** of your Arduino (or compatible) board. It is powered from the board's 5V (or 3.3V for a Seeed board) output (see schematic)
   - GND = black
   - 5V / 3.3V = red
   - Signal = green
-- The board is conected via an USB cable to the PC. Make sure to check what kind of USB cable is needed for your board.
-- As listed in the Pricing indication I used a **Seeed Xiao SAMD21 Cortex M0+** instead of an Arduino. It comes cheap (5,60€), has a lot of analogue connectors and a very small footprint (20mm x 17,5mm x 3,5mm) to fit into a small housing. Last but not least it has a USB-C connector.
- 
-## Schematic
+- The board is conected via an USB cable to the PC.
+
+### Schematic
 In the schematic below, you find two options:
 1. Left is the setup with the Seeed Xiao SAMD21 Cortex M0+. **Ensure to connect the potentiometer to the 3.3V output** of the board as the 5V will probably kill the board's microcontroller.
 2. Right is the setup with an Arduino.
 
 ![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer_schematic_2.png)
 
-## Material
-**Please keep in mind that a very cheap potentiometer causes noise** so that noise reduction needs to be switched on. It absolutely makes sense to spend 2-3€ instead of 0,45€ as listed below. I use a ~ 3€ poti with a **tolerance of +-5%** in my device and noise reduction switched off. Cheap potentiometers can have a tolerance of +-20%.
+If you connect everything exactly as shown in the schematic, the potentiometer will be connected to the **A0 pin** of your microcontroller. If you used another Analog pin, you need to change the sketch before uploading it to your board. See [below](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/Manual.md#changeanaloguepin)
 
-**Important**: make sure to buy a **linear** potentiometer, not a logarithmic one!
-
-Item | Price (€)|Link
------|------|-------
-Microcontroller: Seeed Xiao SAMD21 Cortex M0+|5,60|https://www.berrybase.de/en/seeeduino-xiao-arduino-microcontroller-samd21-cortex-m0
-Potentiometer Noname 10k (tolerance: +-20%)|0,45|https://www.berrybase.de/en/drehpotentiometer-10k-937-liegend-mono-6mm-loetoesen?c=164
-*Optional:* Potentiometer Alpha RV16AF20KB10KM (tolerance: +-5%)|2,99|https://www.conrad.de/de/p/alpha-rv16af20kb10km-dreh-potentiometer-mono-200-mw-10-k-1-st-1694304.html#productDownloads 
-Knob|0,65|https://www.berrybase.de/en/drehknopf-fuer-geraendelte-6-0mm-achse-mit-anzeige-16x16mm-schwarz/grau?c=164
-Copper wire isolated|1,50|https://www.berrybase.de/en/kupferschaltdraht-isoliert-oe0-5mm-10m
-**Total**|**8,20 - 10,74**|
-
-If you use the listed microcontroller you will additionally need a **USB-C cable**.
-
-## Housing
-You can use anything as a housing for your controller - even a matchbox if you do not have a 3D-Printer.
-
-I decided to design and 3D-print one by myself. If you like the "design" you can download either the STL files or GCODE files [here](https://github.com/TheSoundCoder/AudioControl/tree/master/assets/3d-model).
-
-<img src="https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer3.jpg" height="300"> <img src="https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GameChatBalancer2.jpg" height="300" style="fillColor: 'ff0000'">
-
-# Installation
+# GameChatBalancer - Installation
 
 ## Arduino
 **Prerequisite**: You should have the **Arduino IDE** installed on your PC. You can download it [here](https://www.arduino.cc/en/software).
 - Download the file **GCBalancer.ino** from the latest release of this project (you should find it at the right side under "Releases").
-- Open the downloaded sketch AudioControl.ino with the installed Arduino IDE
+- Open the downloaded sketch GCBalancer.ino with the installed Arduino IDE
 - Follow the instructions "How to upload a sketch with the Arduino IDE 2" from the [Arduino website] (https://docs.arduino.cc/software/ide-v2/tutorials/getting-started/ide-v2-uploading-a-sketch)
+
+### Change analog pin
+You can change the used analog pin in **line 1** of the sketch. Change the value to whatever the **output pin** of your potentiometer (green line in the shematic above) is connected to.
+
+![Sketch](https://user-images.githubusercontent.com/130736237/235370434-3a052883-85e2-4aa0-8d43-80c4657d75c4.png)
+
 
 ### Test
 After uploading the sketch, open the serial monitor of thr Arduino IDE by choosing *Tools* ->  *Serial Monitor* (or by pressing `strg` + `shift` + `M`).
@@ -95,73 +59,79 @@ If you turn the potentiometer (or move the slider) you should see **values betwe
   - Type shell:startup and press enter
   - Right click and create a new link to GCBalancer.exe
 
-# Manual
+# Manual - Systray application
 The application will start in the systray:
 
-![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GCB_Systray_Expanded.png)
+![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/Manual/GCB_Systray_Expanded.png)
 
-Clicking on **Show** will open the GUI so that you can configure for which applications you want to modify the volume:
+A right click will open the context menu. The first row shows the **connection status** (COM4) to your DIY hardware device. The second row shows the **last recieved value** (59) from the hardware.
 
-![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/GCB_settings.png)
+Clicking on **Show** will open the GUI so that you can configure GameChatBalancer:
+
+![](https://github.com/TheSoundCoder/AudioControl/blob/master/assets/Manual/GCB_settings.png)
+
+The two symbols on the left ("Equalizer" and "Bug") let you switch between the [Settings](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/Manual.md#settings) and [Debug](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/Manual.md#debug) area.
 
 ## Settings
-You can fully control and customize GameChatBalancer to your needs in the settings area.
-If your DIY hardware is connected to the PC GameChatBalancer should automatically detect it and connect to it. 
+The settings area is your **command center** for this application. It has two main areas:
+- Hardware properties
+- Audio settings
+
+We will start with the hardware properties as this might be of interest on the first startup.
 
 ### Hardware properties
+![](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/assets/Manual/GCB_settings_hwproperties.png)
 
-### Audio setup
+#### ComPort (blue)
+In the Hardware properties area, you can choose the **COM port** for your DIY hardware. Usually it should be a COM port greater than COM2. **I recomment to leave this setting to "Auto"**. In this case GameChatBalancer will **auto-detect your DIY hardware by doing a basic handshake** (syn <> ack).
 
+If your device is properly connected the checkbox "Connected" will be checked. Otherwise in a disconnected state this checkbox will be unchecked. 
+
+#### Noise reduction (green)
+Here you can set the Noise reduction level for your Arduino. Changing this setting will be confirmed by the hardware. In this case the Checkbox "NR confirmed" will be checked.
+
+As cheap potentiometers / sliders can cause noise, it is important to modify this setting to the quality of used components. 
+
+*What is noise?* - The Arduino / Seeed XIAO microcontroller reads the analog resistor value of your potentiometer, resulting in values between 0 and 1023. If you do not touch your potentiometer, this value should be static. If you turn your potentiometer to the middle position, this value should be ~512. A cheap potentiometer has a higher tolerance, meaning that this value will not be static, but will vary for example between 508 and 516.
+
+*Why is noise bad?* - To **reduce the traffic on the Com port and to reduce the CPU load of your PC**, the Arduino sketch is implemented to only send a value to the PC, if it deviates from the previously sent value.
+No turn on the potentiometer -> No change in values -> No data is sent to the PC -> GameChantBalancer Systray application keeps sleeping.
+Noise will cause a constant stream of new values between the Arduino and your PC and might cause an increased CPU load as the volume settings for applications are constantly modified.
+
+*Which level of noise reduction should I use?* - If you want to validate if the chosen noise reduction level matches the quality of your potentiometer, use the  [Debug](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/Manual.md#debug) area as follows.
+1. Enable debugging
+2. Start with *Noise reduction* set to *off*.
+3. Wait until the microcontroller confirms the chosen debug level. (Checkbox "NR confirmed" (Settings - Hardware properties) is checked.)
+4. Change to the Debug area
+5. **Do not turn the potentiometer or move the slider**
+6. If the debug window shows a lot of altering values coming in, change to a higher noise reduction level.
+7. Return with #3, except you already reached the noise reduction level "High". ;-)
+
+*What is the downside of noise reduction?* - If noise reduction is set to medium or high, the application will "drop" 1 value at level medium und 2 values at level high **if you change the direction when turning the potentiometer**. The reason is that those values are buffered and not sent by the microcontroller. At level high it will look as follows (example):
+- Initial value 50
+- Turn the potentiometer left until you reach 45
+- Start turing the potentiometer right. The first value will be **48 instead of 46** as 45, 46 and 47 are in the local buffer for noise reduction.
+
+
+### Audio settings
+The audio settings are located above the Hardware properties.
+
+![](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/assets/Manual/GCB_settings_programs.png)
+
+You can assign applications to the **chat** (yellow) or **game** (green) category by **dragging and dropping** them from the list of **available programs** (blue). ([see Video](https://github.com/TheSoundCoder/GameChatBalancer/edit/master/README.md#pictures--video))
+
+If a program you want to assign is not listed in the blue area:
+- **start the program** 
+- press the **refresh icon** below the listbox - your program should appear now
+- assign the program via drag & drop
+
+If you mixed up the ground and power wires during the built, you can invert the behaviour of the potentiometer by checking the **"Invert" checkbox** in the Hardware properties.
+
+![](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/assets/Manual/GCB_settings_slider.png)
 
 
 ## Debug
+You can see debug messages in the debug area of the application. To enable debug messages just activate the highlighted checkbox.
 
-# Pictures / Video
+![](https://github.com/TheSoundCoder/GameChatBalancer/blob/master/assets/Manual/GCB_debug1.png)
 
-See the application in action:
-
-https://user-images.githubusercontent.com/130736237/235218694-252510ab-6273-4d05-bc87-e7d56919cefa.mp4
-
-This is how it look like in the Windows Audio mixer:
-
-https://user-images.githubusercontent.com/130736237/235218894-d49eed7c-69e4-4d56-9448-dae65230d700.mp4
-
-
-# Licences
-Icons used under [Creativecommons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/legalcode) from https://icon-icons.com:
-Designer | Iconpack | Icon Name | Image
----------|----------|---------|---------
-Perpixel | Mobile Basic Vol. 1 | conversation Icon | <img src="https://github.com/TheSoundCoder/AudioControl/blob/master/AudioControl/Resources/ico_chat3.png" width="48">
-Iconicons | Icons - line | Game, controller icon | <img src="https://cdn.icon-icons.com/icons2/3831/PNG/512/game_controller_icon_234136.png" width="48">
-CoreUI | CoreUI Free | Equalizer Icon | <img src="https://cdn.icon-icons.com/icons2/2385/PNG/512/equalizer_icon_144361.png" width="48">
-Steve Shoger | Zondicons | Bug Icon | <img src="https://cdn.icon-icons.com/icons2/2065/PNG/512/bug_icon_125029.png" width="48">
-Yannick | General Icons | Refresh Icon | <img src="https://cdn.icon-icons.com/icons2/562/PNG/512/refresh-page-arrow-button_icon-icons.com_53909.png" width="48">
-
-# Roadmap
-Depending on my free time I would like to make the complete setup flexible so that additional potentiometers are supported. Those can then be used to (e.g.):
-- Control the master volume of your PC
-- Assign single or multiple applications to a potentiometer
-
-From controlling the audio volume this is very easy to implement. I am currently thinking of how the Systray UI and configuration of the Arduino can be done flexible so that no new sketch needs to be uploaded.
-
-# Special Thanks
-First of all I would like to thank **sverrirs for his Gist AudioManager.cs** which accelerated the development and for sure saved me from some pain during the development. I used and modified AudioManager.cs to my needs so that GameChatBalancer is able to adjust the volume of more than one application by application name in one single call.
-
-# Issues
-- [x] Implement options for noise reduction (Off(0) - Low(1) - Medium(2) - High(3))
-  - [x] Default: High
-  - [x] Customizable via C# application
-  - [x] Set / Get value during startup of the application
-  - [ ] [Optional] Auto-Adjust mode for noise reduction
-- COM handling modifizieren
-  - Liste aktualisieren wenn USB event
-  - aktuelle Auswahl hinzufügen
-  - reconnect
-  - IsInitialized valiable
-  - Reconnecting variable
-
-## Optional
-- [ ] Screen overlay to see volume adjustments Ingame
-https://github.com/michel-pi/GameOverlay.Net
-- [ ] Migrate to modern UI
-    - https://social.msdn.microsoft.com/Forums/es-ES/65a2064f-2d6a-4ecc-8076-60c72cb7070d/wpf-c-save-controls-created-at-runtime?forum=wpf
