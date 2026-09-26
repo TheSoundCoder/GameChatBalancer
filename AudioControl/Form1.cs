@@ -3,11 +3,11 @@
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO.Ports;
+using Microsoft.Win32;
 //using static System.Runtime.InteropServices.JavaScript.JSType;
 //using System.Security.Cryptography;
 using System.Management;
 using System.Windows.Forms;
-using static AudioManager.AudioManager;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace AudioControl
@@ -17,21 +17,52 @@ namespace AudioControl
         //static SerialPort _serialPort;
         //string ComPort = Properties.Settings.Default.ComPort;    //Config
 
-        string GAME = Properties.Settings.Default.GAME;   //List of Games comma separated
-        string CHAT = Properties.Settings.Default.CHAT;    //List of Voice apps comma separated
+        string GAME;   //List of Games comma separated
+        string CHAT;    //List of Voice apps comma separated
 
         bool debug = false;
         bool initialized = false;
         public object lb_item = null;
         ListBox source_LB = null;
+        readonly ISerialDeviceService serialDeviceService;
+        readonly IUsbWatcherService usbWatcherService;
+        readonly IAudioSessionService audioSessionService;
+        readonly IAudioBalanceService audioBalanceService;
+        readonly ISettingsStore settingsStore;
 
         public Form1()
+            : this(null, null, null, null, null)
+        {
+        }
+
+        internal Form1(ISerialDeviceService? serialDeviceService)
+            : this(serialDeviceService, null, null, null, null)
+        {
+        }
+
+        internal Form1(ISerialDeviceService? serialDeviceService, IUsbWatcherService? usbWatcherService)
+            : this(serialDeviceService, usbWatcherService, null, null, null)
+        {
+        }
+
+        internal Form1(ISerialDeviceService? serialDeviceService, IUsbWatcherService? usbWatcherService, IAudioSessionService? audioSessionService)
+            : this(serialDeviceService, usbWatcherService, audioSessionService, null, null)
+        {
+        }
+
+        internal Form1(ISerialDeviceService? serialDeviceService, IUsbWatcherService? usbWatcherService, IAudioSessionService? audioSessionService, ISettingsStore? settingsStore, IAudioBalanceService? audioBalanceService)
         {
             InitializeComponent();
             // Handle the ApplicationExit event to know when the application is exiting.
             Application.ApplicationExit += new EventHandler(this.OnApplicationExit);
-            USBandCOM.HandOverForm(this);
-            HandOverForm(this); //AudioManager
+            SystemEvents.SessionEnding += OnSessionEnding;
+            this.serialDeviceService = serialDeviceService ?? new SerialDeviceService(this);
+            this.usbWatcherService = usbWatcherService ?? new UsbWatcherService();
+            this.audioSessionService = audioSessionService ?? new AudioSessionService(this);
+            this.settingsStore = settingsStore ?? new SettingsStore();
+            this.audioBalanceService = audioBalanceService ?? new AudioBalanceService(this.audioSessionService);
+            GAME = this.settingsStore.Game;
+            CHAT = this.settingsStore.Chat;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -52,14 +83,18 @@ namespace AudioControl
             fill_lb_CHAT();
             fill_lb_AudioProcesses();
             fill_ddl_NoiseReduction();
-            cb_invert.Checked = Properties.Settings.Default.Invert;
-            if (Properties.Settings.Default.ComPort == "") { Properties.Settings.Default.ComPort = "Auto"; }
+            cb_invert.Checked = settingsStore.Invert;
+            if (settingsStore.ComPort == "")
+            {
+                settingsStore.ComPort = "Auto";
+                settingsStore.SaveNow();
+            }
             SendToLog("Filling ComPortList");
             Fill_ddl_ComPort();
 
-            USBandCOM.Initialize_USB_Watcher();
-            USBandCOM.OpenComPort();
-            if (USBandCOM.sp_connected())
+            usbWatcherService.Start();
+            serialDeviceService.OpenComPort();
+            if (serialDeviceService.IsConnected())
             {
                 GetVol();
                 Send_NoiseReducion_Value();
@@ -83,7 +118,7 @@ namespace AudioControl
         private void fill_lb_AudioProcesses()
         {
             lb_AudioProcesses.Items.Clear();
-            lb_AudioProcesses.Items.AddRange(GetAudioApplications(false).Split("\r\n").Distinct().ToArray());
+            lb_AudioProcesses.Items.AddRange(audioSessionService.GetAudioApplications(false).Split("\r\n").Distinct().ToArray());
             foreach (var item in lb_CHAT.Items)
             {
                 lb_AudioProcesses.Items.Remove(item);
@@ -100,7 +135,7 @@ namespace AudioControl
         {
             SendToLog("Updating DDL_ComPort");
             string strOptions = "";
-            string strSelection = Properties.Settings.Default.ComPort;
+            string strSelection = settingsStore.ComPort;
             strOptions += "Auto,";
             strOptions += strSelection + ",";
             foreach (string ComPort in SerialPort.GetPortNames())
@@ -124,42 +159,88 @@ namespace AudioControl
             ddlNoiseReduction.ValueMember = "Key";
             ddlNoiseReduction.DisplayMember = "Value";
             ddlNoiseReduction.Enabled = true;
-            ddlNoiseReduction.Text = Properties.Settings.Default.NoiseReduction;
+            ddlNoiseReduction.Text = settingsStore.NoiseReduction;
         }
 
         public void SendToLog(string msg)
         {
+            if (InvokeRequired)
+            {
+                if (!IsDisposed && IsHandleCreated)
+                {
+                    BeginInvoke(new Action<string>(SendToLog), msg);
+                }
+                return;
+            }
+
             if (debug) { textBox1.AppendText(msg + "\r\n"); }
         }
 
         public void ConfirmNR()
         {
+            if (InvokeRequired)
+            {
+                if (!IsDisposed && IsHandleCreated)
+                {
+                    BeginInvoke(new Action(ConfirmNR));
+                }
+                return;
+            }
+
             cbNR.Checked = true;
         }
 
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool Debug
         {
             get => debug;
             set { debug = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool Initialized
         {
             get => initialized;
             set { initialized = value; }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public string SystrayCom
         {
             get => systrayCom.Text;
-            set { systrayCom.Text = value; }
+            set
+            {
+                if (InvokeRequired)
+                {
+                    if (!IsDisposed && IsHandleCreated)
+                    {
+                        BeginInvoke(new Action<string>(v => systrayCom.Text = v), value);
+                    }
+                    return;
+                }
+
+                systrayCom.Text = value;
+            }
         }
 
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool Connected
         {
             get => cb_connected.Checked;
-            set { cb_connected.Checked = value; }
+            set
+            {
+                if (InvokeRequired)
+                {
+                    if (!IsDisposed && IsHandleCreated)
+                    {
+                        BeginInvoke(new Action<bool>(v => cb_connected.Checked = v), value);
+                    }
+                    return;
+                }
+
+                cb_connected.Checked = value;
+            }
         }
 
 
@@ -167,41 +248,29 @@ namespace AudioControl
         {
             SendToLog("Noise reduction set to: " + ddlNoiseReduction.SelectedValue.ToString());
             cbNR.Checked = false;
-            USBandCOM.sp_SendData(ddlNoiseReduction.SelectedValue.ToString());
+            serialDeviceService.SendData(ddlNoiseReduction.SelectedValue.ToString());
         }
 
 
         public void controlVolume(float volume)
         {
+            if (InvokeRequired)
+            {
+                if (!IsDisposed && IsHandleCreated)
+                {
+                    BeginInvoke(new Action<float>(controlVolume), volume);
+                }
+                return;
+            }
+
             //if (Debug) { textBox1.AppendText(volume.ToString() + "\r\n"); }
-            if (cb_invert.Checked) { volume = 100 - volume; }
-            systrayVolume.Text = volume.ToString();
-            trackBar1.Value = (int)volume;
-            lbl_absoluteval.Text = volume.ToString();
-            if (volume < 50)
-            {
-                //tune GAME
-                SetApplicationVolumeByName(GAME, volume * 2);
-                SetApplicationVolumeByName(CHAT, 100);
-                lbl_game_vol.Text = (volume * 2).ToString();
-                lbl_chat_vol.Text = "100";
-            }
-            else if (volume > 50)
-            {
-                //tune CHAT
-                SetApplicationVolumeByName(CHAT, 100 - ((volume - 50) * 2));
-                SetApplicationVolumeByName(GAME, 100);
-                lbl_chat_vol.Text = (100 - ((volume - 50) * 2)).ToString();
-                lbl_game_vol.Text = "100";
-            }
-            else
-            {
-                //set BOTH to 100
-                SetApplicationVolumeByName(GAME, 100);
-                SetApplicationVolumeByName(CHAT, 100);
-                lbl_game_vol.Text = "100";
-                lbl_chat_vol.Text = "100";
-            }
+            var balance = audioBalanceService.ApplyBalance(GAME, CHAT, volume, cb_invert.Checked);
+
+            systrayVolume.Text = balance.DisplayVolume.ToString();
+            trackBar1.Value = (int)balance.DisplayVolume;
+            lbl_absoluteval.Text = balance.DisplayVolume.ToString();
+            lbl_game_vol.Text = balance.GameVolume.ToString();
+            lbl_chat_vol.Text = balance.ChatVolume.ToString();
 
         }
 
@@ -235,7 +304,7 @@ namespace AudioControl
 
         private void GetVol()
         {
-            USBandCOM.sp_SendData("get");
+            serialDeviceService.SendData("get");
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -312,6 +381,10 @@ namespace AudioControl
                     CHAT += item + ",";
                 }
 
+                settingsStore.Game = GAME;
+                settingsStore.Chat = CHAT;
+                settingsStore.ScheduleSave();
+
                 if (Debug) { textBox1.AppendText("GAME: " + GAME + "\r\n"); }
                 if (Debug) { textBox1.AppendText("CHAT: " + CHAT + "\r\n"); }
             }
@@ -347,24 +420,34 @@ namespace AudioControl
 
         private void OnApplicationExit(object sender, EventArgs e)
         {
-            // When the application is exiting, write the application data to the
-            // user file and close it.
-            Properties.Settings.Default.GAME = GAME;
-            Properties.Settings.Default.CHAT = CHAT;
-            Properties.Settings.Default.Save();
-            USBandCOM.CloseComPort();
+            PersistSettingsImmediate();
+            usbWatcherService.Stop();
+            serialDeviceService.Shutdown();
+            SystemEvents.SessionEnding -= OnSessionEnding;
+        }
+
+        private void OnSessionEnding(object? sender, SessionEndingEventArgs e)
+        {
+            PersistSettingsImmediate();
+        }
+
+        private void PersistSettingsImmediate()
+        {
+            settingsStore.Game = GAME;
+            settingsStore.Chat = CHAT;
+            settingsStore.SaveNow();
         }
 
         private void ddl_ComPort_SelectedIndexChanged(object sender, EventArgs e)
         {
             SendToLog("DDL_ComPort Selection changed");
-            Properties.Settings.Default.ComPort = ddl_ComPort.SelectedItem.ToString();
-            Properties.Settings.Default.Save();
+            settingsStore.ComPort = ddl_ComPort.SelectedItem.ToString();
+            settingsStore.SaveNow();
             if (!initialized) { return; }
-            //muss hier noch etwas getan werden währen eines Updates? (Beim Neubefüllen der DDL?)
-            USBandCOM.CloseComPort();
-            USBandCOM.OpenComPort();
-            if (USBandCOM.sp_connected()) { GetVol(); Send_NoiseReducion_Value(); }
+            //muss hier noch etwas getan werden w?hren eines Updates? (Beim Neubef?llen der DDL?)
+            serialDeviceService.CloseComPort();
+            serialDeviceService.OpenComPort();
+            if (serialDeviceService.IsConnected()) { GetVol(); Send_NoiseReducion_Value(); }
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -375,13 +458,14 @@ namespace AudioControl
         private void ddlNoiseReduction_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (!initialized) { return; }
-            Properties.Settings.Default.NoiseReduction = ddlNoiseReduction.Text;
+            settingsStore.NoiseReduction = ddlNoiseReduction.Text;
+            settingsStore.ScheduleSave();
             //USBandCOM.sp_SendData(message);
             //USBandCOM.CloseComPort();
-            if (USBandCOM.sp_connected()) { Send_NoiseReducion_Value(); }
+            if (serialDeviceService.IsConnected()) { Send_NoiseReducion_Value(); }
             SendToLog("Key: " + ddlNoiseReduction.Text);
             SendToLog("Value: " + ddlNoiseReduction.SelectedValue.ToString());
-            SendToLog("Stored Value: " + Properties.Settings.Default.NoiseReduction);
+            SendToLog("Stored Value: " + settingsStore.NoiseReduction);
             //SendToLog(ddlNoiseReduction.SelectedValue.ToString());
         }
 
@@ -397,7 +481,8 @@ namespace AudioControl
 
         private void cb_invert_CheckedChanged(object sender, EventArgs e)
         {
-            Properties.Settings.Default.Invert = cb_invert.Checked;
+            settingsStore.Invert = cb_invert.Checked;
+            settingsStore.ScheduleSave();
             if (cb_invert.Checked == true)
             {
                 controlVolume(float.Parse(lbl_absoluteval.Text));

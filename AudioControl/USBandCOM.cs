@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO.Ports;
 using System.Management;
 using System.Text.RegularExpressions;
+using System.Threading;
 //using System.Linq;
 //using System.Security.Policy;
 //using System.Text;
@@ -25,6 +26,10 @@ namespace AudioControl
         static string cComPort = "";            //used COM Port
         //bool Connected = false;                 //Connection open or closed?
         static string buffer = "";
+        static bool shuttingDown = false;
+        static int reconnectInProgress = 0;
+        static bool dataReceivedHandlerAttached = false;
+        static int dataReceivedInProgress = 0;
 
         #endregion
 
@@ -84,6 +89,7 @@ namespace AudioControl
             int i = 1;
             //_serialPort = new SerialPort();
             if (_serialPort.IsOpen) { CloseComPort(); }
+            shuttingDown = false;
             while (!RetVal && i < Retry)
             {
                 i++;
@@ -97,15 +103,20 @@ namespace AudioControl
                 }
                 if (cComPort.ToUpper() == "AUTO") { return false; }
                 buffer = "";
+                _serialPort = new SerialPort();
                 _serialPort.PortName = cComPort;//Set your board COM
                 _serialPort.BaudRate = 115200;
                 _serialPort.DtrEnable = true;
                 _serialPort.NewLine = "\r\n";
-                _serialPort.DataReceived += new SerialDataReceivedEventHandler(sp_DataReceived); //event based reading
                 //_serialPort.ErrorReceived += new SerialErrorReceivedEventHandler(sp_Error);
                 try
                 {
                     _serialPort.Open();
+                    if (!dataReceivedHandlerAttached)
+                    {
+                        _serialPort.DataReceived += new SerialDataReceivedEventHandler(sp_DataReceived); //event based reading
+                        dataReceivedHandlerAttached = true;
+                    }
                     MainForm.SendToLog("Connected to: " + cComPort);
                     RetVal = true;
                     MainForm.SystrayCom = cComPort;
@@ -123,20 +134,81 @@ namespace AudioControl
         
         public static void CloseComPort()
         {
-            if (_serialPort.IsOpen) { _serialPort.Close(); }
-            _serialPort.DataReceived -= new SerialDataReceivedEventHandler(sp_DataReceived); //event based reading
+            try
+            {
+                if (_serialPort.IsOpen) { _serialPort.Close(); }
+            }
+            catch { }
+
+            try
+            {
+                _serialPort.Dispose();
+            }
+            catch { }
+
+            _serialPort = new SerialPort();
+            dataReceivedHandlerAttached = false;
             buffer = "";
-            MainForm.SystrayCom = "disconnected";
-            MainForm.Connected = false;
+            if (MainForm != null)
+            {
+                MainForm.SystrayCom = "disconnected";
+                MainForm.Connected = false;
+            }
+        }
+
+        public static void Shutdown()
+        {
+            shuttingDown = true;
+
+            try
+            {
+                StopUsbWatcher();
+            }
+            catch { }
+
+            try
+            {
+                CloseComPort();
+            }
+            catch { }
+        }
+
+        public static void StopUsbWatcher()
+        {
+            shuttingDown = true;
+            watcher.EventArrived -= new EventArrivedEventHandler(USB_Event);
+            watcher.Stop();
         }
 
         public static void sp_SendData(string Data)
         {
-            _serialPort.WriteLine(Data);
+            var port = _serialPort;
+            if (!port.IsOpen) { return; }
+
+            try
+            {
+                port.WriteLine(Data);
+            }
+            catch { }
         }
 
         private static void sp_Reconnect()
         {
+            if (Interlocked.CompareExchange(ref reconnectInProgress, 1, 0) != 0) { return; }
+
+            try
+            {
+            if (MainForm == null) { return; }
+
+            if (MainForm.InvokeRequired)
+            {
+                if (!MainForm.IsDisposed && MainForm.IsHandleCreated)
+                {
+                    MainForm.BeginInvoke(new Action(sp_Reconnect));
+                }
+                return;
+            }
+
             CloseComPort();
             MainForm.Initialized = false;       //if not set to false, Fill_ddl_ComPort() will also Open the connection -> suppress
             MainForm.Fill_ddl_ComPort();        //refill DDL for ComPort selection
@@ -147,53 +219,66 @@ namespace AudioControl
                 sp_SendData("get");
                 MainForm.Send_NoiseReducion_Value();
             }
+            }
+            finally
+            {
+                Interlocked.Exchange(ref reconnectInProgress, 0);
+            }
         }
 
         
         private static void sp_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            _serialPort.DataReceived -= new SerialDataReceivedEventHandler(sp_DataReceived);
+            if (Interlocked.CompareExchange(ref dataReceivedInProgress, 1, 0) != 0) { return; }
             //if (MainForm.Debug) { MainForm.SendToLog("Starting continous read."); }
-            while (_serialPort.BytesToRead > 0)
+            try
             {
-                buffer += _serialPort.ReadExisting();
-                if (buffer != null && buffer != "")
+                var port = sender as SerialPort ?? _serialPort;
+                while (!shuttingDown && port.IsOpen && port.BytesToRead > 0)
                 {
-                    //string[] packets1 = buffer.Split("\r\n");
-                    //int arrlength = packets1.Length - 1;
-                    if (buffer.IndexOf("NR=")>-1)
-                    {
-                        //confirmation that NoiseReduction was successfully set
-                        MainForm.ConfirmNR();
-                        MainForm.SendToLog("Noise reduction confirmed by Hardware.");
-                        buffer.Replace("NR=", "");
-                        buffer = Regex.Replace(buffer, "NR=.\\r\\n", "");
-                        //buffer = "";
-                    }
+                    buffer += port.ReadExisting();
                     if (buffer != null && buffer != "")
                     {
-                        //Extract latest volume level from strem
-                        string[] packets1 = buffer.Split("\r\n");
-                        int arrlength = packets1.Length - 1;
-                        if (arrlength > 0)
+                        //string[] packets1 = buffer.Split("\r\n");
+                        //int arrlength = packets1.Length - 1;
+                        if (buffer.IndexOf("NR=")>-1)
                         {
-                            if (MainForm.Debug) { MainForm.SendToLog("Value: " + packets1[arrlength - 1]); }
-                            MainForm.controlVolume(float.Parse(packets1[arrlength - 1]));
+                            //confirmation that NoiseReduction was successfully set
+                            MainForm.ConfirmNR();
+                            MainForm.SendToLog("Noise reduction confirmed by Hardware.");
+                            buffer.Replace("NR=", "");
+                            buffer = Regex.Replace(buffer, "NR=.\\r\\n", "");
+                            //buffer = "";
                         }
-                        //SetMasterVolume(float.Parse(packets1[arrlength - 1])); }
-                        if (buffer.EndsWith("\n"))
+                        if (buffer != null && buffer != "")
                         {
-                            buffer = "";
-                        }
-                        else
-                        {
-                            buffer = packets1[arrlength];
+                            //Extract latest volume level from strem
+                            string[] packets1 = buffer.Split("\r\n");
+                            int arrlength = packets1.Length - 1;
+                            if (arrlength > 0)
+                            {
+                                if (MainForm.Debug) { MainForm.SendToLog("Value: " + packets1[arrlength - 1]); }
+                                MainForm.controlVolume(float.Parse(packets1[arrlength - 1]));
+                            }
+                            //SetMasterVolume(float.Parse(packets1[arrlength - 1])); }
+                            if (buffer.EndsWith("\n"))
+                            {
+                                buffer = "";
+                            }
+                            else
+                            {
+                                buffer = packets1[arrlength];
+                            }
                         }
                     }
                 }
             }
+            catch { }
+            finally
+            {
+                Interlocked.Exchange(ref dataReceivedInProgress, 0);
+            }
             //if (MainForm.Debug) { MainForm.SendToLog("Ending continous read."); }
-            _serialPort.DataReceived += new SerialDataReceivedEventHandler(sp_DataReceived);
 
             /*
             if (MainForm.Debug) { MainForm.SendToLog("ThreatCount: " + Threatcount.ToString()); }
@@ -219,7 +304,7 @@ namespace AudioControl
         }
 
 
-        public static bool sp_connected() { return _serialPort.IsOpen; }
+        public static bool sp_connected() { return _serialPort != null && _serialPort.IsOpen; }
 
         private void sp_Error(object sender, SerialErrorReceivedEventArgs e)
         {
@@ -231,6 +316,7 @@ namespace AudioControl
         #region USB Device Event-Handling
         public static void Initialize_USB_Watcher()
         {
+            shuttingDown = false;
             //WqlEventQuery query = new WqlEventQuery("SELECT * FROM Win32_VolumeChangeEvent WHERE EventType=2");
             watcher.EventArrived += new EventArrivedEventHandler(USB_Event);
             watcher.Query = query;
@@ -241,6 +327,7 @@ namespace AudioControl
 
         private static void USB_Event(object sender, EventArrivedEventArgs e)
         {
+            if (shuttingDown || MainForm == null) { return; }
             //watcher.EventArrived -= new EventArrivedEventHandler(USB_Connect);
             //watcher.Stop();
 
@@ -261,16 +348,21 @@ namespace AudioControl
             }
             */
 
-            if (e.NewEvent.SystemProperties["__CLASS"].Value.ToString() == "__InstanceDeletionEvent")
+            var eventClass = e.NewEvent.SystemProperties["__CLASS"].Value.ToString();
+
+            if (eventClass == "__InstanceDeletionEvent")
             {
                 MainForm.SendToLog("A USB device was disconnected.");
-                //Do I need to do anything? Yes. Check whether the connection is still open
-                sp_Reconnect();
+                if (sp_connected())
+                {
+                    //nur reconnecten, wenn zuvor eine Verbindung bestand
+                    sp_Reconnect();
+                }
             }
-            else if (e.NewEvent.SystemProperties["__CLASS"].Value.ToString() == "__InstanceCreationEvent")
+            else if (eventClass == "__InstanceCreationEvent")
             {
                 MainForm.SendToLog("A USB device was connected.");
-                if (!MainForm.Connected)
+                if (!sp_connected())
                 {
                     sp_Reconnect();
                 }
