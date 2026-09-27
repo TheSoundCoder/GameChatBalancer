@@ -168,6 +168,26 @@ Nach jeder Phase sind verbindlich: Build, Fehlerbehebung, Warning-Prüfung, Regr
 
 ---
 
+## ADR-0009 – Event-Driven Architektur bleibt verbindlich
+- **Status:** Accepted
+- **Datum:** 2026-09-26
+
+### Kontext
+Die Anwendung verarbeitet Hardware- und Audiozustände bereits eventbasiert. Polling-Ansätze würden unnötige Last und Komplexität einführen.
+
+### Entscheidung
+GameChatBalancer bleibt strikt event-driven. Für Arduino/Balancer/UI/Overlay werden keine kontinuierlichen Polling-Schleifen oder periodischen Timer eingeführt, sofern Ereignisse verfügbar sind.
+
+### Erlaubte Ausnahmen
+Timer nur für inhärent timerbasierte Fälle (Overlay-AutoHide, Animationstiming, Debouncing).
+
+### Konsequenzen
+- Niedrigerer Laufzeit-Overhead
+- Klarere Zustandsflüsse über Events
+- Bessere Skalierbarkeit für WPF/ViewModel-basierte Weiterentwicklung
+
+---
+
 ## ADR-Template (für neue Entscheidungen)
 
 ```md
