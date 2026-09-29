@@ -17,6 +17,11 @@ namespace AudioControl
 {
     public partial class Form1 : Form
     {
+        [System.Runtime.InteropServices.DllImport("user32.dll")]
+        private static extern short GetAsyncKeyState(int vKey);
+
+        private const int VkShift = 0x10;
+
         //static SerialPort _serialPort;
         //string ComPort = Properties.Settings.Default.ComPort;    //Config
 
@@ -493,6 +498,7 @@ namespace AudioControl
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EnsureWpfApplicationInitialized();
+            var showDebugOption = (GetAsyncKeyState(VkShift) & 0x8000) != 0;
 
             if (wpfMainWindow == null)
             {
@@ -512,9 +518,14 @@ namespace AudioControl
                     GetDebugMessagesForWpf,
                     SendToLog,
                     SetDebugModeFromWpf,
-                    ApplySoftwareBalanceFromWpf);
+                    ApplySoftwareBalanceFromWpf,
+                    showDebugOption);
                 wpfMainWindow.Closing += WpfMainWindow_Closing;
                 wpfMainWindow.Closed += (_, _) => wpfMainWindow = null;
+            }
+            else
+            {
+                wpfMainWindow.SetShowDebugOption(showDebugOption);
             }
 
             wpfMainWindow.SetArduinoValue(trackBar1.Value);

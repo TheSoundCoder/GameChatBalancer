@@ -47,6 +47,7 @@ public partial class MainWindow : Window
     private readonly Action<string> debugLogAction;
     private readonly Action<bool> debugModeSetter;
     private readonly Action<float> softwareBalanceSetter;
+    private bool showDebugOption;
     private readonly IAppIconService appIconService;
     private bool suppressHardwareOptionEvents;
     private readonly DispatcherTimer noiseReductionAckTimeoutTimer = new() { Interval = TimeSpan.FromSeconds(3) };
@@ -84,7 +85,8 @@ public partial class MainWindow : Window
             () => Enumerable.Empty<string>(),
             _ => { },
             _ => { },
-            _ => { })
+            _ => { },
+            false)
     {
     }
 
@@ -104,7 +106,8 @@ public partial class MainWindow : Window
         Func<IEnumerable<string>> debugMessagesProvider,
         Action<string> debugLogAction,
         Action<bool> debugModeSetter,
-        Action<float> softwareBalanceSetter)
+        Action<float> softwareBalanceSetter,
+        bool showDebugOption)
     {
         this.hardwareStatusProvider = hardwareStatusProvider;
         this.noiseReductionProvider = noiseReductionProvider;
@@ -122,6 +125,7 @@ public partial class MainWindow : Window
         this.debugLogAction = debugLogAction;
         this.debugModeSetter = debugModeSetter;
         this.softwareBalanceSetter = softwareBalanceSetter;
+        this.showDebugOption = showDebugOption;
         appIconService = new ProcessAppIconService();
 
         InitializeComponent();
@@ -578,7 +582,16 @@ public partial class MainWindow : Window
         var homeSelected = navHome?.IsChecked == true;
         var settingsSelected = navSettings?.IsChecked == true;
         var aboutSelected = navAbout?.IsChecked == true;
-        var debugSelected = navDebug?.IsChecked == true;
+        var debugSelected = showDebugOption && navDebug?.IsChecked == true;
+
+        if (navDebug is not null)
+        {
+            navDebug.Visibility = showDebugOption ? Visibility.Visible : Visibility.Collapsed;
+            if (!showDebugOption)
+            {
+                navDebug.IsChecked = false;
+            }
+        }
 
         if (homeHeaderSection is not null)
         {
@@ -611,6 +624,23 @@ public partial class MainWindow : Window
         }
 
         debugModeSetter(debugSelected);
+    }
+
+    public void SetShowDebugOption(bool show)
+    {
+        if (!Dispatcher.CheckAccess())
+        {
+            Dispatcher.BeginInvoke(() => SetShowDebugOption(show));
+            return;
+        }
+
+        if (showDebugOption == show)
+        {
+            return;
+        }
+
+        showDebugOption = show;
+        UpdateNavigationSections();
     }
 
     public void SetHardwareStatus()

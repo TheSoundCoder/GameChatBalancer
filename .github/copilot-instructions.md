@@ -57,6 +57,7 @@ Vor Umsetzung einer UI-Phase muss eine kurze Design-Spezifikation vorliegen (Pal
 
 ## Debugging
 - Der Debug-Bereich soll scrollbar sein; neue Debug-Logeinträge sollen oben angezeigt/eingefügt werden (neueste zuerst).
+- Die Debug-Option soll nicht mehr vom Programmstart abhängen, sondern davon, ob beim Klick auf Systray->Show die Shift-Taste gehalten wird.
 
 ## Software-Control
 - Für Software-Control sollen Hotkeys gelten: Ctrl+Shift+Left verschiebt Balance Richtung Chat, Ctrl+Shift+Right Richtung Game; dabei gilt der Arduino-Invert-Status nicht. 
