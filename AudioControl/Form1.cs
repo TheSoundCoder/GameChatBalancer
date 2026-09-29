@@ -36,6 +36,7 @@ namespace AudioControl
         readonly IUsbWatcherService usbWatcherService;
         readonly IAudioSessionService audioSessionService;
         readonly IAudioBalanceService audioBalanceService;
+        readonly IAutoStartService autoStartService;
         readonly ISettingsStore settingsStore;
         readonly AppAssignmentPathStore appAssignmentPathStore;
         readonly List<string> debugMessages = new();
@@ -45,26 +46,26 @@ namespace AudioControl
         bool isExiting;
 
         public Form1()
-            : this(null, null, null, null, null)
+            : this(null, null, null, null, null, null)
         {
         }
 
         internal Form1(ISerialDeviceService? serialDeviceService)
-            : this(serialDeviceService, null, null, null, null)
+            : this(serialDeviceService, null, null, null, null, null)
         {
         }
 
         internal Form1(ISerialDeviceService? serialDeviceService, IUsbWatcherService? usbWatcherService)
-            : this(serialDeviceService, usbWatcherService, null, null, null)
+            : this(serialDeviceService, usbWatcherService, null, null, null, null)
         {
         }
 
         internal Form1(ISerialDeviceService? serialDeviceService, IUsbWatcherService? usbWatcherService, IAudioSessionService? audioSessionService)
-            : this(serialDeviceService, usbWatcherService, audioSessionService, null, null)
+            : this(serialDeviceService, usbWatcherService, audioSessionService, null, null, null)
         {
         }
 
-        internal Form1(ISerialDeviceService? serialDeviceService, IUsbWatcherService? usbWatcherService, IAudioSessionService? audioSessionService, ISettingsStore? settingsStore, IAudioBalanceService? audioBalanceService)
+        internal Form1(ISerialDeviceService? serialDeviceService, IUsbWatcherService? usbWatcherService, IAudioSessionService? audioSessionService, ISettingsStore? settingsStore, IAudioBalanceService? audioBalanceService, IAutoStartService? autoStartService)
         {
             InitializeComponent();
             // Handle the ApplicationExit event to know when the application is exiting.
@@ -76,6 +77,7 @@ namespace AudioControl
             this.audioSessionService = audioSessionService ?? new AudioSessionService(this);
             this.settingsStore = settingsStore ?? new SettingsStore();
             this.audioBalanceService = audioBalanceService ?? new AudioBalanceService(this.audioSessionService);
+            this.autoStartService = autoStartService ?? new AutoStartService();
             this.appAssignmentPathStore = new AppAssignmentPathStore();
             GAME = this.settingsStore.Game;
             CHAT = this.settingsStore.Chat;
@@ -519,6 +521,8 @@ namespace AudioControl
                     SendToLog,
                     SetDebugModeFromWpf,
                     ApplySoftwareBalanceFromWpf,
+                    GetStartWithWindowsFromWpf,
+                    ApplyStartWithWindowsFromWpf,
                     showDebugOption);
                 wpfMainWindow.Closing += WpfMainWindow_Closing;
                 wpfMainWindow.Closed += (_, _) => wpfMainWindow = null;
@@ -535,6 +539,37 @@ namespace AudioControl
 
             this.Hide();
             trayicon.Visible = true;
+        }
+
+        private bool GetStartWithWindowsFromWpf()
+        {
+            var enabled = autoStartService.IsEnabled();
+            if (settingsStore.StartWithWindows != enabled)
+            {
+                settingsStore.StartWithWindows = enabled;
+                settingsStore.ScheduleSave();
+                SendToLog($"Autostart sync: settings adjusted to OS state ({(enabled ? "enabled" : "disabled")}).");
+            }
+
+            return enabled;
+        }
+
+        private void ApplyStartWithWindowsFromWpf(bool enabled)
+        {
+            if (!autoStartService.TrySetEnabled(enabled, out var errorMessage))
+            {
+                var actualState = autoStartService.IsEnabled();
+                SendToLog($"Autostart update failed: {errorMessage}");
+                SendToLog($"Autostart rollback: keeping OS state ({(actualState ? "enabled" : "disabled")}).");
+                settingsStore.StartWithWindows = actualState;
+                settingsStore.ScheduleSave();
+                wpfMainWindow?.SetStartWithWindowsState(actualState);
+                return;
+            }
+
+            settingsStore.StartWithWindows = enabled;
+            settingsStore.ScheduleSave();
+            SendToLog($"Autostart {(enabled ? "enabled" : "disabled")}." );
         }
 
         private void ApplyNoiseReductionFromWpf(string noiseReduction)

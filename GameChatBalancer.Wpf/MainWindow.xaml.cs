@@ -47,6 +47,8 @@ public partial class MainWindow : Window
     private readonly Action<string> debugLogAction;
     private readonly Action<bool> debugModeSetter;
     private readonly Action<float> softwareBalanceSetter;
+    private readonly Func<bool> startWithWindowsProvider;
+    private readonly Action<bool> startWithWindowsSetter;
     private bool showDebugOption;
     private readonly IAppIconService appIconService;
     private bool suppressHardwareOptionEvents;
@@ -86,6 +88,8 @@ public partial class MainWindow : Window
             _ => { },
             _ => { },
             _ => { },
+            () => false,
+            _ => { },
             false)
     {
     }
@@ -107,6 +111,8 @@ public partial class MainWindow : Window
         Action<string> debugLogAction,
         Action<bool> debugModeSetter,
         Action<float> softwareBalanceSetter,
+        Func<bool> startWithWindowsProvider,
+        Action<bool> startWithWindowsSetter,
         bool showDebugOption)
     {
         this.hardwareStatusProvider = hardwareStatusProvider;
@@ -125,6 +131,8 @@ public partial class MainWindow : Window
         this.debugLogAction = debugLogAction;
         this.debugModeSetter = debugModeSetter;
         this.softwareBalanceSetter = softwareBalanceSetter;
+        this.startWithWindowsProvider = startWithWindowsProvider;
+        this.startWithWindowsSetter = startWithWindowsSetter;
         this.showDebugOption = showDebugOption;
         appIconService = new ProcessAppIconService();
 
@@ -136,6 +144,7 @@ public partial class MainWindow : Window
         Loaded += (_, _) => UpdateHardwareStatus();
         Loaded += (_, _) => InitializeHardwareOptions();
         Loaded += (_, _) => InitializeAppAssignments();
+        Loaded += (_, _) => InitializeStartWithWindowsOption();
         Loaded += (_, _) => RefreshDebugMessages();
         SourceInitialized += MainWindow_SourceInitialized;
         Closed += MainWindow_Closed;
@@ -143,6 +152,19 @@ public partial class MainWindow : Window
 
         noiseReductionAckTimeoutTimer.Tick += NoiseReductionAckTimeoutTimer_Tick;
         UpdateAudioBalanceUi(currentArduinoValue);
+    }
+
+    private void InitializeStartWithWindowsOption()
+    {
+        suppressHardwareOptionEvents = true;
+        try
+        {
+            tglStartWithWindows.IsChecked = startWithWindowsProvider();
+        }
+        finally
+        {
+            suppressHardwareOptionEvents = false;
+        }
     }
 
     private void MainWindow_SourceInitialized(object? sender, EventArgs e)
@@ -673,6 +695,35 @@ public partial class MainWindow : Window
         }
 
         invertControlSetter(tglInvertControl.IsChecked == true);
+    }
+
+    private void StartWithWindowsToggle_Changed(object sender, RoutedEventArgs e)
+    {
+        if (suppressHardwareOptionEvents)
+        {
+            return;
+        }
+
+        startWithWindowsSetter(tglStartWithWindows.IsChecked == true);
+    }
+
+    public void SetStartWithWindowsState(bool enabled)
+    {
+        if (!Dispatcher.CheckAccess())
+        {
+            Dispatcher.BeginInvoke(() => SetStartWithWindowsState(enabled));
+            return;
+        }
+
+        suppressHardwareOptionEvents = true;
+        try
+        {
+            tglStartWithWindows.IsChecked = enabled;
+        }
+        finally
+        {
+            suppressHardwareOptionEvents = false;
+        }
     }
 
     public void SetNoiseReductionApplying(string level)

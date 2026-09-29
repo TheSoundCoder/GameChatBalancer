@@ -36,6 +36,12 @@ namespace AudioControl
             set => Properties.Settings.Default.Invert = value;
         }
 
+        public bool StartWithWindows
+        {
+            get => Properties.Settings.Default.StartWithWindows;
+            set => Properties.Settings.Default.StartWithWindows = value;
+        }
+
         public void ScheduleSave()
         {
             lock (sync)

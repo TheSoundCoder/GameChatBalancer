@@ -99,10 +99,26 @@
 5. `03.03` WPF Drag&Drop-Zuordnung
 6. `03.06` Systray-/Lifecycle-Host von `Form1` entkoppeln (eigenen Host einführen), danach `Form1` vollständig entfernen
 
+## Nächste Umsetzungssequenz (ab jetzt)
+1. `04.01` Windows-Autostart als Option umsetzen (Registry HKCU Run + WPF Toggle + Persistenz)
+2. `04.02` Systray-Bereich an neues Design anpassen (ohne Lifecycle-Bruch)
+3. `04.03` `Form1` schrittweise entkoppeln und entfernen (Host kapseln, dann UI-Adapter abbauen)
+
+### Phase 04.01 – Autostart (Detailplan)
+- `04.01.01` `IAutoStartService` Vertrag definieren
+- `04.01.02` `AutoStartService` implementieren (lesen/setzen/entfernen in `HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run`)
+- `04.01.03` `ISettingsStore`/`SettingsStore` um `StartWithWindows` ergänzen
+- `04.01.04` Form1-Integration als WPF-Callback verdrahten
+- `04.01.05` WPF-Toggle „Start with Windows“ anbinden und initialisieren
+- `04.01.06` Fehlerpfad + Debug-Logging ergänzen
+- `04.01.07` Build + manueller Registry-Funktionstest
+
 ## Fortschrittsprotokoll
 
 | Datum | Änderung | Verantwortlich |
 |---|---|---|
+| 2026-09-29 | 04.01 umgesetzt: Windows-Autostart-Option integriert (`IAutoStartService`/`AutoStartService`, WPF-Toggle „Start with Windows“, OS↔Settings-Sync, Fehler-Rollback + Debug-Logging); Build + Registry-Smoketest erfolgreich | AI Agent |
+| 2026-09-29 | Roadmap erweitert: Sequenz 04.01 Autostart, 04.02 Systray-Modernisierung, 04.03 Form1-Entkopplung/Entfernung priorisiert; Detailplan für 04.01 ergänzt | User + AI Agent |
 | 2026-09-27 | 03.03 korrigiert: AudioSessionsChanged auf robustes CoreAudio-Session-Monitoring umgestellt (dedizierter MTA-Thread + sauberes Register/Unregister), damit SessionCreated-Events zuverlässig ankommen; Build erfolgreich | AI Agent |
 | 2026-09-27 | 03.03 fortgeführt: Eventbasierte Auto-Aktualisierung für neu erscheinende Audio-Sessions ergänzt (CoreAudio `SessionCreated` statt Prozessstart-Trigger), inkl. sauberem Start/Stop/Unsubscribe für rückbaubare Änderung; Build erfolgreich | AI Agent |
 | 2026-09-27 | Planung ergänzt: neuer Schritt `03.06` aufgenommen, um Systray/Lifecycle aus `Form1` zu lösen und `Form1` später löschen zu können | User + AI Agent |

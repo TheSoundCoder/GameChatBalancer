@@ -568,6 +568,23 @@
                             Margin="0,10,0,8"
                             Click="RescanAudioSessionsButton_Click" />
                     <Button Content="Reconnect Hardware" Height="36" />
+
+                    <Grid Margin="0,12,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Start with Windows"
+                                   FontSize="14"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource Brush.TextPrimary}"
+                                   VerticalAlignment="Center" />
+                        <ToggleButton x:Name="tglStartWithWindows"
+                                      Grid.Column="1"
+                                      Style="{StaticResource HardwareToggleStyle}"
+                                      Checked="StartWithWindowsToggle_Changed"
+                                      Unchecked="StartWithWindowsToggle_Changed" />
+                    </Grid>
                 </StackPanel>
             </Border>
 
