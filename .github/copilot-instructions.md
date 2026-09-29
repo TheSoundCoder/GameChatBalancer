@@ -4,6 +4,7 @@
 - Der Nutzer möchte ein zentrales Umsetzungsbacklog und eine Designentscheidungsdokumentation als Steuerungs- und Gedächtnisartefakte im Repository; außerdem soll die Migration auf eine aktuelle .NET-Version (net10.0-windows) bereits in einer frühen Projektphase eingeplant werden.
 - Der Nutzer möchte auf WPF mit Fluent UI migrieren und eine WinUI-3-Migration höchstens zu einem späteren Zeitpunkt evaluieren. Für die Modernisierung sollen Funktionalität und Stabilität strikt vor UX/Visuals priorisiert werden; Migration in kleinen Phasen mit Build/Warning/Test-Gates, WPF+Fluent als Ziel, WinUI 3 nur später optional.
 - Der Nutzer bevorzugt Branch-Workflow: erst refactor/services-decoupling als Basisbranch, danach separater WPF-Upgrade-Branch darauf.
+- Der Nutzer möchte den Migrationsplan um einen expliziten Schritt erweitern, der den Systray-/Lifecycle-Host von Form1 entkoppelt, damit Form1 später vollständig entfernt werden kann.
 
 ## Architekturelles Prinzip (verbindlich)
 ### Event Driven
@@ -18,7 +19,13 @@
 - Verbindliche Referenzdatei: `AI Agent/UI-Design-Reference.md`
 - Referenzbildpfad im Repository: `assets/design-reference/GameChatBalancer-Reference.jpeg`
 - Das Referenzbild ist eine visuelle Leitlinie, keine pixelgenaue Spezifikation.
+- Titel und Untertitel sollen direkt auf der Titelgrafik platziert werden, nicht oberhalb des Bildbereichs. Der Titel im Hero-Bild soll leicht kleiner und weiter links/unten positioniert werden; er soll mit sehr dezentem Schatten/Glow für bessere Lesbarkeit auf hellen Bildbereichen versehen werden.
 - Die bestehende GameChatBalancer-Funktionalität muss erhalten bleiben und in die neue Designsprache übertragen werden.
+- Der Schriftzug "GameChatBalancer" soll in der WPF-Shell im zentralen Hauptelement erscheinen (nicht primär in der Sidebar).
+- Im zentralen WPF-Bereich soll Chat links und Game rechts angezeigt werden.
+- Wenn keine Hardware-Verbindung besteht, soll der Status in der WPF-UI explizit als "Disconnected" angezeigt werden (statt "Connected").
+- Der Titelbild im oberen Produkt-Card-Bereich soll den Kasten möglichst vollständig ausfüllen, ohne innere Ränder.
+- Für den Hardware-Status oben rechts in der WPF-UI bevorzugt der Nutzer eine reine farbige Kreis-Anzeige ohne Text im Badge; der Hardware-Status-Dot soll einen klaren, scharfen Rand ohne unscharfen/ausgefransten Effekt haben.
 
 ### Verbindliche Gestaltungsregeln
 - Windows-11-/Fluent-inspirierte visuelle Sprache
@@ -31,4 +38,20 @@
 - Kein 1:1-Screenshot-Nachbau, kein RGB-Gaming-Look, keine unnötigen Effekte
 
 ### Vorgehenspflicht vor UI-Implementierung
-Vor Umsetzung einer UI-Phase muss eine kurze Design-Spezifikation vorliegen (Palette, Typografie, Spacing, Radius, Controls, Cards, Navigation, Icons, States, Light-Theme-Äquivalent, Layoutstruktur). Dafür ist die Datei `AI Agent/UI-Design-Reference.md` maßgeblich.Vor Umsetzung einer UI-Phase muss eine kurze Design-Spezifikation vorliegen (Palette, Typografie, Spacing, Radius, Controls, Cards, Navigation, Icons, States, Light-Theme-Äquivalent, Layoutstruktur). Dafür ist die Datei `AI Agent/UI-Design-Reference.md` maßgeblich.
+Vor Umsetzung einer UI-Phase muss eine kurze Design-Spezifikation vorliegen (Palette, Typografie, Spacing, Radius, Controls, Cards, Navigation, Icons, States, Light-Theme-Äquivalent, Layoutstruktur). Dafür ist die Datei `AI Agent/UI-Design-Reference.md` maßgeblich.
+
+### Navigation
+- Für die WPF-Navigation bevorzugt der Nutzer nur die Bereiche Home, Settings und About; separate Navigationseinträge für Game/Chat sollen entfallen, da die Zuordnung zentral im Hauptbereich erfolgt.
+- Der Nutzer bevorzugt für den WPF-Hauptbereich das 2-Ebenen-Layout (oben Game/Chat, darunter Verfügbare Apps) und bewertet diese Variante als besser als eine dritte Spalte im rechten Utility-Bereich.
+- Für die Sidebar-Navigation sollen Mockup-nahe Symbole je Eintrag verwendet werden und die aktive Selektion klar mit einem blauen vertikalen Streifen markiert sein. Die Button-Optik soll stärker am Mockup orientiert sein: bessere Lesbarkeit, größerer linker Innenabstand und klareres Highlighting der aktiven Option.
+
+### UI-Layout
+- Der zentrale Headerbereich soll in zwei getrennte Cards aufgeteilt werden: eine eigene Product-Branding-Fläche (später durch Grafik ersetzt) und eine separate "Audio Balance"-Card.
+- Im Audio-Balance-Bereich sollen 'Game' und 'Chat' optisch größer hervorgehoben werden; die Prozentwerte sollen darunter stehen, um dem ursprünglichen Mockup näher zu kommen.
+
+## Service-Änderungen
+- Änderungen an Services sollen nach Möglichkeit zunächst vermieden werden; wenn Service-Änderungen nötig sind, müssen sie vorab begründet und vom Nutzer bestätigt werden. Vor Änderungen an service-naher Logik (z. B. AudioManager) immer vorab kurz begründen und erst nach expliziter Nutzerbestätigung umsetzen.
+- Bei neuen Service-nahen Änderungen soll die Umsetzung so erfolgen, dass sie im Zweifel sauber rückbaubar ist.
+
+## Debugging
+- Der Debug-Bereich soll scrollbar sein; neue Debug-Logeinträge sollen oben angezeigt/eingefügt werden (neueste zuerst).

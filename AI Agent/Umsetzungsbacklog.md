@@ -97,11 +97,20 @@
 3. `03.04` WPF Tray-Integration
 4. `03.05` WPF Hardware-Steuerung anbinden
 5. `03.03` WPF Drag&Drop-Zuordnung
+6. `03.06` Systray-/Lifecycle-Host von `Form1` entkoppeln (eigenen Host einführen), danach `Form1` vollständig entfernen
 
 ## Fortschrittsprotokoll
 
 | Datum | Änderung | Verantwortlich |
 |---|---|---|
+| 2026-09-27 | 03.03 korrigiert: AudioSessionsChanged auf robustes CoreAudio-Session-Monitoring umgestellt (dedizierter MTA-Thread + sauberes Register/Unregister), damit SessionCreated-Events zuverlässig ankommen; Build erfolgreich | AI Agent |
+| 2026-09-27 | 03.03 fortgeführt: Eventbasierte Auto-Aktualisierung für neu erscheinende Audio-Sessions ergänzt (CoreAudio `SessionCreated` statt Prozessstart-Trigger), inkl. sauberem Start/Stop/Unsubscribe für rückbaubare Änderung; Build erfolgreich | AI Agent |
+| 2026-09-27 | Planung ergänzt: neuer Schritt `03.06` aufgenommen, um Systray/Lifecycle aus `Form1` zu lösen und `Form1` später löschen zu können | User + AI Agent |
+| 2026-09-27 | 03.03 begonnen: WPF Assignment-Listen auf echte Daten umgestellt (Game/Chat/Verfügbar inkl. App-Icons), Drag&Drop zwischen Kategorien implementiert, Persistierung der Zuordnung zeitnah über `ISettingsStore.ScheduleSave()` verdrahtet, Build erfolgreich | AI Agent |
+| 2026-09-27 | 03.05 fortgeführt: Hardware-Status modernisiert (Status-Dot, Noise Reduction, Invert-Toggle inkl. Arduino-Confirm/Apply/Error-Visualisierung), COM-Port-UI bewusst entfernt bei unveränderter Service-Logik, Build erfolgreich | AI Agent |
+| 2026-09-27 | 03.02 fortgeführt: Assignment-Bereich auf 2-Ebenen-Layout umgestellt (oben Game/Chat, darunter volle Breite „Verfügbare Apps (nicht zugewiesen)“), Build erfolgreich | AI Agent |
+| 2026-09-27 | 03.02 gestartet: WPF Basis-Shell + Sidebar-Navigation umgesetzt (`GameChatBalancer.Wpf`), Design-Token/Theme-Ressourcen in `App.xaml` angelegt, Build erfolgreich | AI Agent |
+| 2026-09-27 | 03.01 abgeschlossen: WPF-Projekt `GameChatBalancer.Wpf` erstellt und in `AudioControl.sln` eingebunden, Ziel-TFM `net10.0-windows` verifiziert, Build erfolgreich | AI Agent |
 | 2026-09-26 | 01.05 abgeschlossen: CI-Workflow hinzugefügt (`.github/workflows/ci.yml` mit Restore/Build/Test auf .NET 10), SDK-Pinning via `global.json` (`10.0.401`), lokale Validierung per Build/Test erfolgreich | AI Agent |
 | 2026-09-26 | Adapter-Bereinigung nachgezogen: verbleibende direkte `USBandCOM`/`Properties.Settings`-Zugriffe in `Form1` (COM-Port-Handler) entfernt; Reconnect-Overhead reduziert (Reconnect-Guard + keine Deletion-Reconnects ohne aktive Verbindung), Build erfolgreich | AI Agent |
 | 2026-09-26 | 02.06 abgeschlossen: `Form1` weiter als UI-Adapter geschnitten (Audio-Mix in `IAudioBalanceService`, verbleibende direkte `USBandCOM`/Settings-Zugriffe entfernt), Build erfolgreich | AI Agent |

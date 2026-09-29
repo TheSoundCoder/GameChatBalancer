@@ -31,12 +31,16 @@ namespace AudioControl
         static bool dataReceivedHandlerAttached = false;
         static int dataReceivedInProgress = 0;
 
+        public static event EventHandler? ConnectionStatusChanged;
+
         #endregion
 
         public static void HandOverForm(Form1 f)
         {
             MainForm = f;
         }
+
+        public static string CurrentPort => cComPort;
 
         #region COM port handling
 
@@ -101,7 +105,11 @@ namespace AudioControl
                 {
                     cComPort = Properties.Settings.Default.ComPort;
                 }
-                if (cComPort.ToUpper() == "AUTO") { return false; }
+                if (cComPort.ToUpper() == "AUTO")
+                {
+                    cComPort = "";
+                    return false;
+                }
                 buffer = "";
                 _serialPort = new SerialPort();
                 _serialPort.PortName = cComPort;//Set your board COM
@@ -121,6 +129,7 @@ namespace AudioControl
                     RetVal = true;
                     MainForm.SystrayCom = cComPort;
                     MainForm.Connected = true;
+                    ConnectionStatusChanged?.Invoke(null, EventArgs.Empty);
                 }
                 catch
                 {
@@ -149,11 +158,13 @@ namespace AudioControl
             _serialPort = new SerialPort();
             dataReceivedHandlerAttached = false;
             buffer = "";
+            cComPort = "";
             if (MainForm != null)
             {
                 MainForm.SystrayCom = "disconnected";
                 MainForm.Connected = false;
             }
+            ConnectionStatusChanged?.Invoke(null, EventArgs.Empty);
         }
 
         public static void Shutdown()
@@ -353,10 +364,26 @@ namespace AudioControl
             if (eventClass == "__InstanceDeletionEvent")
             {
                 MainForm.SendToLog("A USB device was disconnected.");
-                if (sp_connected())
+                // Sofort auf getrennt setzen, damit UI/Tray unmittelbar aktualisiert werden.
+                CloseComPort();
+
+                if (MainForm.InvokeRequired)
                 {
-                    //nur reconnecten, wenn zuvor eine Verbindung bestand
-                    sp_Reconnect();
+                    if (!MainForm.IsDisposed && MainForm.IsHandleCreated)
+                    {
+                        MainForm.BeginInvoke(new Action(() =>
+                        {
+                            MainForm.Initialized = false;
+                            MainForm.Fill_ddl_ComPort();
+                            MainForm.Initialized = true;
+                        }));
+                    }
+                }
+                else
+                {
+                    MainForm.Initialized = false;
+                    MainForm.Fill_ddl_ComPort();
+                    MainForm.Initialized = true;
                 }
             }
             else if (eventClass == "__InstanceCreationEvent")

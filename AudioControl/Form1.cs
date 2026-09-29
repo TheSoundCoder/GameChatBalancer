@@ -1,13 +1,16 @@
 //using Microsoft.VisualBasic;
 //using System.Linq.Expressions;
 using System.ComponentModel;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO.Ports;
+using System.Linq;
 using Microsoft.Win32;
 //using static System.Runtime.InteropServices.JavaScript.JSType;
 //using System.Security.Cryptography;
 using System.Management;
 using System.Windows.Forms;
+using GameChatBalancer.Wpf;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace AudioControl
@@ -29,6 +32,12 @@ namespace AudioControl
         readonly IAudioSessionService audioSessionService;
         readonly IAudioBalanceService audioBalanceService;
         readonly ISettingsStore settingsStore;
+        readonly AppAssignmentPathStore appAssignmentPathStore;
+        readonly List<string> debugMessages = new();
+        readonly object debugMessagesSync = new();
+        int audioSessionRefreshQueued;
+        MainWindow? wpfMainWindow;
+        bool isExiting;
 
         public Form1()
             : this(null, null, null, null, null)
@@ -57,12 +66,50 @@ namespace AudioControl
             Application.ApplicationExit += new EventHandler(this.OnApplicationExit);
             SystemEvents.SessionEnding += OnSessionEnding;
             this.serialDeviceService = serialDeviceService ?? new SerialDeviceService(this);
+            this.serialDeviceService.ConnectionStatusChanged += SerialDeviceService_ConnectionStatusChanged;
             this.usbWatcherService = usbWatcherService ?? new UsbWatcherService();
             this.audioSessionService = audioSessionService ?? new AudioSessionService(this);
             this.settingsStore = settingsStore ?? new SettingsStore();
             this.audioBalanceService = audioBalanceService ?? new AudioBalanceService(this.audioSessionService);
+            this.appAssignmentPathStore = new AppAssignmentPathStore();
             GAME = this.settingsStore.Game;
             CHAT = this.settingsStore.Chat;
+            this.appAssignmentPathStore.SyncAssignedApps(ParseCsv(GAME), ParseCsv(CHAT));
+        }
+
+        private void SerialDeviceService_ConnectionStatusChanged(object? sender, EventArgs e)
+        {
+            wpfMainWindow?.SetHardwareStatus();
+        }
+
+        private void AudioSessionService_AudioSessionsChanged(object? sender, EventArgs e)
+        {
+            if (IsDisposed || !IsHandleCreated)
+            {
+                return;
+            }
+
+            if (debug)
+            {
+                SendToLog("AudioSessionService: AudioSessionsChanged received.");
+            }
+
+            if (System.Threading.Interlocked.Exchange(ref audioSessionRefreshQueued, 1) == 1)
+            {
+                return;
+            }
+
+            BeginInvoke(new Action(HandleAudioSessionsChangedOnUiThread));
+        }
+
+        private void HandleAudioSessionsChangedOnUiThread()
+        {
+            if (IsDisposed)
+            {
+                return;
+            }
+
+            RefreshWpfAssignments(force: true);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -82,6 +129,13 @@ namespace AudioControl
             fill_lb_GAME();
             fill_lb_CHAT();
             fill_lb_AudioProcesses();
+
+            if (string.IsNullOrWhiteSpace(settingsStore.NoiseReduction))
+            {
+                settingsStore.NoiseReduction = "High";
+                settingsStore.SaveNow();
+            }
+
             fill_ddl_NoiseReduction();
             cb_invert.Checked = settingsStore.Invert;
             if (settingsStore.ComPort == "")
@@ -100,17 +154,59 @@ namespace AudioControl
                 Send_NoiseReducion_Value();
             }
 
+            this.Hide();
+            trayicon.Visible = true;
+
             initialized = true;
+
+            audioSessionService.AudioSessionsChanged += AudioSessionService_AudioSessionsChanged;
+            audioSessionService.StartSessionMonitoring();
+            lastKnownAvailableAppsSnapshot = BuildAvailableAppsSnapshot();
+        }
+
+        private string lastKnownAvailableAppsSnapshot = string.Empty;
+
+        private void RefreshWpfAssignments(bool force)
+        {
+            var currentSnapshot = BuildAvailableAppsSnapshot();
+            if (!force && string.Equals(currentSnapshot, lastKnownAvailableAppsSnapshot, StringComparison.Ordinal))
+            {
+                if (debug)
+                {
+                    SendToLog("WPF Assignment refresh skipped (snapshot unchanged).");
+                }
+                return;
+            }
+
+            fill_lb_AudioProcesses();
+            lastKnownAvailableAppsSnapshot = currentSnapshot;
+            wpfMainWindow?.RefreshAppAssignments();
+
+            if (debug)
+            {
+                SendToLog("WPF Assignment refresh applied.");
+            }
+        }
+
+        private string BuildAvailableAppsSnapshot()
+        {
+            var available = GetAvailableAppsForWpf()
+                .OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+
+            return string.Join("|", available);
         }
 
         private void fill_lb_GAME()
         {
+            lb_GAME.Items.Clear();
             lb_GAME.Items.AddRange(GAME.Split(","));
             lb_GAME.Items.Remove("");
         }
 
         private void fill_lb_CHAT()
         {
+            lb_CHAT.Items.Clear();
             lb_CHAT.Items.AddRange(CHAT.Split(","));
             lb_CHAT.Items.Remove("");
         }
@@ -129,6 +225,63 @@ namespace AudioControl
             }
             lb_AudioProcesses.Items.Remove("Idle");
             lb_AudioProcesses.Items.Remove("");
+        }
+
+        private IEnumerable<string> GetAvailableAppsForWpf()
+        {
+            var gameApps = (settingsStore.Game ?? string.Empty)
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(item => item.Trim())
+                .Where(item => !string.IsNullOrWhiteSpace(item))
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            var chatApps = (settingsStore.Chat ?? string.Empty)
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(item => item.Trim())
+                .Where(item => !string.IsNullOrWhiteSpace(item))
+                .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+            return audioSessionService.GetAudioApplications(false)
+                .Split("\r\n", StringSplitOptions.RemoveEmptyEntries)
+                .Select(item => item.Trim())
+                .Where(item => !string.IsNullOrWhiteSpace(item))
+                .Where(item => !item.Equals("Idle", StringComparison.OrdinalIgnoreCase))
+                .Where(item => !gameApps.Contains(item) && !chatApps.Contains(item))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+        }
+
+        private string? ResolveAssignedAppPathForWpf(string appName)
+        {
+            return appAssignmentPathStore.GetPath(appName);
+        }
+
+        private void ApplyGameAppsFromWpf(string csv)
+        {
+            settingsStore.Game = csv ?? string.Empty;
+            settingsStore.ScheduleSave();
+            GAME = settingsStore.Game;
+            appAssignmentPathStore.SyncAssignedApps(ParseCsv(GAME), ParseCsv(CHAT));
+            fill_lb_GAME();
+            fill_lb_AudioProcesses();
+        }
+
+        private void ApplyChatAppsFromWpf(string csv)
+        {
+            settingsStore.Chat = csv ?? string.Empty;
+            settingsStore.ScheduleSave();
+            CHAT = settingsStore.Chat;
+            appAssignmentPathStore.SyncAssignedApps(ParseCsv(GAME), ParseCsv(CHAT));
+            fill_lb_CHAT();
+            fill_lb_AudioProcesses();
+        }
+
+        private static IEnumerable<string> ParseCsv(string csv)
+        {
+            return (csv ?? string.Empty)
+                .Split(',', StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => x.Trim())
+                .Where(x => !string.IsNullOrWhiteSpace(x));
         }
 
         public void Fill_ddl_ComPort()
@@ -173,7 +326,35 @@ namespace AudioControl
                 return;
             }
 
-            if (debug) { textBox1.AppendText(msg + "\r\n"); }
+            if (debug)
+            {
+                textBox1.AppendText(msg + "\r\n");
+            }
+
+            lock (debugMessagesSync)
+            {
+                debugMessages.Add($"{DateTime.Now:HH:mm:ss}  {msg}");
+                if (debugMessages.Count > 500)
+                {
+                    debugMessages.RemoveRange(0, debugMessages.Count - 500);
+                }
+            }
+
+            wpfMainWindow?.RefreshDebugMessages();
+        }
+
+        private IEnumerable<string> GetDebugMessagesForWpf()
+        {
+            lock (debugMessagesSync)
+            {
+                return debugMessages.AsEnumerable().Reverse().ToArray();
+            }
+        }
+
+        private void SetDebugModeFromWpf(bool isDebugSectionActive)
+        {
+            debug = isDebugSectionActive;
+            cb_Debug.Checked = isDebugSectionActive;
         }
 
         public void ConfirmNR()
@@ -188,6 +369,7 @@ namespace AudioControl
             }
 
             cbNR.Checked = true;
+            wpfMainWindow?.SetNoiseReductionConfirmed(settingsStore.NoiseReduction);
         }
 
 
@@ -271,6 +453,7 @@ namespace AudioControl
             lbl_absoluteval.Text = balance.DisplayVolume.ToString();
             lbl_game_vol.Text = balance.GameVolume.ToString();
             lbl_chat_vol.Text = balance.ChatVolume.ToString();
+            wpfMainWindow?.SetArduinoValue(balance.DisplayVolume);
 
         }
 
@@ -309,10 +492,97 @@ namespace AudioControl
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.Show();
-            this.WindowState = FormWindowState.Normal;
-            this.TopMost = true;
-            fill_lb_AudioProcesses();
+            EnsureWpfApplicationInitialized();
+
+            if (wpfMainWindow == null)
+            {
+                wpfMainWindow = new MainWindow(
+                    () => (serialDeviceService.Connected, serialDeviceService.CurrentPort),
+                    () => settingsStore.NoiseReduction,
+                    ApplyNoiseReductionFromWpf,
+                    () => settingsStore.Invert,
+                    ApplyInvertControlFromWpf,
+                    () => settingsStore.Game,
+                    ApplyGameAppsFromWpf,
+                    () => settingsStore.Chat,
+                    ApplyChatAppsFromWpf,
+                    GetAvailableAppsForWpf,
+                    ResolveAssignedAppPathForWpf,
+                    fill_lb_AudioProcesses,
+                    GetDebugMessagesForWpf,
+                    SetDebugModeFromWpf);
+                wpfMainWindow.Closing += WpfMainWindow_Closing;
+                wpfMainWindow.Closed += (_, _) => wpfMainWindow = null;
+            }
+
+            wpfMainWindow.SetArduinoValue(trackBar1.Value);
+            wpfMainWindow.Show();
+            wpfMainWindow.WindowState = System.Windows.WindowState.Normal;
+            wpfMainWindow.Activate();
+
+            this.Hide();
+            trayicon.Visible = true;
+        }
+
+        private void ApplyNoiseReductionFromWpf(string noiseReduction)
+        {
+            settingsStore.NoiseReduction = noiseReduction;
+            settingsStore.ScheduleSave();
+
+            var command = noiseReduction switch
+            {
+                "Off" => "NR=0",
+                "Low" => "NR=1",
+                "Medium" => "NR=2",
+                "High" => "NR=3",
+                _ => "NR=2"
+            };
+
+            SendToLog("Noise reduction set to: " + command);
+            if (serialDeviceService.IsConnected())
+            {
+                serialDeviceService.SendData(command);
+            }
+            else
+            {
+                wpfMainWindow?.SetNoiseReductionError(noiseReduction);
+            }
+        }
+
+        private void ApplyInvertControlFromWpf(bool invert)
+        {
+            if (InvokeRequired)
+            {
+                if (!IsDisposed && IsHandleCreated)
+                {
+                    BeginInvoke(new Action<bool>(ApplyInvertControlFromWpf), invert);
+                }
+                return;
+            }
+
+            if (cb_invert.Checked != invert)
+            {
+                cb_invert.Checked = invert;
+                return;
+            }
+
+            settingsStore.Invert = invert;
+            settingsStore.ScheduleSave();
+        }
+
+        private static void EnsureWpfApplicationInitialized()
+        {
+            if (System.Windows.Application.Current != null)
+            {
+                return;
+            }
+
+            var wpfApp = new App
+            {
+                ShutdownMode = System.Windows.ShutdownMode.OnExplicitShutdown
+            };
+
+            wpfApp.InitializeComponent();
         }
 
         private void Form1_Move(object sender, EventArgs e)
@@ -326,7 +596,27 @@ namespace AudioControl
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            isExiting = true;
+            if (wpfMainWindow != null)
+            {
+                wpfMainWindow.Closing -= WpfMainWindow_Closing;
+                wpfMainWindow.Close();
+            }
+
             Application.Exit();
+        }
+
+        private void WpfMainWindow_Closing(object? sender, CancelEventArgs e)
+        {
+            if (isExiting)
+            {
+                return;
+            }
+
+            e.Cancel = true;
+            wpfMainWindow?.Hide();
+            this.Hide();
+            trayicon.Visible = true;
         }
 
         private void Settings_Opening(object sender, System.ComponentModel.CancelEventArgs e)
@@ -420,6 +710,9 @@ namespace AudioControl
 
         private void OnApplicationExit(object sender, EventArgs e)
         {
+            audioSessionService.AudioSessionsChanged -= AudioSessionService_AudioSessionsChanged;
+            audioSessionService.StopSessionMonitoring();
+
             PersistSettingsImmediate();
             usbWatcherService.Stop();
             serialDeviceService.Shutdown();
