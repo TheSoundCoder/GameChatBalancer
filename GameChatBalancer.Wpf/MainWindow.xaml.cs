@@ -7,11 +7,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
 
 namespace GameChatBalancer.Wpf;
 
 public partial class MainWindow : Window
 {
+    private const int WmHotkey = 0x0312;
+    private const int HotkeyIdDecrease = 0x5101;
+    private const int HotkeyIdIncrease = 0x5102;
+    private const int HotkeyIdCenter = 0x5103;
+    private const uint ModControl = 0x0002;
+    private const uint ModShift = 0x0004;
+    private const uint VkLeft = 0x25;
+    private const uint VkRight = 0x27;
+    private const uint VkDown = 0x28;
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
+
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+
     private float currentArduinoValue = 50f;
     private readonly Func<(bool Connected, string CurrentPort)> hardwareStatusProvider;
     private readonly Func<string> noiseReductionProvider;
@@ -26,7 +44,9 @@ public partial class MainWindow : Window
     private readonly Func<string, string?> assignedAppPathProvider;
     private readonly Action rescanAudioSessionsAction;
     private readonly Func<IEnumerable<string>> debugMessagesProvider;
+    private readonly Action<string> debugLogAction;
     private readonly Action<bool> debugModeSetter;
+    private readonly Action<float> softwareBalanceSetter;
     private readonly IAppIconService appIconService;
     private bool suppressHardwareOptionEvents;
     private readonly DispatcherTimer noiseReductionAckTimeoutTimer = new() { Interval = TimeSpan.FromSeconds(3) };
@@ -36,6 +56,10 @@ public partial class MainWindow : Window
     private readonly ObservableCollection<AppListItem> chatItems = new();
     private readonly ObservableCollection<AppListItem> availableItems = new();
     private readonly ObservableCollection<string> debugMessages = new();
+    private bool softwareHotkeysRegistered;
+    private bool softwareHotkeysDesired;
+    private IntPtr windowHandle;
+    private HwndSource? hwndSource;
     private bool suppressPlaceholderDrop;
 
     public MainWindow(
@@ -58,6 +82,8 @@ public partial class MainWindow : Window
             _ => null,
             () => { },
             () => Enumerable.Empty<string>(),
+            _ => { },
+            _ => { },
             _ => { })
     {
     }
@@ -76,7 +102,9 @@ public partial class MainWindow : Window
         Func<string, string?> assignedAppPathProvider,
         Action rescanAudioSessionsAction,
         Func<IEnumerable<string>> debugMessagesProvider,
-        Action<bool> debugModeSetter)
+        Action<string> debugLogAction,
+        Action<bool> debugModeSetter,
+        Action<float> softwareBalanceSetter)
     {
         this.hardwareStatusProvider = hardwareStatusProvider;
         this.noiseReductionProvider = noiseReductionProvider;
@@ -91,7 +119,9 @@ public partial class MainWindow : Window
         this.assignedAppPathProvider = assignedAppPathProvider;
         this.rescanAudioSessionsAction = rescanAudioSessionsAction;
         this.debugMessagesProvider = debugMessagesProvider;
+        this.debugLogAction = debugLogAction;
         this.debugModeSetter = debugModeSetter;
+        this.softwareBalanceSetter = softwareBalanceSetter;
         appIconService = new ProcessAppIconService();
 
         InitializeComponent();
@@ -103,9 +133,176 @@ public partial class MainWindow : Window
         Loaded += (_, _) => InitializeHardwareOptions();
         Loaded += (_, _) => InitializeAppAssignments();
         Loaded += (_, _) => RefreshDebugMessages();
+        SourceInitialized += MainWindow_SourceInitialized;
+        Closed += MainWindow_Closed;
         debugMessagesList.ItemsSource = debugMessages;
+
         noiseReductionAckTimeoutTimer.Tick += NoiseReductionAckTimeoutTimer_Tick;
         UpdateAudioBalanceUi(currentArduinoValue);
+    }
+
+    private void MainWindow_SourceInitialized(object? sender, EventArgs e)
+    {
+        windowHandle = new WindowInteropHelper(this).Handle;
+        hwndSource = HwndSource.FromHwnd(windowHandle);
+        hwndSource?.AddHook(WndProc);
+        UpdateSoftwareControlHotkeys(hardwareStatusProvider().Connected);
+    }
+
+    private void MainWindow_Closed(object? sender, EventArgs e)
+    {
+        UnregisterSoftwareControlHotkeys();
+        if (hwndSource is not null)
+        {
+            hwndSource.RemoveHook(WndProc);
+            hwndSource = null;
+        }
+
+        windowHandle = IntPtr.Zero;
+    }
+
+    private void UpdateSoftwareControlHotkeys(bool connected)
+    {
+        softwareHotkeysDesired = !connected;
+        ApplySoftwareControlHotkeyRegistration();
+    }
+
+    private void ApplySoftwareControlHotkeyRegistration()
+    {
+        if (windowHandle == IntPtr.Zero)
+        {
+            return;
+        }
+
+        if (softwareHotkeysDesired)
+        {
+            RegisterSoftwareControlHotkeys();
+            return;
+        }
+
+        UnregisterSoftwareControlHotkeys();
+    }
+
+    private void RegisterSoftwareControlHotkeys()
+    {
+        if (softwareHotkeysRegistered)
+        {
+            return;
+        }
+
+        var modifiers = ModControl | ModShift;
+        var decreaseRegistered = RegisterHotKey(windowHandle, HotkeyIdDecrease, modifiers, VkLeft);
+        var increaseRegistered = RegisterHotKey(windowHandle, HotkeyIdIncrease, modifiers, VkRight);
+        var centerRegistered = RegisterHotKey(windowHandle, HotkeyIdCenter, modifiers, VkDown);
+
+        if (decreaseRegistered && increaseRegistered && centerRegistered)
+        {
+            softwareHotkeysRegistered = true;
+            debugLogAction("SoftwareControl: Hotkeys registriert (Ctrl+Shift+Left/Right/Down).");
+            return;
+        }
+
+        if (decreaseRegistered)
+        {
+            UnregisterHotKey(windowHandle, HotkeyIdDecrease);
+        }
+
+        if (increaseRegistered)
+        {
+            UnregisterHotKey(windowHandle, HotkeyIdIncrease);
+        }
+
+        if (centerRegistered)
+        {
+            UnregisterHotKey(windowHandle, HotkeyIdCenter);
+        }
+
+        var error = Marshal.GetLastWin32Error();
+        debugLogAction($"SoftwareControl: Hotkey-Registrierung fehlgeschlagen (Win32={error}).");
+    }
+
+    private void UnregisterSoftwareControlHotkeys()
+    {
+        if (!softwareHotkeysRegistered || windowHandle == IntPtr.Zero)
+        {
+            softwareHotkeysRegistered = false;
+            return;
+        }
+
+        UnregisterHotKey(windowHandle, HotkeyIdDecrease);
+        UnregisterHotKey(windowHandle, HotkeyIdIncrease);
+        UnregisterHotKey(windowHandle, HotkeyIdCenter);
+        softwareHotkeysRegistered = false;
+        debugLogAction("SoftwareControl: Hotkeys deregistriert.");
+    }
+
+    private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+    {
+        if (msg == WmHotkey)
+        {
+            var hotkeyId = wParam.ToInt32();
+            if (hotkeyId == HotkeyIdDecrease)
+            {
+                debugLogAction("SoftwareControl: Hotkey Ctrl+Shift+Left erkannt.");
+                ApplySoftwareControlStep(-5f);
+                handled = true;
+            }
+            else if (hotkeyId == HotkeyIdIncrease)
+            {
+                debugLogAction("SoftwareControl: Hotkey Ctrl+Shift+Right erkannt.");
+                ApplySoftwareControlStep(5f);
+                handled = true;
+            }
+            else if (hotkeyId == HotkeyIdCenter)
+            {
+                debugLogAction("SoftwareControl: Hotkey Ctrl+Shift+Down erkannt.");
+                ApplySoftwareControlCenter();
+                handled = true;
+            }
+        }
+
+        return IntPtr.Zero;
+    }
+
+    private void ApplySoftwareControlStep(float delta)
+    {
+        var current = Math.Clamp(currentArduinoValue, 0f, 100f);
+        var isOnFivePercentGrid = Math.Abs(current % 5f) < 0.01f || Math.Abs((current % 5f) - 5f) < 0.01f;
+
+        float nextValue;
+        if (delta < 0f)
+        {
+            nextValue = isOnFivePercentGrid
+                ? current - 5f
+                : MathF.Floor(current / 5f) * 5f;
+        }
+        else
+        {
+            nextValue = isOnFivePercentGrid
+                ? current + 5f
+                : MathF.Ceiling(current / 5f) * 5f;
+        }
+
+        nextValue = Math.Clamp(nextValue, 0f, 100f);
+        if (Math.Abs(nextValue - currentArduinoValue) < 0.01f)
+        {
+            return;
+        }
+
+        UpdateAudioBalanceUi(nextValue);
+        softwareBalanceSetter(nextValue);
+    }
+
+    private void ApplySoftwareControlCenter()
+    {
+        const float centerValue = 50f;
+        if (Math.Abs(currentArduinoValue - centerValue) < 0.01f)
+        {
+            return;
+        }
+
+        UpdateAudioBalanceUi(centerValue);
+        softwareBalanceSetter(centerValue);
     }
 
     private void InitializeHardwareOptions()
@@ -358,6 +555,17 @@ public partial class MainWindow : Window
             ? new SolidColorBrush(Color.FromRgb(34, 197, 94))
             : new SolidColorBrush(Color.FromRgb(245, 158, 11));
         hardwareStatusDot.ToolTip = connected ? "Connected" : "Disconnected";
+        UpdateSoftwareControlHotkeys(connected);
+
+        if (hardwareControlsSection is not null)
+        {
+            hardwareControlsSection.Visibility = connected ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        if (softwareControlSection is not null)
+        {
+            softwareControlSection.Visibility = connected ? Visibility.Collapsed : Visibility.Visible;
+        }
     }
 
     private void NavigationRadioButton_Checked(object sender, RoutedEventArgs e)

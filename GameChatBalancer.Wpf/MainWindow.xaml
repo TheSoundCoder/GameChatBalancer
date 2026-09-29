@@ -412,69 +412,151 @@
 
                     <Separator Margin="0,12,0,10" Background="{StaticResource Brush.BorderSubtle}" />
 
-                    <TextBlock Text="Noise Reduction" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource Brush.TextPrimary}" />
-                    <ComboBox x:Name="cmbNoiseReduction"
-                              Style="{StaticResource HardwareComboBoxStyle}"
-                              ItemContainerStyle="{StaticResource HardwareComboBoxItemStyle}"
-                              Margin="0,8,0,0"
-                              Height="34"
-                              SelectionChanged="NoiseReductionComboBox_SelectionChanged" />
+                    <StackPanel x:Name="hardwareControlsSection">
+                        <TextBlock Text="Noise Reduction" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource Brush.TextPrimary}" />
+                        <ComboBox x:Name="cmbNoiseReduction"
+                                  Style="{StaticResource HardwareComboBoxStyle}"
+                                  ItemContainerStyle="{StaticResource HardwareComboBoxItemStyle}"
+                                  Margin="0,8,0,0"
+                                  Height="34"
+                                  SelectionChanged="NoiseReductionComboBox_SelectionChanged" />
 
-                    <Border x:Name="noiseReductionStateBorder"
-                            Margin="0,10,0,0"
-                            Padding="10,8"
-                            CornerRadius="8"
-                            Background="#14253E"
-                            BorderBrush="{StaticResource Brush.BorderSubtle}"
-                            BorderThickness="1">
-                        <Grid>
+                        <Border x:Name="noiseReductionStateBorder"
+                                Margin="0,10,0,0"
+                                Padding="10,8"
+                                CornerRadius="8"
+                                Background="#14253E"
+                                BorderBrush="{StaticResource Brush.BorderSubtle}"
+                                BorderThickness="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Ellipse x:Name="noiseReductionStateDot"
+                                         Width="10"
+                                         Height="10"
+                                         VerticalAlignment="Center"
+                                         Fill="#94A3B8"
+                                         Stroke="#CCFFFFFF"
+                                         StrokeThickness="1"
+                                         SnapsToDevicePixels="True"
+                                         UseLayoutRounding="True" />
+
+                                <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                    <TextBlock x:Name="txtNoiseReductionStateTitle"
+                                               Text="Ready"
+                                               FontSize="13"
+                                               FontWeight="SemiBold"
+                                               Foreground="{StaticResource Brush.TextPrimary}" />
+                                    <TextBlock x:Name="txtNoiseReductionStateDetail"
+                                               Text="Waiting for next change"
+                                               Foreground="{StaticResource Brush.TextSecondary}"
+                                               Margin="0,2,0,0" />
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+
+                        <Grid Margin="0,12,0,0">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto" />
                                 <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <Ellipse x:Name="noiseReductionStateDot"
-                                     Width="10"
-                                     Height="10"
-                                     VerticalAlignment="Center"
-                                     Fill="#94A3B8"
-                                     Stroke="#CCFFFFFF"
-                                     StrokeThickness="1"
-                                     SnapsToDevicePixels="True"
-                                     UseLayoutRounding="True" />
+                            <TextBlock Text="Invert Control"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource Brush.TextPrimary}"
+                                       VerticalAlignment="Center" />
 
-                            <StackPanel Grid.Column="1" Margin="10,0,0,0">
-                                <TextBlock x:Name="txtNoiseReductionStateTitle"
-                                           Text="Ready"
-                                           FontSize="13"
-                                           FontWeight="SemiBold"
-                                           Foreground="{StaticResource Brush.TextPrimary}" />
-                                <TextBlock x:Name="txtNoiseReductionStateDetail"
-                                           Text="Waiting for next change"
-                                           Foreground="{StaticResource Brush.TextSecondary}"
-                                           Margin="0,2,0,0" />
-                            </StackPanel>
+                            <ToggleButton x:Name="tglInvertControl"
+                                          Grid.Column="1"
+                                          Style="{StaticResource HardwareToggleStyle}"
+                                          Checked="InvertControlToggle_Changed"
+                                          Unchecked="InvertControlToggle_Changed" />
                         </Grid>
+                    </StackPanel>
+
+                    <Border x:Name="softwareControlSection"
+                            Visibility="Collapsed"
+                            Margin="0,2,0,0"
+                            Padding="12"
+                            CornerRadius="10"
+                            Background="{StaticResource Brush.Surface1}"
+                            BorderBrush="{StaticResource Brush.BorderSubtle}"
+                            BorderThickness="1">
+                        <StackPanel>
+                            <TextBlock Text="Software Control"
+                                       FontSize="16"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource Brush.TextPrimary}" />
+                            <TextBlock Text="Use keyboard shortcuts to adjust the game/chat balance in 5% steps."
+                                       Margin="0,6,0,0"
+                                       TextWrapping="Wrap"
+                                       Foreground="{StaticResource Brush.TextSecondary}" />
+
+                            <Grid Margin="0,12,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Balance towards Chat"
+                                           VerticalAlignment="Center"
+                                           Foreground="{StaticResource Brush.TextPrimary}" />
+                                <Border Grid.Column="1"
+                                        Padding="8,4"
+                                        CornerRadius="7"
+                                        Background="#1B3658"
+                                        BorderBrush="{StaticResource Brush.BorderSubtle}"
+                                        BorderThickness="1">
+                                    <TextBlock Text="Ctrl + Shift + ←"
+                                               FontSize="12"
+                                               Foreground="{StaticResource Brush.TextPrimary}" />
+                                </Border>
+                            </Grid>
+
+                            <Grid Margin="0,8,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Balance towards Game"
+                                           VerticalAlignment="Center"
+                                           Foreground="{StaticResource Brush.TextPrimary}" />
+                                <Border Grid.Column="1"
+                                        Padding="8,4"
+                                        CornerRadius="7"
+                                        Background="#1B3658"
+                                        BorderBrush="{StaticResource Brush.BorderSubtle}"
+                                        BorderThickness="1">
+                                    <TextBlock Text="Ctrl + Shift + →"
+                                               FontSize="12"
+                                               Foreground="{StaticResource Brush.TextPrimary}" />
+                                </Border>
+                            </Grid>
+
+                            <Grid Margin="0,8,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Center Balance"
+                                           VerticalAlignment="Center"
+                                           Foreground="{StaticResource Brush.TextPrimary}" />
+                                <Border Grid.Column="1"
+                                        Padding="8,4"
+                                        CornerRadius="7"
+                                        Background="#1B3658"
+                                        BorderBrush="{StaticResource Brush.BorderSubtle}"
+                                        BorderThickness="1">
+                                    <TextBlock Text="Ctrl + Shift + ↓"
+                                               FontSize="12"
+                                               Foreground="{StaticResource Brush.TextPrimary}" />
+                                </Border>
+                            </Grid>
+                        </StackPanel>
                     </Border>
-
-                    <Grid Margin="0,12,0,0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-
-                        <TextBlock Text="Invert Control"
-                                   FontSize="14"
-                                   FontWeight="SemiBold"
-                                   Foreground="{StaticResource Brush.TextPrimary}"
-                                   VerticalAlignment="Center" />
-
-                        <ToggleButton x:Name="tglInvertControl"
-                                      Grid.Column="1"
-                                      Style="{StaticResource HardwareToggleStyle}"
-                                      Checked="InvertControlToggle_Changed"
-                                      Unchecked="InvertControlToggle_Changed" />
-                    </Grid>
                 </StackPanel>
             </Border>
 

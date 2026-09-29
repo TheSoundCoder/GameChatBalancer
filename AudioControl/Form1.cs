@@ -510,7 +510,9 @@ namespace AudioControl
                     ResolveAssignedAppPathForWpf,
                     fill_lb_AudioProcesses,
                     GetDebugMessagesForWpf,
-                    SetDebugModeFromWpf);
+                    SendToLog,
+                    SetDebugModeFromWpf,
+                    ApplySoftwareBalanceFromWpf);
                 wpfMainWindow.Closing += WpfMainWindow_Closing;
                 wpfMainWindow.Closed += (_, _) => wpfMainWindow = null;
             }
@@ -568,6 +570,34 @@ namespace AudioControl
 
             settingsStore.Invert = invert;
             settingsStore.ScheduleSave();
+        }
+
+        private void ApplySoftwareBalanceFromWpf(float volume)
+        {
+            if (InvokeRequired)
+            {
+                if (!IsDisposed && IsHandleCreated)
+                {
+                    BeginInvoke(new Action<float>(ApplySoftwareBalanceFromWpf), volume);
+                }
+
+                return;
+            }
+
+            var clampedVolume = Math.Clamp(volume, 0f, 100f);
+            var balance = audioBalanceService.ApplyBalance(GAME, CHAT, clampedVolume, invert: false);
+
+            systrayVolume.Text = balance.DisplayVolume.ToString();
+            trackBar1.Value = (int)balance.DisplayVolume;
+            lbl_absoluteval.Text = balance.DisplayVolume.ToString();
+            lbl_game_vol.Text = balance.GameVolume.ToString();
+            lbl_chat_vol.Text = balance.ChatVolume.ToString();
+            wpfMainWindow?.SetArduinoValue(balance.DisplayVolume);
+
+            if (debug)
+            {
+                SendToLog($"SoftwareControl: Balance adjusted to {MathF.Round(balance.DisplayVolume):0}.");
+            }
         }
 
         private static void EnsureWpfApplicationInitialized()

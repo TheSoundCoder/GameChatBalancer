@@ -5,6 +5,7 @@
 - Der Nutzer möchte auf WPF mit Fluent UI migrieren und eine WinUI-3-Migration höchstens zu einem späteren Zeitpunkt evaluieren. Für die Modernisierung sollen Funktionalität und Stabilität strikt vor UX/Visuals priorisiert werden; Migration in kleinen Phasen mit Build/Warning/Test-Gates, WPF+Fluent als Ziel, WinUI 3 nur später optional.
 - Der Nutzer bevorzugt Branch-Workflow: erst refactor/services-decoupling als Basisbranch, danach separater WPF-Upgrade-Branch darauf.
 - Der Nutzer möchte den Migrationsplan um einen expliziten Schritt erweitern, der den Systray-/Lifecycle-Host von Form1 entkoppelt, damit Form1 später vollständig entfernt werden kann.
+- Umsetzung soll in kleinen Schritten erfolgen.
 
 ## Architekturelles Prinzip (verbindlich)
 ### Event Driven
@@ -24,6 +25,7 @@
 - Der Schriftzug "GameChatBalancer" soll in der WPF-Shell im zentralen Hauptelement erscheinen (nicht primär in der Sidebar).
 - Im zentralen WPF-Bereich soll Chat links und Game rechts angezeigt werden.
 - Wenn keine Hardware-Verbindung besteht, soll der Status in der WPF-UI explizit als "Disconnected" angezeigt werden (statt "Connected").
+- Im Branch Software-Control soll bei fehlender Arduino-Verbindung in der WPF-UI statt Noise Reduction/Invert Control eine deutliche Software-Control-Info mit Shortcut-Hinweisen gemäß Mockup angezeigt werden; erster Schritt: nur Umschaltung der Anzeige bei disconnected.
 - Der Titelbild im oberen Produkt-Card-Bereich soll den Kasten möglichst vollständig ausfüllen, ohne innere Ränder.
 - Für den Hardware-Status oben rechts in der WPF-UI bevorzugt der Nutzer eine reine farbige Kreis-Anzeige ohne Text im Badge; der Hardware-Status-Dot soll einen klaren, scharfen Rand ohne unscharfen/ausgefransten Effekt haben.
 
@@ -55,3 +57,8 @@ Vor Umsetzung einer UI-Phase muss eine kurze Design-Spezifikation vorliegen (Pal
 
 ## Debugging
 - Der Debug-Bereich soll scrollbar sein; neue Debug-Logeinträge sollen oben angezeigt/eingefügt werden (neueste zuerst).
+
+## Software-Control
+- Für Software-Control sollen Hotkeys gelten: Ctrl+Shift+Left verschiebt Balance Richtung Chat, Ctrl+Shift+Right Richtung Game; dabei gilt der Arduino-Invert-Status nicht. 
+- Software-Control-Hotkeys sollen nur bei Arduino-Disconnected registriert sein und bei Connected vollständig deaktiviert werden, um Overhead zu minimieren.
+- Beim ersten Schritt auf das 5%-Raster gesnappt werden (z.B. 42 -> Decrease 40, Increase 45), danach in 5%-Schritten weiter.
