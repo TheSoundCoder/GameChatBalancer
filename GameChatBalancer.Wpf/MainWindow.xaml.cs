@@ -726,6 +726,50 @@ public partial class MainWindow : Window
         }
     }
 
+    public void SetInvertControlState(bool enabled)
+    {
+        if (!Dispatcher.CheckAccess())
+        {
+            Dispatcher.BeginInvoke(() => SetInvertControlState(enabled));
+            return;
+        }
+
+        suppressHardwareOptionEvents = true;
+        try
+        {
+            tglInvertControl.IsChecked = enabled;
+        }
+        finally
+        {
+            suppressHardwareOptionEvents = false;
+        }
+    }
+
+    public void SetNoiseReductionSelection(string level)
+    {
+        if (!Dispatcher.CheckAccess())
+        {
+            Dispatcher.BeginInvoke(() => SetNoiseReductionSelection(level));
+            return;
+        }
+
+        suppressHardwareOptionEvents = true;
+        try
+        {
+            var normalized = string.IsNullOrWhiteSpace(level) ? "High" : level.Trim();
+            var selected = cmbNoiseReduction.Items
+                .Cast<string>()
+                .FirstOrDefault(item => string.Equals(item, normalized, StringComparison.OrdinalIgnoreCase))
+                ?? "High";
+
+            cmbNoiseReduction.SelectedItem = selected;
+        }
+        finally
+        {
+            suppressHardwareOptionEvents = false;
+        }
+    }
+
     public void SetNoiseReductionApplying(string level)
     {
         if (!Dispatcher.CheckAccess())

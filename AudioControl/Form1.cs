@@ -20,7 +20,22 @@ namespace AudioControl
         [System.Runtime.InteropServices.DllImport("user32.dll")]
         private static extern short GetAsyncKeyState(int vKey);
 
+        [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
+        private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
+
+        [System.Runtime.InteropServices.DllImport("user32.dll", SetLastError = true)]
+        private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+
         private const int VkShift = 0x10;
+        private const int WmHotkey = 0x0312;
+        private const int SoftwareHotkeyIdDecrease = 0x5201;
+        private const int SoftwareHotkeyIdIncrease = 0x5202;
+        private const int SoftwareHotkeyIdCenter = 0x5203;
+        private const uint ModControl = 0x0002;
+        private const uint ModShift = 0x0004;
+        private const uint VkLeft = 0x25;
+        private const uint VkRight = 0x27;
+        private const uint VkDown = 0x28;
 
         //static SerialPort _serialPort;
         //string ComPort = Properties.Settings.Default.ComPort;    //Config
@@ -43,6 +58,8 @@ namespace AudioControl
         readonly object debugMessagesSync = new();
         int audioSessionRefreshQueued;
         MainWindow? wpfMainWindow;
+        SystrayPopupWindow? systrayPopupWindow;
+        bool softwareHotkeysRegistered;
         bool isExiting;
 
         public Form1()
@@ -86,7 +103,26 @@ namespace AudioControl
 
         private void SerialDeviceService_ConnectionStatusChanged(object? sender, EventArgs e)
         {
+            if (InvokeRequired)
+            {
+                if (!IsDisposed && IsHandleCreated)
+                {
+                    BeginInvoke(new Action<object?, EventArgs>(SerialDeviceService_ConnectionStatusChanged), sender, e);
+                }
+
+                return;
+            }
+
             wpfMainWindow?.SetHardwareStatus();
+            var connected = serialDeviceService.IsConnected();
+            systrayPopupWindow?.SetConnectedState(connected, serialDeviceService.CurrentPort);
+            UpdateSoftwareControlHotkeys(connected);
+
+            if (connected)
+            {
+                systrayPopupWindow?.SetNoiseReductionState(settingsStore.NoiseReduction);
+                systrayPopupWindow?.SetInvertControlState(settingsStore.Invert);
+            }
         }
 
         private void AudioSessionService_AudioSessionsChanged(object? sender, EventArgs e)
@@ -161,8 +197,16 @@ namespace AudioControl
                 Send_NoiseReducion_Value();
             }
 
+            UpdateSoftwareControlHotkeys(serialDeviceService.IsConnected());
+
             this.Hide();
             trayicon.Visible = true;
+
+            EnsureSystrayPopupWindow();
+            systrayPopupWindow?.SetConnectedState(serialDeviceService.IsConnected(), serialDeviceService.CurrentPort);
+            systrayPopupWindow?.SetNoiseReductionState(settingsStore.NoiseReduction);
+            systrayPopupWindow?.SetInvertControlState(settingsStore.Invert);
+            systrayPopupWindow?.SetBalance(trackBar1.Value, float.Parse(lbl_game_vol.Text), float.Parse(lbl_chat_vol.Text));
 
             initialized = true;
 
@@ -461,6 +505,7 @@ namespace AudioControl
             lbl_game_vol.Text = balance.GameVolume.ToString();
             lbl_chat_vol.Text = balance.ChatVolume.ToString();
             wpfMainWindow?.SetArduinoValue(balance.DisplayVolume);
+            systrayPopupWindow?.SetBalance(balance.DisplayVolume, balance.GameVolume, balance.ChatVolume);
 
         }
 
@@ -479,7 +524,67 @@ namespace AudioControl
                 }
             }
             finally { }
+
             return "";
+        }
+
+        private void trayicon_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right)
+            {
+                return;
+            }
+
+            ShowSystrayPopup();
+        }
+
+        private void EnsureSystrayPopupWindow()
+        {
+            if (systrayPopupWindow != null)
+            {
+                return;
+            }
+
+            systrayPopupWindow = new SystrayPopupWindow(
+                openAppAction: () => BeginInvoke(new Action(() => openToolStripMenuItem_Click(openToolStripMenuItem, EventArgs.Empty))),
+                exitAction: () => BeginInvoke(new Action(() => closeToolStripMenuItem_Click(this, EventArgs.Empty))),
+                startWithWindowsProvider: GetStartWithWindowsFromWpf,
+                startWithWindowsSetter: enabled => BeginInvoke(new Action(() => ApplyStartWithWindowsFromWpf(enabled))),
+                noiseReductionProvider: () => settingsStore.NoiseReduction,
+                noiseReductionSetter: level => BeginInvoke(new Action(() => ApplyNoiseReductionFromWpf(level))),
+                invertControlProvider: () => settingsStore.Invert,
+                invertControlSetter: invert => BeginInvoke(new Action(() => ApplyInvertControlFromWpf(invert))));
+
+            systrayPopupWindow.Closed += (_, _) => systrayPopupWindow = null;
+        }
+
+        private void ShowSystrayPopup()
+        {
+            EnsureWpfApplicationInitialized();
+            EnsureSystrayPopupWindow();
+            if (systrayPopupWindow == null)
+            {
+                return;
+            }
+
+            systrayPopupWindow.SetConnectedState(serialDeviceService.IsConnected(), serialDeviceService.CurrentPort);
+            systrayPopupWindow.SetStartWithWindowsState(GetStartWithWindowsFromWpf());
+            systrayPopupWindow.SetNoiseReductionState(settingsStore.NoiseReduction);
+            systrayPopupWindow.SetInvertControlState(settingsStore.Invert);
+            systrayPopupWindow.SetBalance(trackBar1.Value, float.Parse(lbl_game_vol.Text), float.Parse(lbl_chat_vol.Text));
+
+            var workingArea = Screen.GetWorkingArea(this);
+            systrayPopupWindow.Left = workingArea.Right - systrayPopupWindow.Width - 12;
+            systrayPopupWindow.Top = workingArea.Bottom - systrayPopupWindow.Height - 12;
+
+            if (!systrayPopupWindow.IsVisible)
+            {
+                systrayPopupWindow.Show();
+            }
+            else
+            {
+                systrayPopupWindow.Activate();
+            }
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -569,6 +674,7 @@ namespace AudioControl
 
             settingsStore.StartWithWindows = enabled;
             settingsStore.ScheduleSave();
+            wpfMainWindow?.SetStartWithWindowsState(enabled);
             SendToLog($"Autostart {(enabled ? "enabled" : "disabled")}." );
         }
 
@@ -576,6 +682,9 @@ namespace AudioControl
         {
             settingsStore.NoiseReduction = noiseReduction;
             settingsStore.ScheduleSave();
+            systrayPopupWindow?.SetNoiseReductionState(noiseReduction);
+            wpfMainWindow?.SetNoiseReductionSelection(noiseReduction);
+            wpfMainWindow?.SetNoiseReductionApplying(noiseReduction);
 
             var command = noiseReduction switch
             {
@@ -616,6 +725,8 @@ namespace AudioControl
 
             settingsStore.Invert = invert;
             settingsStore.ScheduleSave();
+            systrayPopupWindow?.SetInvertControlState(invert);
+            wpfMainWindow?.SetInvertControlState(invert);
         }
 
         private void ApplySoftwareBalanceFromWpf(float volume)
@@ -639,6 +750,7 @@ namespace AudioControl
             lbl_game_vol.Text = balance.GameVolume.ToString();
             lbl_chat_vol.Text = balance.ChatVolume.ToString();
             wpfMainWindow?.SetArduinoValue(balance.DisplayVolume);
+            systrayPopupWindow?.SetBalance(balance.DisplayVolume, balance.GameVolume, balance.ChatVolume);
 
             if (debug)
             {
@@ -673,6 +785,13 @@ namespace AudioControl
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             isExiting = true;
+            UnregisterSoftwareControlHotkeys();
+            if (systrayPopupWindow != null)
+            {
+                systrayPopupWindow.Close();
+                systrayPopupWindow = null;
+            }
+
             if (wpfMainWindow != null)
             {
                 wpfMainWindow.Closing -= WpfMainWindow_Closing;
@@ -786,6 +905,7 @@ namespace AudioControl
 
         private void OnApplicationExit(object sender, EventArgs e)
         {
+            UnregisterSoftwareControlHotkeys();
             audioSessionService.AudioSessionsChanged -= AudioSessionService_AudioSessionsChanged;
             audioSessionService.StopSessionMonitoring();
 
@@ -805,6 +925,136 @@ namespace AudioControl
             settingsStore.Game = GAME;
             settingsStore.Chat = CHAT;
             settingsStore.SaveNow();
+        }
+
+        private void UpdateSoftwareControlHotkeys(bool connected)
+        {
+            if (connected)
+            {
+                UnregisterSoftwareControlHotkeys();
+                return;
+            }
+
+            RegisterSoftwareControlHotkeys();
+        }
+
+        private void RegisterSoftwareControlHotkeys()
+        {
+            if (softwareHotkeysRegistered || !IsHandleCreated)
+            {
+                return;
+            }
+
+            var modifiers = ModControl | ModShift;
+            var decreaseRegistered = RegisterHotKey(Handle, SoftwareHotkeyIdDecrease, modifiers, VkLeft);
+            var increaseRegistered = RegisterHotKey(Handle, SoftwareHotkeyIdIncrease, modifiers, VkRight);
+            var centerRegistered = RegisterHotKey(Handle, SoftwareHotkeyIdCenter, modifiers, VkDown);
+
+            if (decreaseRegistered && increaseRegistered && centerRegistered)
+            {
+                softwareHotkeysRegistered = true;
+                SendToLog("SoftwareControl: Startup-Hotkeys registriert (Ctrl+Shift+Left/Right/Down).");
+                return;
+            }
+
+            if (decreaseRegistered)
+            {
+                UnregisterHotKey(Handle, SoftwareHotkeyIdDecrease);
+            }
+
+            if (increaseRegistered)
+            {
+                UnregisterHotKey(Handle, SoftwareHotkeyIdIncrease);
+            }
+
+            if (centerRegistered)
+            {
+                UnregisterHotKey(Handle, SoftwareHotkeyIdCenter);
+            }
+
+            SendToLog($"SoftwareControl: Startup-Hotkey-Registrierung fehlgeschlagen (Win32={System.Runtime.InteropServices.Marshal.GetLastWin32Error()}).");
+        }
+
+        private void UnregisterSoftwareControlHotkeys()
+        {
+            if (!softwareHotkeysRegistered || !IsHandleCreated)
+            {
+                softwareHotkeysRegistered = false;
+                return;
+            }
+
+            UnregisterHotKey(Handle, SoftwareHotkeyIdDecrease);
+            UnregisterHotKey(Handle, SoftwareHotkeyIdIncrease);
+            UnregisterHotKey(Handle, SoftwareHotkeyIdCenter);
+            softwareHotkeysRegistered = false;
+            SendToLog("SoftwareControl: Startup-Hotkeys deregistriert.");
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            if (m.Msg == WmHotkey)
+            {
+                var hotkeyId = m.WParam.ToInt32();
+                if (hotkeyId == SoftwareHotkeyIdDecrease)
+                {
+                    ApplySoftwareControlStep(-5f);
+                    return;
+                }
+
+                if (hotkeyId == SoftwareHotkeyIdIncrease)
+                {
+                    ApplySoftwareControlStep(5f);
+                    return;
+                }
+
+                if (hotkeyId == SoftwareHotkeyIdCenter)
+                {
+                    ApplySoftwareControlCenter();
+                    return;
+                }
+            }
+
+            base.WndProc(ref m);
+        }
+
+        private void ApplySoftwareControlStep(float delta)
+        {
+            var current = Math.Clamp((float)trackBar1.Value, 0f, 100f);
+            var isOnFivePercentGrid = Math.Abs(current % 5f) < 0.01f || Math.Abs((current % 5f) - 5f) < 0.01f;
+
+            float nextValue;
+            if (delta < 0f)
+            {
+                nextValue = isOnFivePercentGrid
+                    ? current - 5f
+                    : MathF.Floor(current / 5f) * 5f;
+            }
+            else
+            {
+                nextValue = isOnFivePercentGrid
+                    ? current + 5f
+                    : MathF.Ceiling(current / 5f) * 5f;
+            }
+
+            nextValue = Math.Clamp(nextValue, 0f, 100f);
+            if (Math.Abs(nextValue - current) < 0.01f)
+            {
+                return;
+            }
+
+            ApplySoftwareBalanceFromWpf(nextValue);
+        }
+
+        private void ApplySoftwareControlCenter()
+        {
+            const float centerValue = 50f;
+            var current = Math.Clamp((float)trackBar1.Value, 0f, 100f);
+            if (Math.Abs(current - centerValue) < 0.01f)
+            {
+                return;
+            }
+
+            ApplySoftwareBalanceFromWpf(centerValue);
         }
 
         private void ddl_ComPort_SelectedIndexChanged(object sender, EventArgs e)
@@ -852,6 +1102,9 @@ namespace AudioControl
         {
             settingsStore.Invert = cb_invert.Checked;
             settingsStore.ScheduleSave();
+            systrayPopupWindow?.SetInvertControlState(cb_invert.Checked);
+            wpfMainWindow?.SetInvertControlState(cb_invert.Checked);
+
             if (cb_invert.Checked == true)
             {
                 controlVolume(float.Parse(lbl_absoluteval.Text));

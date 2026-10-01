@@ -148,10 +148,18 @@
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Margin="0,0,12,0" VerticalAlignment="Center">
-                                <TextBlock Text="Chat"
-                                           Foreground="{StaticResource Brush.AccentChat}"
-                                           FontSize="22"
-                                           FontWeight="Bold" />
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <TextBlock Text="&#xE8BD;"
+                                               FontFamily="Segoe MDL2 Assets"
+                                               Foreground="{StaticResource Brush.AccentChat}"
+                                               FontSize="22"
+                                               Margin="0,0,6,0"
+                                               VerticalAlignment="Bottom" />
+                                    <TextBlock Text="Chat"
+                                               Foreground="{StaticResource Brush.AccentChat}"
+                                               FontSize="22"
+                                               FontWeight="Bold" />
+                                </StackPanel>
                                 <TextBlock x:Name="txtChatPercent"
                                            Text="100%"
                                            Foreground="{StaticResource Brush.TextSecondary}"
@@ -195,11 +203,19 @@
                             </Grid>
 
                             <StackPanel Grid.Column="2" Margin="12,0,0,0" VerticalAlignment="Center">
-                                <TextBlock Text="Game"
-                                           Foreground="{StaticResource Brush.AccentGame}"
-                                           FontSize="22"
-                                           FontWeight="Bold"
-                                           HorizontalAlignment="Right" />
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                                    <TextBlock Text="Game"
+                                               Foreground="{StaticResource Brush.AccentGame}"
+                                               FontSize="22"
+                                               FontWeight="Bold"
+                                               Margin="0,0,6,0"
+                                               HorizontalAlignment="Right" />
+                                    <TextBlock Text="&#xE7FC;"
+                                               FontFamily="Segoe MDL2 Assets"
+                                               Foreground="{StaticResource Brush.AccentGame}"
+                                               FontSize="22"
+                                               VerticalAlignment="Bottom" />
+                                </StackPanel>
                                 <TextBlock x:Name="txtGamePercent"
                                            Text="100%"
                                            Foreground="{StaticResource Brush.TextSecondary}"
@@ -413,7 +429,19 @@
                     <Separator Margin="0,12,0,10" Background="{StaticResource Brush.BorderSubtle}" />
 
                     <StackPanel x:Name="hardwareControlsSection">
-                        <TextBlock Text="Noise Reduction" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource Brush.TextPrimary}" />
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="&#xE7F5;"
+                                       FontFamily="Segoe MDL2 Assets"
+                                       FontSize="14"
+                                       Foreground="{StaticResource Brush.TextSecondary}"
+                                       VerticalAlignment="Center" />
+                            <TextBlock Text="Noise Reduction"
+                                       Margin="8,0,0,0"
+                                       FontSize="14"
+                                       FontWeight="SemiBold"
+                                       Foreground="{StaticResource Brush.TextPrimary}"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
                         <ComboBox x:Name="cmbNoiseReduction"
                                   Style="{StaticResource HardwareComboBoxStyle}"
                                   ItemContainerStyle="{StaticResource HardwareComboBoxItemStyle}"
@@ -464,11 +492,19 @@
                                 <ColumnDefinition Width="Auto" />
                             </Grid.ColumnDefinitions>
 
-                            <TextBlock Text="Invert Control"
-                                       FontSize="14"
-                                       FontWeight="SemiBold"
-                                       Foreground="{StaticResource Brush.TextPrimary}"
-                                       VerticalAlignment="Center" />
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="&#xE8AB;"
+                                           FontFamily="Segoe MDL2 Assets"
+                                           FontSize="14"
+                                           Foreground="{StaticResource Brush.TextSecondary}"
+                                           VerticalAlignment="Center" />
+                                <TextBlock Text="Invert Control"
+                                           Margin="8,0,0,0"
+                                           FontSize="14"
+                                           FontWeight="SemiBold"
+                                           Foreground="{StaticResource Brush.TextPrimary}"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
 
                             <ToggleButton x:Name="tglInvertControl"
                                           Grid.Column="1"

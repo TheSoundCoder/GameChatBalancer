@@ -119,10 +119,11 @@
             // 
             // trayicon
             // 
-            trayicon.ContextMenuStrip = Settings;
+            trayicon.ContextMenuStrip = null;
             trayicon.Icon = (Icon)resources.GetObject("trayicon.Icon");
             trayicon.Text = "AudioControl";
             trayicon.Visible = true;
+            trayicon.MouseUp += trayicon_MouseUp;
             // 
             // tabPage2
             // 
