@@ -4,9 +4,9 @@ namespace AudioControl
     {
         public event EventHandler? ConnectionStatusChanged;
 
-        public SerialDeviceService(Form1 form)
+        public SerialDeviceService(ISerialHostBridge hostBridge)
         {
-            USBandCOM.HandOverForm(form);
+            USBandCOM.HandOverHostBridge(hostBridge);
             USBandCOM.ConnectionStatusChanged += OnConnectionStatusChanged;
         }
 

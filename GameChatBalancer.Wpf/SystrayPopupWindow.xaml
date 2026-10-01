@@ -164,7 +164,6 @@
                         <ComboBox x:Name="noiseReductionCombo"
                                   Grid.Column="1"
                                   Width="120"
-                                  SelectedIndex="2"
                                   SelectionChanged="NoiseReductionCombo_SelectionChanged"
                                   Style="{StaticResource HardwareComboBoxStyle}">
                             <ComboBoxItem Content="Off" />

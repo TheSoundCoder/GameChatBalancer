@@ -4,9 +4,9 @@ namespace AudioControl
     {
         public event EventHandler? AudioSessionsChanged;
 
-        public AudioSessionService(Form1 form)
+        public AudioSessionService(IDiagnosticsSink diagnosticsSink)
         {
-            global::AudioManager.AudioManager.HandOverForm(form);
+            global::AudioManager.AudioManager.HandOverDiagnosticsSink(diagnosticsSink);
             global::AudioManager.AudioManager.AudioSessionsChanged += (_, _) => AudioSessionsChanged?.Invoke(this, EventArgs.Empty);
         }
 

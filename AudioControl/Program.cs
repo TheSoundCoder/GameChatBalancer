@@ -27,7 +27,8 @@ namespace AudioControl
                 wpfApp.InitializeComponent();
             }
 
-            WinFormsApplication.Run(new Form1());
+            IApplicationHostFactory hostFactory = new LegacyApplicationHostFactory();
+            WinFormsApplication.Run(new LegacyHostApplicationContext(hostFactory));
         }
     }
 }

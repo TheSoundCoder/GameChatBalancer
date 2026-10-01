@@ -57,6 +57,7 @@ Vor Umsetzung einer UI-Phase muss eine kurze Design-Spezifikation vorliegen (Pal
 ## Service-Änderungen
 - Änderungen an Services sollen nach Möglichkeit zunächst vermieden werden; wenn Service-Änderungen nötig sind, müssen sie vorab begründet und vom Nutzer bestätigt werden. Vor Änderungen an service-naher Logik (z. B. AudioManager) immer vorab kurz begründen und erst nach expliziter Nutzerbestätigung umsetzen.
 - Bei neuen Service-nahen Änderungen soll die Umsetzung so erfolgen, dass sie im Zweifel sauber rückbaubar ist.
+- Interface-Namen sollen kein unnötiges 'Audio'-Präfix tragen; IAudioDiagnosticsSink zu generischem Namen ohne Audio umbenennen.
 
 ## Debugging
 - Der Debug-Bereich soll scrollbar sein; neue Debug-Logeinträge sollen oben angezeigt/eingefügt werden (neueste zuerst).
@@ -64,8 +65,12 @@ Vor Umsetzung einer UI-Phase muss eine kurze Design-Spezifikation vorliegen (Pal
 
 ## Software-Control
 - Für Software-Control sollen Hotkeys gelten: Ctrl+Shift+Left verschiebt Balance Richtung Chat, Ctrl+Shift+Right Richtung Game; dabei gilt der Arduino-Invert-Status nicht. 
-- Software-Control-Hotkeys sollen nur bei Arduino-Disconnected registriert sein und bei Connected vollständig deaktiviert werden, um Overhead zu minimieren.
+- Software-Control-Hotkeys sollen nur bei Arduino-Disconnected registriert sein und bei Connected vollständig deaktiviert werden, um Overhead zu minimieren. Im Disconnected-Zustand sind die Hotkeys erst nach Öffnen des MainWindows aktiv.
 - Beim ersten Schritt auf das 5%-Raster gesnappt werden (z.B. 42 -> Decrease 40, Increase 45), danach in 5%-Schritten weiter.
 
 ## MainWindow Anpassungen
 - Ab jetzt keine ungefragten Änderungen im MainWindow vornehmen; MainWindow nur nach expliziter Anforderung anpassen.
+
+## Paritäts-Checkliste
+- Bei Punkt 7 (Arduino-Verbindung, Live-Wechsel auf Connected) hängt sich die Anwendung aktuell auf.
+- In der aktuellen UI wird der COM-Port im Systray nicht mehr angezeigt; Testpunkt 9 ist daher N/A.

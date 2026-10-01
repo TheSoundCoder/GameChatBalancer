@@ -118,9 +118,9 @@ namespace AudioManager
                 {
                     try
                     {
-                        if (MainForm != null && MainForm.Debug)
+                        if (DiagnosticsSink != null && DiagnosticsSink.DebugEnabled)
                         {
-                            MainForm.SendToLog("AudioSessionMonitoring: OnSessionCreated received.");
+                            DiagnosticsSink.Log("AudioSessionMonitoring: OnSessionCreated received.");
                         }
                     }
                     catch
@@ -133,9 +133,9 @@ namespace AudioManager
                 var registerHr = sessionManager.RegisterSessionNotification(notificationClient);
                 try
                 {
-                    if (MainForm != null && MainForm.Debug)
+                    if (DiagnosticsSink != null && DiagnosticsSink.DebugEnabled)
                     {
-                        MainForm.SendToLog($"AudioSessionMonitoring: RegisterSessionNotification HR=0x{registerHr:X8}");
+                        DiagnosticsSink.Log($"AudioSessionMonitoring: RegisterSessionNotification HR=0x{registerHr:X8}");
                     }
                 }
                 catch
@@ -149,9 +149,9 @@ namespace AudioManager
                 sessionEnumerator?.GetCount(out initialCount);
                 try
                 {
-                    if (MainForm != null && MainForm.Debug)
+                    if (DiagnosticsSink != null && DiagnosticsSink.DebugEnabled)
                     {
-                        MainForm.SendToLog($"AudioSessionMonitoring: Initial session count={initialCount}.");
+                        DiagnosticsSink.Log($"AudioSessionMonitoring: Initial session count={initialCount}.");
                     }
                 }
                 catch
@@ -174,9 +174,9 @@ namespace AudioManager
                         var unregisterHr = sessionManager.UnregisterSessionNotification(notificationClient);
                         try
                         {
-                            if (MainForm != null && MainForm.Debug)
+                            if (DiagnosticsSink != null && DiagnosticsSink.DebugEnabled)
                             {
-                                MainForm.SendToLog($"AudioSessionMonitoring: UnregisterSessionNotification HR=0x{unregisterHr:X8}");
+                                DiagnosticsSink.Log($"AudioSessionMonitoring: UnregisterSessionNotification HR=0x{unregisterHr:X8}");
                             }
                         }
                         catch
@@ -221,10 +221,10 @@ namespace AudioManager
         /// </summary>
         /// <returns>-1 in case of an error, if successful the value will be between 0 and 100</returns>
 
-        static AudioControl.Form1 MainForm;     //holds a referende to Form1
-        public static void HandOverForm(Form1 f)
+        private static AudioControl.IDiagnosticsSink? DiagnosticsSink;
+        public static void HandOverDiagnosticsSink(AudioControl.IDiagnosticsSink diagnosticsSink)
         {
-            MainForm = f;
+            DiagnosticsSink = diagnosticsSink;
         }
 
 
@@ -765,7 +765,7 @@ namespace AudioManager
                             Guid guid = Guid.Empty;
                             volumeControl = ctl as ISimpleAudioVolume;
                             volumeControl.SetMasterVolume(level / 100, ref guid);
-                            if (MainForm.Debug) { MainForm.SendToLog(cAppName.ToString() + ".Volume=" + level.ToString()); }
+                            if (DiagnosticsSink != null && DiagnosticsSink.DebugEnabled) { DiagnosticsSink.Log(cAppName.ToString() + ".Volume=" + level.ToString()); }
                         }
                     }
                     catch { }
