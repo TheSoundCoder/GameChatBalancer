@@ -42,6 +42,30 @@ namespace AudioControl
             set => Properties.Settings.Default.StartWithWindows = value;
         }
 
+        public bool OverlayEnabled
+        {
+            get => Properties.Settings.Default.OverlayEnabled;
+            set => Properties.Settings.Default.OverlayEnabled = value;
+        }
+
+        public int OverlayDurationSeconds
+        {
+            get => Properties.Settings.Default.OverlayDurationSeconds;
+            set => Properties.Settings.Default.OverlayDurationSeconds = value;
+        }
+
+        public string OverlayPosition
+        {
+            get => Properties.Settings.Default.OverlayPosition;
+            set => Properties.Settings.Default.OverlayPosition = value;
+        }
+
+        public double OverlayOpacity
+        {
+            get => Properties.Settings.Default.OverlayOpacity;
+            set => Properties.Settings.Default.OverlayOpacity = value;
+        }
+
         public void ScheduleSave()
         {
             lock (sync)
@@ -70,5 +94,6 @@ namespace AudioControl
             {
             }
         }
+
     }
 }

@@ -380,13 +380,230 @@
                     Grid.RowSpan="2"
                     Style="{StaticResource CardBorderStyle}"
                     Visibility="Collapsed">
-                <StackPanel>
-                    <TextBlock Text="Settings" FontSize="24" FontWeight="Bold" Foreground="{StaticResource Brush.TextPrimary}" />
-                    <TextBlock Text="Hardware und App-Optionen" Margin="0,6,0,0" Foreground="{StaticResource Brush.TextSecondary}" />
-                    <Border Background="{StaticResource Brush.Surface1}" BorderBrush="{StaticResource Brush.BorderSubtle}" BorderThickness="1" CornerRadius="10" Padding="14" Margin="0,18,0,0">
-                        <TextBlock Text="Settings-Inhalt folgt in 03.02/03.05 (Placeholder)." Foreground="{StaticResource Brush.TextSecondary}" />
-                    </Border>
-                </StackPanel>
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                    <StackPanel>
+                        <TextBlock Text="Settings" FontSize="24" FontWeight="Bold" Foreground="{StaticResource Brush.TextPrimary}" />
+                        <TextBlock Text="Configure general app behavior, overlay, audio, hardware and software controls."
+                                   Margin="0,6,0,0"
+                                   Foreground="{StaticResource Brush.TextSecondary}" />
+
+                        <Border Background="{StaticResource Brush.Surface1}" BorderBrush="{StaticResource Brush.BorderSubtle}" BorderThickness="1" CornerRadius="12" Padding="16" Margin="0,18,0,0">
+                            <StackPanel>
+                                <TextBlock Text="General"
+                                           FontSize="16"
+                                           FontWeight="SemiBold"
+                                           Foreground="{StaticResource Brush.TextPrimary}" />
+                                <TextBlock Text="Application-wide preferences."
+                                           Margin="0,4,0,0"
+                                           Foreground="{StaticResource Brush.TextSecondary}" />
+                                <Border Height="1" Background="{StaticResource Brush.BorderSubtle}" Margin="0,10,0,12" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <TextBlock Text="Start with Windows" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource Brush.TextPrimary}" />
+                                        <TextBlock Text="Launch GameChatBalancer automatically after sign-in." Margin="0,4,0,0" Foreground="{StaticResource Brush.TextSecondary}" />
+                                    </StackPanel>
+                                    <ToggleButton x:Name="tglSettingsStartWithWindows"
+                                                  Grid.Column="1"
+                                                  Style="{StaticResource HardwareToggleStyle}"
+                                                  Checked="StartWithWindowsToggle_Changed"
+                                                  Unchecked="StartWithWindowsToggle_Changed" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="{StaticResource Brush.Surface1}" BorderBrush="{StaticResource Brush.BorderSubtle}" BorderThickness="1" CornerRadius="12" Padding="16" Margin="0,14,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Overlay"
+                                           FontSize="16"
+                                           FontWeight="SemiBold"
+                                           Foreground="{StaticResource Brush.TextPrimary}" />
+                                <TextBlock Text="Show an in-game overlay when balance values change."
+                                           Margin="0,4,0,0"
+                                           Foreground="{StaticResource Brush.TextSecondary}" />
+                                <Border Height="1" Background="{StaticResource Brush.BorderSubtle}" Margin="0,10,0,12" />
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <TextBlock Text="Enable Overlay" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource Brush.TextPrimary}" />
+                                        <TextBlock Text="Display overlay whenever Game/Chat balance updates." Margin="0,4,0,0" Foreground="{StaticResource Brush.TextSecondary}" />
+                                    </StackPanel>
+                                    <ToggleButton x:Name="tglOverlayEnabled"
+                                                   Grid.Column="1"
+                                                   Style="{StaticResource HardwareToggleStyle}"
+                                                   Checked="OverlayEnabledToggle_Changed"
+                                                   Unchecked="OverlayEnabledToggle_Changed" />
+                                </Grid>
+
+                                <Grid Margin="0,14,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="180" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Display Duration" VerticalAlignment="Center" Foreground="{StaticResource Brush.TextPrimary}" />
+                                    <ComboBox x:Name="cmbOverlayDuration"
+                                              Grid.Column="1"
+                                              Style="{StaticResource HardwareComboBoxStyle}"
+                                              ItemContainerStyle="{StaticResource HardwareComboBoxItemStyle}"
+                                              Height="34"
+                                              SelectionChanged="OverlayDurationComboBox_SelectionChanged">
+                                        <ComboBoxItem Tag="1000" Content="1 s" />
+                                        <ComboBoxItem Tag="2000" Content="2 s" />
+                                        <ComboBoxItem Tag="3000" Content="3 s" />
+                                        <ComboBoxItem Tag="4000" Content="4 s" />
+                                        <ComboBoxItem Tag="5000" Content="5 s" />
+                                    </ComboBox>
+                                </Grid>
+
+                                <Grid Margin="0,10,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="180" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Overlay Position" VerticalAlignment="Center" Foreground="{StaticResource Brush.TextPrimary}" />
+                                    <ComboBox x:Name="cmbOverlayPosition"
+                                              Grid.Column="1"
+                                              Style="{StaticResource HardwareComboBoxStyle}"
+                                              ItemContainerStyle="{StaticResource HardwareComboBoxItemStyle}"
+                                              Height="34"
+                                              SelectionChanged="OverlayPositionComboBox_SelectionChanged">
+                                        <ComboBoxItem Content="TopLeft" />
+                                        <ComboBoxItem Content="TopCenter" />
+                                        <ComboBoxItem Content="TopRight" />
+                                        <ComboBoxItem Content="CenterLeft" />
+                                        <ComboBoxItem Content="Center" />
+                                        <ComboBoxItem Content="CenterRight" />
+                                        <ComboBoxItem Content="BottomLeft" />
+                                        <ComboBoxItem Content="BottomCenter" />
+                                        <ComboBoxItem Content="BottomRight" />
+                                    </ComboBox>
+                                </Grid>
+
+                                <Grid Margin="0,12,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="180" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="56" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Overlay Opacity" VerticalAlignment="Center" Foreground="{StaticResource Brush.TextPrimary}" />
+                                    <Slider x:Name="sldOverlayOpacity"
+                                            Grid.Column="1"
+                                            Minimum="20"
+                                            Maximum="100"
+                                            TickFrequency="5"
+                                            IsSnapToTickEnabled="True"
+                                            ValueChanged="OverlayOpacitySlider_ValueChanged" />
+                                    <TextBlock x:Name="txtOverlayOpacityValue"
+                                               Grid.Column="2"
+                                               HorizontalAlignment="Right"
+                                               VerticalAlignment="Center"
+                                               Foreground="{StaticResource Brush.TextSecondary}"
+                                               Text="90%" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="{StaticResource Brush.Surface1}" BorderBrush="{StaticResource Brush.BorderSubtle}" BorderThickness="1" CornerRadius="12" Padding="16" Margin="0,14,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Hardware"
+                                           FontSize="16"
+                                           FontWeight="SemiBold"
+                                           Foreground="{StaticResource Brush.TextPrimary}" />
+                                <TextBlock Text="Connection state and control mode."
+                                           Margin="0,4,0,0"
+                                           Foreground="{StaticResource Brush.TextSecondary}" />
+                                <Border Height="1" Background="{StaticResource Brush.BorderSubtle}" Margin="0,10,0,12" />
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Ellipse x:Name="settingsHardwareStatusDot"
+                                             Width="12"
+                                             Height="12"
+                                             VerticalAlignment="Center"
+                                             Fill="{StaticResource Brush.Warning}" />
+                                    <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                        <TextBlock x:Name="txtSettingsHardwareStatus"
+                                                   Text="Arduino: Disconnected"
+                                                   FontSize="14"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{StaticResource Brush.TextPrimary}" />
+                                        <TextBlock x:Name="txtSettingsControlMode"
+                                                   Text="Software Control active"
+                                                   Margin="0,4,0,0"
+                                                   Foreground="{StaticResource Brush.TextSecondary}" />
+                                    </StackPanel>
+                                </Grid>
+
+                                <Border Height="1" Background="{StaticResource Brush.BorderSubtle}" Margin="0,12,0,12" />
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="180" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Noise Reduction" VerticalAlignment="Center" Foreground="{StaticResource Brush.TextPrimary}" />
+                                    <ComboBox x:Name="cmbSettingsNoiseReduction"
+                                              Grid.Column="1"
+                                              Style="{StaticResource HardwareComboBoxStyle}"
+                                              ItemContainerStyle="{StaticResource HardwareComboBoxItemStyle}"
+                                              Height="34"
+                                              SelectionChanged="NoiseReductionComboBox_SelectionChanged" />
+                                </Grid>
+
+                                <Grid Margin="0,12,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <TextBlock Text="Invert Control" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource Brush.TextPrimary}" />
+                                        <TextBlock Text="Invert hardware direction for balance control." Margin="0,4,0,0" Foreground="{StaticResource Brush.TextSecondary}" />
+                                    </StackPanel>
+                                    <ToggleButton x:Name="tglSettingsInvertControl"
+                                                  Grid.Column="1"
+                                                  Style="{StaticResource HardwareToggleStyle}"
+                                                  Checked="InvertControlToggle_Changed"
+                                                  Unchecked="InvertControlToggle_Changed" />
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Background="{StaticResource Brush.Surface1}" BorderBrush="{StaticResource Brush.BorderSubtle}" BorderThickness="1" CornerRadius="12" Padding="16" Margin="0,14,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Hotkeys"
+                                           FontSize="16"
+                                           FontWeight="SemiBold"
+                                           Foreground="{StaticResource Brush.TextPrimary}" />
+                                <TextBlock Text="Software Control shortcuts (active only when hardware is disconnected)."
+                                           Margin="0,4,0,0"
+                                           Foreground="{StaticResource Brush.TextSecondary}" />
+                                <Border Height="1" Background="{StaticResource Brush.BorderSubtle}" Margin="0,10,0,12" />
+                                <TextBlock x:Name="txtSettingsHotkeysState"
+                                           Text="Status: waiting for hardware state"
+                                           Foreground="{StaticResource Brush.TextPrimary}" />
+                                <TextBlock Text="Ctrl + Shift + Left: move toward Chat"
+                                           Margin="0,8,0,0"
+                                           Foreground="{StaticResource Brush.TextSecondary}" />
+                                <TextBlock Text="Ctrl + Shift + Right: move toward Game"
+                                           Margin="0,4,0,0"
+                                           Foreground="{StaticResource Brush.TextSecondary}" />
+                                <TextBlock Text="Step size: 5%"
+                                           Margin="0,4,0,0"
+                                           Foreground="{StaticResource Brush.TextSecondary}" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
             </Border>
 
             <Border x:Name="aboutSection"

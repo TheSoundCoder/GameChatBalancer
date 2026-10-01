@@ -94,5 +94,53 @@ namespace AudioControl.Properties {
                 this["StartWithWindows"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool OverlayEnabled {
+            get {
+                return ((bool)(this["OverlayEnabled"]));
+            }
+            set {
+                this["OverlayEnabled"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public int OverlayDurationSeconds {
+            get {
+                return ((int)(this["OverlayDurationSeconds"]));
+            }
+            set {
+                this["OverlayDurationSeconds"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("BottomCenter")]
+        public string OverlayPosition {
+            get {
+                return ((string)(this["OverlayPosition"]));
+            }
+            set {
+                this["OverlayPosition"] = value;
+            }
+        }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.9")]
+        public double OverlayOpacity {
+            get {
+                return ((double)(this["OverlayOpacity"]));
+            }
+            set {
+                this["OverlayOpacity"] = value;
+            }
+        }
     }
 }

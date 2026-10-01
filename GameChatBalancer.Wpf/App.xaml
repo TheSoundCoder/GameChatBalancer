@@ -23,11 +23,103 @@
         <SolidColorBrush x:Key="Brush.AccentChat" Color="{StaticResource Color.AccentChat}" />
         <SolidColorBrush x:Key="Brush.Success" Color="{StaticResource Color.Success}" />
         <SolidColorBrush x:Key="Brush.Warning" Color="{StaticResource Color.Warning}" />
+        <SolidColorBrush x:Key="Brush.ScrollbarTrack" Color="#1A2E4D" />
+        <SolidColorBrush x:Key="Brush.ScrollbarThumb" Color="#32C5FF" />
+        <SolidColorBrush x:Key="Brush.ScrollbarThumbHover" Color="#7DEBFF" />
 
         <Style TargetType="Window">
             <Setter Property="Background" Value="{StaticResource Brush.BackgroundBase}" />
             <Setter Property="Foreground" Value="{StaticResource Brush.TextPrimary}" />
             <Setter Property="FontFamily" Value="Segoe UI Variable Display" />
+        </Style>
+
+        <Style x:Key="AppScrollThumbStyle" TargetType="Thumb">
+            <Setter Property="Background" Value="{StaticResource Brush.ScrollbarThumb}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Thumb">
+                        <Border x:Name="ThumbBorder"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="6"
+                                Margin="0,1"
+                                Opacity="0.92"
+                                SnapsToDevicePixels="True" />
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ThumbBorder"
+                                                             Storyboard.TargetProperty="Opacity"
+                                                             To="1"
+                                                             Duration="0:0:0.12" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ThumbBorder"
+                                                             Storyboard.TargetProperty="Opacity"
+                                                             To="0.92"
+                                                             Duration="0:0:0.12" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ScrollBar">
+            <Setter Property="Background" Value="{StaticResource Brush.ScrollbarTrack}" />
+            <Setter Property="Width" Value="12" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ScrollBar">
+                        <Grid SnapsToDevicePixels="True" Background="Transparent">
+                            <Border Margin="4,2"
+                                    CornerRadius="6"
+                                    Background="{TemplateBinding Background}" />
+
+                            <Track x:Name="PART_Track"
+                                   Margin="4,2"
+                                   IsDirectionReversed="True"
+                                   Focusable="False"
+                                   Minimum="{TemplateBinding Minimum}"
+                                   Maximum="{TemplateBinding Maximum}"
+                                   Value="{Binding Value, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                   ViewportSize="{TemplateBinding ViewportSize}">
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton Command="ScrollBar.PageUpCommand"
+                                                  Opacity="0"
+                                                  Focusable="False"
+                                                  IsTabStop="False" />
+                                </Track.DecreaseRepeatButton>
+                                <Track.Thumb>
+                                    <Thumb Style="{StaticResource AppScrollThumbStyle}" MinHeight="24" />
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton Command="ScrollBar.PageDownCommand"
+                                                  Opacity="0"
+                                                  Focusable="False"
+                                                  IsTabStop="False" />
+                                </Track.IncreaseRepeatButton>
+                            </Track>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Orientation" Value="Horizontal">
+                                <Setter TargetName="PART_Track" Property="IsDirectionReversed" Value="False" />
+                                <Setter TargetName="PART_Track" Property="Margin" Value="2,4" />
+                                <Setter Property="Width" Value="Auto" />
+                                <Setter Property="Height" Value="12" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <Style x:Key="CardBorderStyle" TargetType="Border">

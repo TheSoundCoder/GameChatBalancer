@@ -45,6 +45,7 @@ namespace AudioControl
         private IAudioBalanceService? audioBalanceService;
         private ITrayHostService? trayHostService;
         private IUiCoordinator? uiCoordinator;
+        private readonly IOverlayService overlayService;
         private NotifyIcon? trayIcon;
         private Icon? trayIconResource;
         private HotkeyMessageWindow? hotkeyWindow;
@@ -61,12 +62,14 @@ namespace AudioControl
         private float gameVolume = 100f;
         private float chatVolume = 100f;
         private bool started;
+        private bool overlayPrimed;
 
         public TrayIconApplicationHost(ISettingsStore settingsStore, IAutoStartService autoStartService)
         {
             this.settingsStore = settingsStore;
             this.autoStartService = autoStartService;
             appAssignmentPathStore = new AppAssignmentPathStore();
+            overlayService = new WpfOverlayService(TimeSpan.FromSeconds(3), Log);
         }
 
         public bool DebugEnabled => debug;
@@ -134,6 +137,7 @@ namespace AudioControl
             trayHostService.RefreshState();
             hotkeyWindow = new HotkeyMessageWindow(HandleHotkeyMessage);
             UpdateSoftwareControlHotkeys(connected);
+            ApplyOverlaySettings();
             started = true;
         }
 
@@ -180,6 +184,8 @@ namespace AudioControl
             UnregisterSoftwareControlHotkeys();
             hotkeyWindow?.Dispose();
             hotkeyWindow = null;
+            overlayService.Hide();
+            overlayService.Dispose();
 
             uiContext = null;
             uiThreadId = 0;
@@ -329,6 +335,14 @@ namespace AudioControl
                 ApplySoftwareBalanceFromWpf,
                 GetStartWithWindowsFromWpf,
                 ApplyStartWithWindowsFromWpf,
+                () => settingsStore.OverlayEnabled,
+                ApplyOverlayEnabledFromWpf,
+                () => Math.Clamp((int)Math.Round(settingsStore.OverlayDurationSeconds * 1000.0), 500, 10000),
+                ApplyOverlayDurationFromWpf,
+                () => settingsStore.OverlayPosition,
+                ApplyOverlayPositionFromWpf,
+                () => settingsStore.OverlayOpacity,
+                ApplyOverlayOpacityFromWpf,
                 showDebugOption: false);
 
             window.Closed += (_, _) => wpfMainWindow = null;
@@ -436,6 +450,35 @@ namespace AudioControl
             trayHostService?.RefreshState();
         }
 
+        private void ApplyOverlayEnabledFromWpf(bool enabled)
+        {
+            settingsStore.OverlayEnabled = enabled;
+            settingsStore.ScheduleSave();
+            ApplyOverlaySettings();
+        }
+
+        private void ApplyOverlayDurationFromWpf(int durationMs)
+        {
+            var seconds = Math.Clamp((int)Math.Round(durationMs / 1000.0), 1, 10);
+            settingsStore.OverlayDurationSeconds = seconds;
+            settingsStore.ScheduleSave();
+            ApplyOverlaySettings();
+        }
+
+        private void ApplyOverlayPositionFromWpf(string position)
+        {
+            settingsStore.OverlayPosition = NormalizeOverlayPosition(position);
+            settingsStore.ScheduleSave();
+            ApplyOverlaySettings();
+        }
+
+        private void ApplyOverlayOpacityFromWpf(double opacity)
+        {
+            settingsStore.OverlayOpacity = Math.Clamp(opacity, 0.2, 1.0);
+            settingsStore.ScheduleSave();
+            ApplyOverlaySettings();
+        }
+
         private void SetDebugModeFromWpf(bool isDebugSectionActive)
         {
             debug = isDebugSectionActive;
@@ -464,6 +507,42 @@ namespace AudioControl
 
             trayHostService?.SetBalance(displayVolume, gameVolume, chatVolume);
             uiCoordinator?.SetArduinoValue(displayVolume);
+            ApplyOverlaySettings();
+
+            if (!overlayPrimed)
+            {
+                overlayPrimed = true;
+                return;
+            }
+
+            overlayService.Update(gameVolume, chatVolume);
+        }
+
+        private void ApplyOverlaySettings()
+        {
+            overlayService.ApplyConfiguration(
+                settingsStore.OverlayEnabled,
+                settingsStore.OverlayDurationSeconds,
+                NormalizeOverlayPosition(settingsStore.OverlayPosition),
+                settingsStore.OverlayOpacity);
+        }
+
+        private static string NormalizeOverlayPosition(string? position)
+        {
+            var normalized = string.IsNullOrWhiteSpace(position) ? "BottomCenter" : position.Trim();
+            return normalized switch
+            {
+                "TopLeft" => "TopLeft",
+                "TopCenter" => "TopCenter",
+                "TopRight" => "TopRight",
+                "CenterLeft" => "CenterLeft",
+                "Center" => "Center",
+                "CenterRight" => "CenterRight",
+                "BottomLeft" => "BottomLeft",
+                "BottomCenter" => "BottomCenter",
+                "BottomRight" => "BottomRight",
+                _ => "BottomCenter"
+            };
         }
 
         private void UpdateSoftwareControlHotkeys(bool isConnected)

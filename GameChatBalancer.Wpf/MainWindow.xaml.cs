@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Shapes;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -49,6 +50,14 @@ public partial class MainWindow : Window
     private readonly Action<float> softwareBalanceSetter;
     private readonly Func<bool> startWithWindowsProvider;
     private readonly Action<bool> startWithWindowsSetter;
+    private readonly Func<bool> overlayEnabledProvider;
+    private readonly Action<bool> overlayEnabledSetter;
+    private readonly Func<int> overlayDurationProvider;
+    private readonly Action<int> overlayDurationSetter;
+    private readonly Func<string> overlayPositionProvider;
+    private readonly Action<string> overlayPositionSetter;
+    private readonly Func<double> overlayOpacityProvider;
+    private readonly Action<double> overlayOpacitySetter;
     private bool showDebugOption;
     private readonly IAppIconService appIconService;
     private bool suppressHardwareOptionEvents;
@@ -90,6 +99,14 @@ public partial class MainWindow : Window
             _ => { },
             () => false,
             _ => { },
+            () => true,
+            _ => { },
+            () => 3,
+            _ => { },
+            () => "BottomCenter",
+            _ => { },
+            () => 0.9,
+            _ => { },
             false)
     {
     }
@@ -113,6 +130,14 @@ public partial class MainWindow : Window
         Action<float> softwareBalanceSetter,
         Func<bool> startWithWindowsProvider,
         Action<bool> startWithWindowsSetter,
+        Func<bool> overlayEnabledProvider,
+        Action<bool> overlayEnabledSetter,
+        Func<int> overlayDurationProvider,
+        Action<int> overlayDurationSetter,
+        Func<string> overlayPositionProvider,
+        Action<string> overlayPositionSetter,
+        Func<double> overlayOpacityProvider,
+        Action<double> overlayOpacitySetter,
         bool showDebugOption)
     {
         this.hardwareStatusProvider = hardwareStatusProvider;
@@ -133,6 +158,14 @@ public partial class MainWindow : Window
         this.softwareBalanceSetter = softwareBalanceSetter;
         this.startWithWindowsProvider = startWithWindowsProvider;
         this.startWithWindowsSetter = startWithWindowsSetter;
+        this.overlayEnabledProvider = overlayEnabledProvider;
+        this.overlayEnabledSetter = overlayEnabledSetter;
+        this.overlayDurationProvider = overlayDurationProvider;
+        this.overlayDurationSetter = overlayDurationSetter;
+        this.overlayPositionProvider = overlayPositionProvider;
+        this.overlayPositionSetter = overlayPositionSetter;
+        this.overlayOpacityProvider = overlayOpacityProvider;
+        this.overlayOpacitySetter = overlayOpacitySetter;
         this.showDebugOption = showDebugOption;
         appIconService = new ProcessAppIconService();
 
@@ -145,6 +178,7 @@ public partial class MainWindow : Window
         Loaded += (_, _) => InitializeHardwareOptions();
         Loaded += (_, _) => InitializeAppAssignments();
         Loaded += (_, _) => InitializeStartWithWindowsOption();
+        Loaded += (_, _) => InitializeOverlayOptions();
         Loaded += (_, _) => RefreshDebugMessages();
         SourceInitialized += MainWindow_SourceInitialized;
         Closed += MainWindow_Closed;
@@ -160,6 +194,45 @@ public partial class MainWindow : Window
         try
         {
             tglStartWithWindows.IsChecked = startWithWindowsProvider();
+            if (tglSettingsStartWithWindows is not null)
+            {
+                tglSettingsStartWithWindows.IsChecked = tglStartWithWindows.IsChecked;
+            }
+        }
+        finally
+        {
+            suppressHardwareOptionEvents = false;
+        }
+    }
+
+    private void InitializeOverlayOptions()
+    {
+        suppressHardwareOptionEvents = true;
+        try
+        {
+            tglOverlayEnabled.IsChecked = overlayEnabledProvider();
+
+            var configuredDuration = overlayDurationProvider().ToString();
+            var durationItem = cmbOverlayDuration.Items
+                .OfType<ComboBoxItem>()
+                .FirstOrDefault(item => string.Equals(item.Tag?.ToString(), configuredDuration, StringComparison.OrdinalIgnoreCase));
+            if (durationItem != null)
+            {
+                cmbOverlayDuration.SelectedItem = durationItem;
+            }
+
+            var configuredPosition = overlayPositionProvider();
+            var positionItem = cmbOverlayPosition.Items
+                .OfType<ComboBoxItem>()
+                .FirstOrDefault(item => string.Equals(item.Content?.ToString(), configuredPosition, StringComparison.OrdinalIgnoreCase));
+            if (positionItem != null)
+            {
+                cmbOverlayPosition.SelectedItem = positionItem;
+            }
+
+            var opacityPercent = (int)Math.Round(Math.Clamp(overlayOpacityProvider(), 0.2, 1.0) * 100d);
+            sldOverlayOpacity.Value = opacityPercent;
+            txtOverlayOpacityValue.Text = $"{opacityPercent}%";
         }
         finally
         {
@@ -337,13 +410,27 @@ public partial class MainWindow : Window
         try
         {
             cmbNoiseReduction.ItemsSource = new[] { "Off", "Low", "Medium", "High" };
+            if (cmbSettingsNoiseReduction is not null)
+            {
+                cmbSettingsNoiseReduction.ItemsSource = new[] { "Off", "Low", "Medium", "High" };
+            }
 
             var configuredNoiseReduction = noiseReductionProvider();
             cmbNoiseReduction.SelectedItem = cmbNoiseReduction.Items.Cast<string>()
                 .FirstOrDefault(item => string.Equals(item, configuredNoiseReduction, StringComparison.OrdinalIgnoreCase))
                 ?? "High";
+            if (cmbSettingsNoiseReduction is not null)
+            {
+                cmbSettingsNoiseReduction.SelectedItem = cmbSettingsNoiseReduction.Items.Cast<string>()
+                    .FirstOrDefault(item => string.Equals(item, configuredNoiseReduction, StringComparison.OrdinalIgnoreCase))
+                    ?? "High";
+            }
 
             tglInvertControl.IsChecked = invertControlProvider();
+            if (tglSettingsInvertControl is not null)
+            {
+                tglSettingsInvertControl.IsChecked = tglInvertControl.IsChecked;
+            }
             SetNoiseReductionConfirmed(cmbNoiseReduction.SelectedItem?.ToString() ?? "High");
         }
         finally
@@ -592,6 +679,30 @@ public partial class MainWindow : Window
         {
             softwareControlSection.Visibility = connected ? Visibility.Collapsed : Visibility.Visible;
         }
+
+        if (txtSettingsHardwareStatus is not null)
+        {
+            txtSettingsHardwareStatus.Text = connected ? "Arduino: Connected" : "Arduino: Disconnected";
+        }
+
+        if (settingsHardwareStatusDot is not null)
+        {
+            settingsHardwareStatusDot.Fill = connected
+                ? new SolidColorBrush(Color.FromRgb(34, 197, 94))
+                : new SolidColorBrush(Color.FromRgb(245, 158, 11));
+        }
+
+        if (txtSettingsControlMode is not null)
+        {
+            txtSettingsControlMode.Text = connected ? "Hardware Control active" : "Software Control active";
+        }
+
+        if (txtSettingsHotkeysState is not null)
+        {
+            txtSettingsHotkeysState.Text = connected
+                ? "Status: disabled while hardware is connected"
+                : "Status: enabled (Ctrl+Shift+Left/Right)";
+        }
     }
 
     private void NavigationRadioButton_Checked(object sender, RoutedEventArgs e)
@@ -678,9 +789,33 @@ public partial class MainWindow : Window
 
     private void NoiseReductionComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (suppressHardwareOptionEvents || cmbNoiseReduction.SelectedItem is not string selectedNoiseReduction)
+        if (suppressHardwareOptionEvents)
         {
             return;
+        }
+
+        var sourceCombo = sender as ComboBox;
+        if (sourceCombo?.SelectedItem is not string selectedNoiseReduction)
+        {
+            return;
+        }
+
+        suppressHardwareOptionEvents = true;
+        try
+        {
+            if (sourceCombo != cmbNoiseReduction && cmbNoiseReduction is not null)
+            {
+                cmbNoiseReduction.SelectedItem = selectedNoiseReduction;
+            }
+
+            if (sourceCombo != cmbSettingsNoiseReduction && cmbSettingsNoiseReduction is not null)
+            {
+                cmbSettingsNoiseReduction.SelectedItem = selectedNoiseReduction;
+            }
+        }
+        finally
+        {
+            suppressHardwareOptionEvents = false;
         }
 
         SetNoiseReductionApplying(selectedNoiseReduction);
@@ -694,7 +829,28 @@ public partial class MainWindow : Window
             return;
         }
 
-        invertControlSetter(tglInvertControl.IsChecked == true);
+        var sourceToggle = sender as ToggleButton;
+        var checkedState = sourceToggle?.IsChecked == true;
+
+        suppressHardwareOptionEvents = true;
+        try
+        {
+            if (sourceToggle != tglInvertControl && tglInvertControl is not null)
+            {
+                tglInvertControl.IsChecked = checkedState;
+            }
+
+            if (sourceToggle != tglSettingsInvertControl && tglSettingsInvertControl is not null)
+            {
+                tglSettingsInvertControl.IsChecked = checkedState;
+            }
+        }
+        finally
+        {
+            suppressHardwareOptionEvents = false;
+        }
+
+        invertControlSetter(checkedState);
     }
 
     private void StartWithWindowsToggle_Changed(object sender, RoutedEventArgs e)
@@ -704,7 +860,87 @@ public partial class MainWindow : Window
             return;
         }
 
-        startWithWindowsSetter(tglStartWithWindows.IsChecked == true);
+        var sourceToggle = sender as ToggleButton;
+        var checkedState = sourceToggle?.IsChecked == true;
+
+        suppressHardwareOptionEvents = true;
+        try
+        {
+            if (sourceToggle != tglStartWithWindows && tglStartWithWindows is not null)
+            {
+                tglStartWithWindows.IsChecked = checkedState;
+            }
+
+            if (sourceToggle != tglSettingsStartWithWindows && tglSettingsStartWithWindows is not null)
+            {
+                tglSettingsStartWithWindows.IsChecked = checkedState;
+            }
+        }
+        finally
+        {
+            suppressHardwareOptionEvents = false;
+        }
+
+        startWithWindowsSetter(checkedState);
+    }
+
+    private void OverlayEnabledToggle_Changed(object sender, RoutedEventArgs e)
+    {
+        if (suppressHardwareOptionEvents)
+        {
+            return;
+        }
+
+        overlayEnabledSetter(tglOverlayEnabled.IsChecked == true);
+    }
+
+    private void OverlayDurationComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (suppressHardwareOptionEvents)
+        {
+            return;
+        }
+
+        if (cmbOverlayDuration.SelectedItem is ComboBoxItem selectedItem && int.TryParse(selectedItem.Content?.ToString(), out var durationSeconds))
+        {
+            overlayDurationSetter(durationSeconds);
+        }
+    }
+
+    private void OverlayPositionComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        if (suppressHardwareOptionEvents)
+        {
+            return;
+        }
+
+        if (cmbOverlayPosition.SelectedItem is ComboBoxItem selectedItem)
+        {
+            var position = selectedItem.Content?.ToString();
+            if (!string.IsNullOrWhiteSpace(position))
+            {
+                overlayPositionSetter(position);
+            }
+        }
+    }
+
+    private void OverlayOpacitySlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+    {
+        var opacityPercent = (int)Math.Round(e.NewValue);
+
+        if (txtOverlayOpacityValue is null)
+        {
+            return;
+        }
+
+        txtOverlayOpacityValue.Text = $"{opacityPercent}%";
+
+        if (suppressHardwareOptionEvents)
+        {
+            return;
+        }
+
+        overlayOpacitySetter?.Invoke(Math.Clamp(opacityPercent / 100d, 0.2, 1.0));
     }
 
     public void SetStartWithWindowsState(bool enabled)
@@ -719,6 +955,10 @@ public partial class MainWindow : Window
         try
         {
             tglStartWithWindows.IsChecked = enabled;
+            if (tglSettingsStartWithWindows is not null)
+            {
+                tglSettingsStartWithWindows.IsChecked = enabled;
+            }
         }
         finally
         {
@@ -738,6 +978,10 @@ public partial class MainWindow : Window
         try
         {
             tglInvertControl.IsChecked = enabled;
+            if (tglSettingsInvertControl is not null)
+            {
+                tglSettingsInvertControl.IsChecked = enabled;
+            }
         }
         finally
         {
@@ -763,6 +1007,10 @@ public partial class MainWindow : Window
                 ?? "High";
 
             cmbNoiseReduction.SelectedItem = selected;
+            if (cmbSettingsNoiseReduction is not null)
+            {
+                cmbSettingsNoiseReduction.SelectedItem = selected;
+            }
         }
         finally
         {
@@ -930,3 +1178,12 @@ public partial class MainWindow : Window
         }
     }
 }
+// Bitte die Overlay-Duration-Logik konsistent auf Sekunden umstellen:
+// 1) In OverlayDurationSlider_ValueChanged (oder äquivalenter Methode):
+//    - Wert als int durationSeconds lesen
+//    - Textanzeige als "{durationSeconds} s"
+//    - overlayDurationSetter(durationSeconds)
+// 2) Beim Laden/Initialisieren der Overlay-Dauer:
+//    - Providerwert als Sekunden behandeln
+//    - Clamp auf sinnvollen Sekundenbereich (1..10)
+// 3) Alle verbleibenden "ms"-Texte/Variablennamen in diesem Kontext auf Sekunden semantisch anpassen.

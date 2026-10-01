@@ -26,6 +26,7 @@ Es dient als visuelle Richtung. Funktionalität und Stabilität bleiben priorisi
 - Zentrales großes Audio-Balance-Control
 - Game-/Chat-Listen, Hardware-Status, Quick Actions, System-Audio
 - Theme-Support: Dark/Light/System
+- Display-Sprache der Applikation ist verbindlich **Englisch** (UI-Texte, Labels, States, Tooltips)
 
 ## Verbote
 - Kein 1:1-Nachbau des Screenshots
