@@ -32,6 +32,41 @@ namespace AudioControl
             return paths.TryGetValue(Normalize(appName), out var path) ? path : null;
         }
 
+        public string? GetPathOrResolve(string appName)
+        {
+            if (string.IsNullOrWhiteSpace(appName))
+            {
+                return null;
+            }
+
+            var key = Normalize(appName);
+            if (paths.TryGetValue(key, out var existingPath) && !string.IsNullOrWhiteSpace(existingPath) && File.Exists(existingPath))
+            {
+                return existingPath;
+            }
+
+            var resolved = TryResolveExePath(key);
+            if (string.IsNullOrWhiteSpace(resolved))
+            {
+                return null;
+            }
+
+            paths[key] = resolved;
+            Save();
+            return resolved;
+        }
+
+        public void SetPath(string appName, string exePath)
+        {
+            if (string.IsNullOrWhiteSpace(appName) || string.IsNullOrWhiteSpace(exePath) || !File.Exists(exePath))
+            {
+                return;
+            }
+
+            paths[Normalize(appName)] = exePath;
+            Save();
+        }
+
         public void SyncAssignedApps(IEnumerable<string> gameApps, IEnumerable<string> chatApps)
         {
             var assigned = gameApps

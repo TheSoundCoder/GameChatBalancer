@@ -10,16 +10,18 @@ namespace GameChatBalancer.Wpf;
 
 public interface IAppIconService
 {
-    ImageSource? GetIcon(string appName, string? persistedExePath);
+    AppIconResult GetIcon(string appName, string? persistedExePath);
 }
+
+public sealed record AppIconResult(ImageSource? Icon, string? ResolvedExePath);
 
 public sealed class ProcessAppIconService : IAppIconService
 {
-    public ImageSource? GetIcon(string appName, string? persistedExePath)
+    public AppIconResult GetIcon(string appName, string? persistedExePath)
     {
         if (string.IsNullOrWhiteSpace(appName))
         {
-            return GetFallbackIcon();
+            return new AppIconResult(GetFallbackIcon(), null);
         }
 
         if (!string.IsNullOrWhiteSpace(persistedExePath) && File.Exists(persistedExePath))
@@ -27,7 +29,7 @@ public sealed class ProcessAppIconService : IAppIconService
             var persistedIcon = TryExtractIcon(persistedExePath);
             if (persistedIcon is not null)
             {
-                return persistedIcon;
+                return new AppIconResult(persistedIcon, persistedExePath);
             }
         }
 
@@ -39,11 +41,11 @@ public sealed class ProcessAppIconService : IAppIconService
             var icon = TryExtractIcon(exePath);
             if (icon is not null)
             {
-                return icon;
+                return new AppIconResult(icon, exePath);
             }
         }
 
-        return GetFallbackIcon();
+        return new AppIconResult(GetFallbackIcon(), null);
     }
 
     private static string? TryFindExePath(string normalizedAppName)

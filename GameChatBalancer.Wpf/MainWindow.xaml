@@ -5,6 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="GameChatBalancer"
+        Background="{DynamicResource Brush.BackgroundBase}"
+        Foreground="{DynamicResource Brush.TextPrimary}"
         Height="900"
         Width="1440"
         MinWidth="1180"
@@ -59,6 +61,7 @@
                                  Tag="&#xE946;"
                                  Style="{StaticResource NavRadioButtonStyle}"
                                   GroupName="MainNavigation"
+                                   Visibility="Collapsed"
                                    Margin="0"
                                    Checked="NavigationRadioButton_Checked">
                         <StackPanel>
@@ -80,9 +83,17 @@
                     </RadioButton>
                 </StackPanel>
 
-                <Border Grid.Row="2" Background="{StaticResource Brush.Surface1}" CornerRadius="8" Padding="12">
-                    <TextBlock Text="Theme: Dark (Basis-Shell)" Foreground="{StaticResource Brush.TextSecondary}" />
-                </Border>
+                <StackPanel Grid.Row="2" Margin="12">
+                    <TextBlock Text="Version 2.0.0"
+                               Foreground="{StaticResource Brush.TextSecondary}"
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center" />
+                    <TextBlock Text="© 2026 TheSoundCoder"
+                               Margin="0,4,0,0"
+                               Foreground="{StaticResource Brush.TextSecondary}"
+                               HorizontalAlignment="Center"
+                               TextAlignment="Center" />
+                </StackPanel>
             </Grid>
         </Border>
 
@@ -195,6 +206,7 @@
                                 <TextBlock x:Name="txtArduinoValue"
                                            Grid.Row="1"
                                            Text="50"
+                                           Visibility="Collapsed"
                                            HorizontalAlignment="Center"
                                            Margin="0,8,0,0"
                                            FontSize="14"
@@ -361,11 +373,81 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <TextBlock Text="Debug" FontSize="24" FontWeight="Bold" Foreground="{StaticResource Brush.TextPrimary}" />
                     <TextBlock Grid.Row="1" Text="Laufzeitmeldungen" Margin="0,6,0,0" Foreground="{StaticResource Brush.TextSecondary}" />
-                    <Border Grid.Row="2" Background="{StaticResource Brush.Surface1}" BorderBrush="{StaticResource Brush.BorderSubtle}" BorderThickness="1" CornerRadius="10" Padding="12" Margin="0,14,0,0">
+
+                    <Border Grid.Row="2"
+                            Background="{StaticResource Brush.Surface1}"
+                            BorderBrush="{StaticResource Brush.BorderSubtle}"
+                            BorderThickness="1"
+                            CornerRadius="10"
+                            Padding="12"
+                            Margin="0,14,0,0">
+                        <StackPanel>
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="&#xE7F5;"
+                                           FontFamily="Segoe MDL2 Assets"
+                                           FontSize="14"
+                                           Foreground="{StaticResource Brush.TextSecondary}"
+                                           VerticalAlignment="Center" />
+                                <TextBlock Text="Noise Reduction"
+                                           Margin="8,0,0,0"
+                                           FontSize="14"
+                                           FontWeight="SemiBold"
+                                           Foreground="{StaticResource Brush.TextPrimary}"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+
+                            <ComboBox x:Name="cmbNoiseReduction"
+                                      Style="{StaticResource HardwareComboBoxStyle}"
+                                      ItemContainerStyle="{StaticResource HardwareComboBoxItemStyle}"
+                                      Margin="0,8,0,0"
+                                      Height="34"
+                                      SelectionChanged="NoiseReductionComboBox_SelectionChanged" />
+
+                            <Border x:Name="noiseReductionStateBorder"
+                                    Margin="0,10,0,0"
+                                    Padding="10,8"
+                                    CornerRadius="8"
+                                    Background="#14253E"
+                                    BorderBrush="{StaticResource Brush.BorderSubtle}"
+                                    BorderThickness="1">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Ellipse x:Name="noiseReductionStateDot"
+                                             Width="10"
+                                             Height="10"
+                                             VerticalAlignment="Center"
+                                             Fill="#94A3B8"
+                                             Stroke="#CCFFFFFF"
+                                             StrokeThickness="1"
+                                             SnapsToDevicePixels="True"
+                                             UseLayoutRounding="True" />
+
+                                    <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                        <TextBlock x:Name="txtNoiseReductionStateTitle"
+                                                   Text="Ready"
+                                                   FontSize="13"
+                                                   FontWeight="SemiBold"
+                                                   Foreground="{StaticResource Brush.TextPrimary}" />
+                                        <TextBlock x:Name="txtNoiseReductionStateDetail"
+                                                   Text="Waiting for next change"
+                                                   Foreground="{StaticResource Brush.TextSecondary}"
+                                                   Margin="0,2,0,0" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="3" Background="{StaticResource Brush.Surface1}" BorderBrush="{StaticResource Brush.BorderSubtle}" BorderThickness="1" CornerRadius="10" Padding="12" Margin="0,14,0,0">
                         <ListBox x:Name="debugMessagesList"
                                  Background="Transparent"
                                  BorderThickness="0"
@@ -383,7 +465,7 @@
                 <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
                     <StackPanel>
                         <TextBlock Text="Settings" FontSize="24" FontWeight="Bold" Foreground="{StaticResource Brush.TextPrimary}" />
-                        <TextBlock Text="Configure general app behavior, overlay, audio, hardware and software controls."
+                        <TextBlock Text="Configure general app behavior, overlay and software controls."
                                    Margin="0,6,0,0"
                                    Foreground="{StaticResource Brush.TextSecondary}" />
 
@@ -512,74 +594,6 @@
 
                         <Border Background="{StaticResource Brush.Surface1}" BorderBrush="{StaticResource Brush.BorderSubtle}" BorderThickness="1" CornerRadius="12" Padding="16" Margin="0,14,0,0">
                             <StackPanel>
-                                <TextBlock Text="Hardware"
-                                           FontSize="16"
-                                           FontWeight="SemiBold"
-                                           Foreground="{StaticResource Brush.TextPrimary}" />
-                                <TextBlock Text="Connection state and control mode."
-                                           Margin="0,4,0,0"
-                                           Foreground="{StaticResource Brush.TextSecondary}" />
-                                <Border Height="1" Background="{StaticResource Brush.BorderSubtle}" Margin="0,10,0,12" />
-
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Ellipse x:Name="settingsHardwareStatusDot"
-                                             Width="12"
-                                             Height="12"
-                                             VerticalAlignment="Center"
-                                             Fill="{StaticResource Brush.Warning}" />
-                                    <StackPanel Grid.Column="1" Margin="10,0,0,0">
-                                        <TextBlock x:Name="txtSettingsHardwareStatus"
-                                                   Text="Arduino: Disconnected"
-                                                   FontSize="14"
-                                                   FontWeight="SemiBold"
-                                                   Foreground="{StaticResource Brush.TextPrimary}" />
-                                        <TextBlock x:Name="txtSettingsControlMode"
-                                                   Text="Software Control active"
-                                                   Margin="0,4,0,0"
-                                                   Foreground="{StaticResource Brush.TextSecondary}" />
-                                    </StackPanel>
-                                </Grid>
-
-                                <Border Height="1" Background="{StaticResource Brush.BorderSubtle}" Margin="0,12,0,12" />
-
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="180" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock Text="Noise Reduction" VerticalAlignment="Center" Foreground="{StaticResource Brush.TextPrimary}" />
-                                    <ComboBox x:Name="cmbSettingsNoiseReduction"
-                                              Grid.Column="1"
-                                              Style="{StaticResource HardwareComboBoxStyle}"
-                                              ItemContainerStyle="{StaticResource HardwareComboBoxItemStyle}"
-                                              Height="34"
-                                              SelectionChanged="NoiseReductionComboBox_SelectionChanged" />
-                                </Grid>
-
-                                <Grid Margin="0,12,0,0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <StackPanel>
-                                        <TextBlock Text="Invert Control" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource Brush.TextPrimary}" />
-                                        <TextBlock Text="Invert hardware direction for balance control." Margin="0,4,0,0" Foreground="{StaticResource Brush.TextSecondary}" />
-                                    </StackPanel>
-                                    <ToggleButton x:Name="tglSettingsInvertControl"
-                                                  Grid.Column="1"
-                                                  Style="{StaticResource HardwareToggleStyle}"
-                                                  Checked="InvertControlToggle_Changed"
-                                                  Unchecked="InvertControlToggle_Changed" />
-                                </Grid>
-                            </StackPanel>
-                        </Border>
-
-                        <Border Background="{StaticResource Brush.Surface1}" BorderBrush="{StaticResource Brush.BorderSubtle}" BorderThickness="1" CornerRadius="12" Padding="16" Margin="0,14,0,0">
-                            <StackPanel>
                                 <TextBlock Text="Hotkeys"
                                            FontSize="16"
                                            FontWeight="SemiBold"
@@ -646,64 +660,7 @@
                     <Separator Margin="0,12,0,10" Background="{StaticResource Brush.BorderSubtle}" />
 
                     <StackPanel x:Name="hardwareControlsSection">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="&#xE7F5;"
-                                       FontFamily="Segoe MDL2 Assets"
-                                       FontSize="14"
-                                       Foreground="{StaticResource Brush.TextSecondary}"
-                                       VerticalAlignment="Center" />
-                            <TextBlock Text="Noise Reduction"
-                                       Margin="8,0,0,0"
-                                       FontSize="14"
-                                       FontWeight="SemiBold"
-                                       Foreground="{StaticResource Brush.TextPrimary}"
-                                       VerticalAlignment="Center" />
-                        </StackPanel>
-                        <ComboBox x:Name="cmbNoiseReduction"
-                                  Style="{StaticResource HardwareComboBoxStyle}"
-                                  ItemContainerStyle="{StaticResource HardwareComboBoxItemStyle}"
-                                  Margin="0,8,0,0"
-                                  Height="34"
-                                  SelectionChanged="NoiseReductionComboBox_SelectionChanged" />
-
-                        <Border x:Name="noiseReductionStateBorder"
-                                Margin="0,10,0,0"
-                                Padding="10,8"
-                                CornerRadius="8"
-                                Background="#14253E"
-                                BorderBrush="{StaticResource Brush.BorderSubtle}"
-                                BorderThickness="1">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-
-                                <Ellipse x:Name="noiseReductionStateDot"
-                                         Width="10"
-                                         Height="10"
-                                         VerticalAlignment="Center"
-                                         Fill="#94A3B8"
-                                         Stroke="#CCFFFFFF"
-                                         StrokeThickness="1"
-                                         SnapsToDevicePixels="True"
-                                         UseLayoutRounding="True" />
-
-                                <StackPanel Grid.Column="1" Margin="10,0,0,0">
-                                    <TextBlock x:Name="txtNoiseReductionStateTitle"
-                                               Text="Ready"
-                                               FontSize="13"
-                                               FontWeight="SemiBold"
-                                               Foreground="{StaticResource Brush.TextPrimary}" />
-                                    <TextBlock x:Name="txtNoiseReductionStateDetail"
-                                               Text="Waiting for next change"
-                                               Foreground="{StaticResource Brush.TextSecondary}"
-                                               Margin="0,2,0,0" />
-                                </StackPanel>
-                            </Grid>
-                        </Border>
-
-                        <Grid Margin="0,12,0,0">
+                        <Grid Margin="0,0,0,0">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
                                 <ColumnDefinition Width="Auto" />
@@ -816,11 +773,23 @@
             <Border Style="{StaticResource CardBorderStyle}">
                 <StackPanel>
                     <TextBlock Text="Quick Actions" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource Brush.TextPrimary}" />
-                    <Button Content="Rescan Audio Sessions"
-                            Height="36"
-                            Margin="0,10,0,8"
-                            Click="RescanAudioSessionsButton_Click" />
-                    <Button Content="Reconnect Hardware" Height="36" />
+
+                    <Grid Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Enable Overlay"
+                                   FontSize="14"
+                                   FontWeight="SemiBold"
+                                   Foreground="{StaticResource Brush.TextPrimary}"
+                                   VerticalAlignment="Center" />
+                        <ToggleButton x:Name="tglQuickOverlayEnabled"
+                                      Grid.Column="1"
+                                      Style="{StaticResource HardwareToggleStyle}"
+                                      Checked="OverlayEnabledToggle_Changed"
+                                      Unchecked="OverlayEnabledToggle_Changed" />
+                    </Grid>
 
                     <Grid Margin="0,12,0,0">
                         <Grid.ColumnDefinitions>
@@ -841,12 +810,6 @@
                 </StackPanel>
             </Border>
 
-            <Border Style="{StaticResource CardBorderStyle}" Margin="0,0,0,0">
-                <StackPanel>
-                    <TextBlock Text="System Audio" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource Brush.TextPrimary}" />
-                    <TextBlock Text="Master: 100%" Foreground="{StaticResource Brush.TextSecondary}" Margin="0,8,0,0" />
-                </StackPanel>
-            </Border>
         </StackPanel>
     </Grid>
 </Window>

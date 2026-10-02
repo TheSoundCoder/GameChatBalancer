@@ -126,8 +126,6 @@ namespace AudioControl
                 exitAppAction: ExitFromTray,
                 startWithWindowsProvider: GetStartWithWindowsFromWpf,
                 startWithWindowsSetter: ApplyStartWithWindowsFromWpf,
-                noiseReductionProvider: () => settingsStore.NoiseReduction,
-                noiseReductionSetter: ApplyNoiseReductionFromWpf,
                 invertControlProvider: () => settingsStore.Invert,
                 invertControlSetter: ApplyInvertControlFromWpf,
                 connectedProvider: () => connected,
@@ -287,7 +285,6 @@ namespace AudioControl
 
                 if (connected)
                 {
-                    trayHostService?.SetNoiseReductionState(settingsStore.NoiseReduction);
                     trayHostService?.SetInvertControlState(settingsStore.Invert);
                 }
             });
@@ -307,6 +304,13 @@ namespace AudioControl
         {
             var showDebugOption = (GetAsyncKeyState(VkShift) & 0x8000) != 0;
             uiCoordinator?.ShowMainWindow(showDebugOption);
+            uiCoordinator?.SetHardwareStatus();
+            uiCoordinator?.SetStartWithWindowsState(GetStartWithWindowsFromWpf());
+            uiCoordinator?.SetNoiseReductionSelection(settingsStore.NoiseReduction);
+            uiCoordinator?.SetInvertControlState(settingsStore.Invert);
+            uiCoordinator?.SetArduinoValue(displayVolume);
+            uiCoordinator?.RefreshAppAssignments();
+            uiCoordinator?.RefreshDebugMessages();
         }
 
         private void ExitFromTray()
@@ -328,7 +332,7 @@ namespace AudioControl
                 ApplyChatAppsFromWpf,
                 GetAvailableAppsForWpf,
                 ResolveAssignedAppPathForWpf,
-                () => uiCoordinator?.RefreshAppAssignments(),
+                PersistResolvedAssignedAppPathForWpf,
                 GetDebugMessagesForWpf,
                 Log,
                 SetDebugModeFromWpf,
@@ -371,7 +375,12 @@ namespace AudioControl
 
         private string? ResolveAssignedAppPathForWpf(string appName)
         {
-            return appAssignmentPathStore.GetPath(appName);
+            return appAssignmentPathStore.GetPathOrResolve(appName);
+        }
+
+        private void PersistResolvedAssignedAppPathForWpf(string appName, string exePath)
+        {
+            appAssignmentPathStore.SetPath(appName, exePath);
         }
 
         private void ApplyGameAppsFromWpf(string csv)
@@ -395,7 +404,6 @@ namespace AudioControl
             settingsStore.NoiseReduction = string.IsNullOrWhiteSpace(level) ? "High" : level;
             settingsStore.ScheduleSave();
 
-            trayHostService?.SetNoiseReductionState(settingsStore.NoiseReduction);
             uiCoordinator?.SetNoiseReductionSelection(settingsStore.NoiseReduction);
             uiCoordinator?.SetNoiseReductionApplying(settingsStore.NoiseReduction);
 
@@ -701,7 +709,7 @@ namespace AudioControl
                 "Low" => "NR=1",
                 "Medium" => "NR=2",
                 "High" => "NR=3",
-                _ => "NR=2"
+                _ => "NR=3"
             };
         }
 

@@ -24,7 +24,7 @@
         <SolidColorBrush x:Key="Brush.Success" Color="{StaticResource Color.Success}" />
         <SolidColorBrush x:Key="Brush.Warning" Color="{StaticResource Color.Warning}" />
         <SolidColorBrush x:Key="Brush.ScrollbarTrack" Color="#1A2E4D" />
-        <SolidColorBrush x:Key="Brush.ScrollbarThumb" Color="#32C5FF" />
+        <SolidColorBrush x:Key="Brush.ScrollbarThumb" Color="#22B8F2" />
         <SolidColorBrush x:Key="Brush.ScrollbarThumbHover" Color="#7DEBFF" />
 
         <Style TargetType="Window">

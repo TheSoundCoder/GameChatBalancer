@@ -11,15 +11,13 @@ public partial class SystrayPopupWindow : Window
     private readonly Action exitAction;
     private readonly Func<bool> startWithWindowsProvider;
     private readonly Action<bool> startWithWindowsSetter;
-    private readonly Func<string> noiseReductionProvider;
-    private readonly Action<string> noiseReductionSetter;
     private readonly Func<bool> invertControlProvider;
     private readonly Action<bool> invertControlSetter;
     private float currentBalanceValue = 50f;
     private bool suppressHardwareOptionEvents;
 
     public SystrayPopupWindow()
-        : this(() => { }, () => { }, () => false, _ => { }, () => "Medium", _ => { }, () => false, _ => { })
+        : this(() => { }, () => { }, () => false, _ => { }, () => false, _ => { })
     {
     }
 
@@ -28,8 +26,6 @@ public partial class SystrayPopupWindow : Window
         Action exitAction,
         Func<bool> startWithWindowsProvider,
         Action<bool> startWithWindowsSetter,
-        Func<string> noiseReductionProvider,
-        Action<string> noiseReductionSetter,
         Func<bool> invertControlProvider,
         Action<bool> invertControlSetter)
     {
@@ -37,8 +33,6 @@ public partial class SystrayPopupWindow : Window
         this.exitAction = exitAction;
         this.startWithWindowsProvider = startWithWindowsProvider;
         this.startWithWindowsSetter = startWithWindowsSetter;
-        this.noiseReductionProvider = noiseReductionProvider;
-        this.noiseReductionSetter = noiseReductionSetter;
         this.invertControlProvider = invertControlProvider;
         this.invertControlSetter = invertControlSetter;
 
@@ -97,32 +91,6 @@ public partial class SystrayPopupWindow : Window
         }
     }
 
-    public void SetNoiseReductionState(string level)
-    {
-        if (noiseReductionCombo == null)
-        {
-            return;
-        }
-
-        suppressHardwareOptionEvents = true;
-        try
-        {
-            var normalized = NormalizeNoiseReduction(level);
-            var item = noiseReductionCombo.Items
-                .OfType<ComboBoxItem>()
-                .FirstOrDefault(x => string.Equals(x.Content?.ToString(), normalized, StringComparison.OrdinalIgnoreCase));
-
-            if (item != null)
-            {
-                noiseReductionCombo.SelectedItem = item;
-            }
-        }
-        finally
-        {
-            suppressHardwareOptionEvents = false;
-        }
-    }
-
     public void SetInvertControlState(bool invert)
     {
         if (invertControlToggle == null)
@@ -157,20 +125,6 @@ public partial class SystrayPopupWindow : Window
         if (toggle != null)
         {
             startWithWindowsSetter(toggle.IsChecked == true);
-        }
-    }
-
-    private void NoiseReductionCombo_SelectionChanged(object sender, SelectionChangedEventArgs e)
-    {
-        if (suppressHardwareOptionEvents)
-        {
-            return;
-        }
-
-        if (noiseReductionCombo.SelectedItem is ComboBoxItem selectedItem)
-        {
-            var level = selectedItem.Content?.ToString() ?? "Medium";
-            noiseReductionSetter(NormalizeNoiseReduction(level));
         }
     }
 
@@ -222,25 +176,7 @@ public partial class SystrayPopupWindow : Window
 
     private void InitializeHardwareOptions()
     {
-        SetNoiseReductionState(noiseReductionProvider());
         SetInvertControlState(invertControlProvider());
-    }
-
-    private static string NormalizeNoiseReduction(string? level)
-    {
-        if (string.IsNullOrWhiteSpace(level))
-        {
-            return "Medium";
-        }
-
-        return level.Trim().ToLowerInvariant() switch
-        {
-            "off" => "Off",
-            "low" => "Low",
-            "medium" => "Medium",
-            "high" => "High",
-            _ => "Medium"
-        };
     }
 
     private ToggleButton? GetStartWithWindowsToggle()

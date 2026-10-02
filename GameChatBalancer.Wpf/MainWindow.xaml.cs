@@ -43,7 +43,7 @@ public partial class MainWindow : Window
     private readonly Action<string> chatAppsSetter;
     private readonly Func<IEnumerable<string>> availableAppsProvider;
     private readonly Func<string, string?> assignedAppPathProvider;
-    private readonly Action rescanAudioSessionsAction;
+    private readonly Action<string, string> assignedAppPathPersister;
     private readonly Func<IEnumerable<string>> debugMessagesProvider;
     private readonly Action<string> debugLogAction;
     private readonly Action<bool> debugModeSetter;
@@ -92,7 +92,7 @@ public partial class MainWindow : Window
             _ => { },
             () => Enumerable.Empty<string>(),
             _ => null,
-            () => { },
+            (_, _) => { },
             () => Enumerable.Empty<string>(),
             _ => { },
             _ => { },
@@ -123,7 +123,7 @@ public partial class MainWindow : Window
         Action<string> chatAppsSetter,
         Func<IEnumerable<string>> availableAppsProvider,
         Func<string, string?> assignedAppPathProvider,
-        Action rescanAudioSessionsAction,
+        Action<string, string> assignedAppPathPersister,
         Func<IEnumerable<string>> debugMessagesProvider,
         Action<string> debugLogAction,
         Action<bool> debugModeSetter,
@@ -151,7 +151,7 @@ public partial class MainWindow : Window
         this.chatAppsSetter = chatAppsSetter;
         this.availableAppsProvider = availableAppsProvider;
         this.assignedAppPathProvider = assignedAppPathProvider;
-        this.rescanAudioSessionsAction = rescanAudioSessionsAction;
+        this.assignedAppPathPersister = assignedAppPathPersister;
         this.debugMessagesProvider = debugMessagesProvider;
         this.debugLogAction = debugLogAction;
         this.debugModeSetter = debugModeSetter;
@@ -211,6 +211,10 @@ public partial class MainWindow : Window
         try
         {
             tglOverlayEnabled.IsChecked = overlayEnabledProvider();
+            if (tglQuickOverlayEnabled is not null)
+            {
+                tglQuickOverlayEnabled.IsChecked = tglOverlayEnabled.IsChecked;
+            }
 
             var configuredDuration = overlayDurationProvider().ToString();
             var durationItem = cmbOverlayDuration.Items
@@ -410,27 +414,13 @@ public partial class MainWindow : Window
         try
         {
             cmbNoiseReduction.ItemsSource = new[] { "Off", "Low", "Medium", "High" };
-            if (cmbSettingsNoiseReduction is not null)
-            {
-                cmbSettingsNoiseReduction.ItemsSource = new[] { "Off", "Low", "Medium", "High" };
-            }
 
             var configuredNoiseReduction = noiseReductionProvider();
             cmbNoiseReduction.SelectedItem = cmbNoiseReduction.Items.Cast<string>()
                 .FirstOrDefault(item => string.Equals(item, configuredNoiseReduction, StringComparison.OrdinalIgnoreCase))
                 ?? "High";
-            if (cmbSettingsNoiseReduction is not null)
-            {
-                cmbSettingsNoiseReduction.SelectedItem = cmbSettingsNoiseReduction.Items.Cast<string>()
-                    .FirstOrDefault(item => string.Equals(item, configuredNoiseReduction, StringComparison.OrdinalIgnoreCase))
-                    ?? "High";
-            }
 
             tglInvertControl.IsChecked = invertControlProvider();
-            if (tglSettingsInvertControl is not null)
-            {
-                tglSettingsInvertControl.IsChecked = tglInvertControl.IsChecked;
-            }
             SetNoiseReductionConfirmed(cmbNoiseReduction.SelectedItem?.ToString() ?? "High");
         }
         finally
@@ -459,12 +449,12 @@ public partial class MainWindow : Window
 
         foreach (var name in gameApps)
         {
-            gameItems.Add(new AppListItem(name, appIconService.GetIcon(name, assignedAppPathProvider(name))));
+            gameItems.Add(CreateAppListItem(name, persistResolvedPath: true));
         }
 
         foreach (var name in chatApps)
         {
-            chatItems.Add(new AppListItem(name, appIconService.GetIcon(name, assignedAppPathProvider(name))));
+            chatItems.Add(CreateAppListItem(name, persistResolvedPath: true));
         }
 
         var assigned = new HashSet<string>(gameApps.Concat(chatApps), StringComparer.OrdinalIgnoreCase);
@@ -472,7 +462,7 @@ public partial class MainWindow : Window
                      .Where(app => !assigned.Contains(app))
                      .OrderBy(app => app, StringComparer.OrdinalIgnoreCase))
         {
-            availableItems.Add(new AppListItem(app, appIconService.GetIcon(app, null)));
+            availableItems.Add(CreateAppListItem(app, persistResolvedPath: false));
         }
 
         gameAppsList.ItemsSource = gameItems;
@@ -493,6 +483,21 @@ public partial class MainWindow : Window
     }
 
     private sealed record AppListItem(string Name, ImageSource? Icon);
+
+    private AppListItem CreateAppListItem(string appName, bool persistResolvedPath)
+    {
+        var persistedPath = assignedAppPathProvider(appName);
+        var iconResult = appIconService.GetIcon(appName, persistedPath);
+
+        if (persistResolvedPath &&
+            !string.IsNullOrWhiteSpace(iconResult.ResolvedExePath) &&
+            !string.Equals(persistedPath, iconResult.ResolvedExePath, StringComparison.OrdinalIgnoreCase))
+        {
+            assignedAppPathPersister(appName, iconResult.ResolvedExePath);
+        }
+
+        return new AppListItem(appName, iconResult.Icon);
+    }
 
     private sealed record DropPlaceholderItem(string Text);
 
@@ -680,23 +685,6 @@ public partial class MainWindow : Window
             softwareControlSection.Visibility = connected ? Visibility.Collapsed : Visibility.Visible;
         }
 
-        if (txtSettingsHardwareStatus is not null)
-        {
-            txtSettingsHardwareStatus.Text = connected ? "Arduino: Connected" : "Arduino: Disconnected";
-        }
-
-        if (settingsHardwareStatusDot is not null)
-        {
-            settingsHardwareStatusDot.Fill = connected
-                ? new SolidColorBrush(Color.FromRgb(34, 197, 94))
-                : new SolidColorBrush(Color.FromRgb(245, 158, 11));
-        }
-
-        if (txtSettingsControlMode is not null)
-        {
-            txtSettingsControlMode.Text = connected ? "Hardware Control active" : "Software Control active";
-        }
-
         if (txtSettingsHotkeysState is not null)
         {
             txtSettingsHotkeysState.Text = connected
@@ -807,11 +795,6 @@ public partial class MainWindow : Window
             {
                 cmbNoiseReduction.SelectedItem = selectedNoiseReduction;
             }
-
-            if (sourceCombo != cmbSettingsNoiseReduction && cmbSettingsNoiseReduction is not null)
-            {
-                cmbSettingsNoiseReduction.SelectedItem = selectedNoiseReduction;
-            }
         }
         finally
         {
@@ -838,11 +821,6 @@ public partial class MainWindow : Window
             if (sourceToggle != tglInvertControl && tglInvertControl is not null)
             {
                 tglInvertControl.IsChecked = checkedState;
-            }
-
-            if (sourceToggle != tglSettingsInvertControl && tglSettingsInvertControl is not null)
-            {
-                tglSettingsInvertControl.IsChecked = checkedState;
             }
         }
         finally
@@ -891,7 +869,28 @@ public partial class MainWindow : Window
             return;
         }
 
-        overlayEnabledSetter(tglOverlayEnabled.IsChecked == true);
+        var sourceToggle = sender as ToggleButton;
+        var checkedState = sourceToggle?.IsChecked == true;
+
+        suppressHardwareOptionEvents = true;
+        try
+        {
+            if (sourceToggle != tglOverlayEnabled && tglOverlayEnabled is not null)
+            {
+                tglOverlayEnabled.IsChecked = checkedState;
+            }
+
+            if (sourceToggle != tglQuickOverlayEnabled && tglQuickOverlayEnabled is not null)
+            {
+                tglQuickOverlayEnabled.IsChecked = checkedState;
+            }
+        }
+        finally
+        {
+            suppressHardwareOptionEvents = false;
+        }
+
+        overlayEnabledSetter(checkedState);
     }
 
     private void OverlayDurationComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -978,10 +977,6 @@ public partial class MainWindow : Window
         try
         {
             tglInvertControl.IsChecked = enabled;
-            if (tglSettingsInvertControl is not null)
-            {
-                tglSettingsInvertControl.IsChecked = enabled;
-            }
         }
         finally
         {
@@ -1007,10 +1002,6 @@ public partial class MainWindow : Window
                 ?? "High";
 
             cmbNoiseReduction.SelectedItem = selected;
-            if (cmbSettingsNoiseReduction is not null)
-            {
-                cmbSettingsNoiseReduction.SelectedItem = selected;
-            }
         }
         finally
         {
@@ -1149,12 +1140,6 @@ public partial class MainWindow : Window
         }
 
         InitializeAppAssignments();
-    }
-
-    private void RescanAudioSessionsButton_Click(object sender, RoutedEventArgs e)
-    {
-        rescanAudioSessionsAction();
-        RefreshAppAssignments();
     }
 
     public void RefreshDebugMessages()

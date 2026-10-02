@@ -10,8 +10,6 @@ namespace AudioControl
         private readonly Action exitAppAction;
         private readonly Func<bool> startWithWindowsProvider;
         private readonly Action<bool> startWithWindowsSetter;
-        private readonly Func<string> noiseReductionProvider;
-        private readonly Action<string> noiseReductionSetter;
         private readonly Func<bool> invertControlProvider;
         private readonly Action<bool> invertControlSetter;
         private readonly Func<bool> connectedProvider;
@@ -26,8 +24,6 @@ namespace AudioControl
             Action exitAppAction,
             Func<bool> startWithWindowsProvider,
             Action<bool> startWithWindowsSetter,
-            Func<string> noiseReductionProvider,
-            Action<string> noiseReductionSetter,
             Func<bool> invertControlProvider,
             Action<bool> invertControlSetter,
             Func<bool> connectedProvider,
@@ -38,8 +34,6 @@ namespace AudioControl
             this.exitAppAction = exitAppAction;
             this.startWithWindowsProvider = startWithWindowsProvider;
             this.startWithWindowsSetter = startWithWindowsSetter;
-            this.noiseReductionProvider = noiseReductionProvider;
-            this.noiseReductionSetter = noiseReductionSetter;
             this.invertControlProvider = invertControlProvider;
             this.invertControlSetter = invertControlSetter;
             this.connectedProvider = connectedProvider;
@@ -67,7 +61,6 @@ namespace AudioControl
 
             popupWindow.SetConnectedState(connectedProvider(), currentPortProvider());
             popupWindow.SetStartWithWindowsState(startWithWindowsProvider());
-            popupWindow.SetNoiseReductionState(noiseReductionProvider());
             popupWindow.SetInvertControlState(invertControlProvider());
 
             var balance = balanceProvider();
@@ -78,12 +71,6 @@ namespace AudioControl
         {
             EnsurePopupWindow();
             popupWindow?.SetConnectedState(connected, currentPort);
-        }
-
-        public void SetNoiseReductionState(string noiseReduction)
-        {
-            EnsurePopupWindow();
-            popupWindow?.SetNoiseReductionState(noiseReduction);
         }
 
         public void SetInvertControlState(bool invert)
@@ -149,8 +136,6 @@ namespace AudioControl
                     exitAppAction,
                     startWithWindowsProvider,
                     startWithWindowsSetter,
-                    noiseReductionProvider,
-                    noiseReductionSetter,
                     invertControlProvider,
                     invertControlSetter);
 

@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="GameChatBalancer Tray"
         Width="332"
-        Height="520"
+        Height="460"
         WindowStyle="None"
         ResizeMode="NoResize"
         ShowInTaskbar="False"
@@ -120,9 +120,9 @@
                         <Border Height="10" CornerRadius="5">
                             <Border.Background>
                                 <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
-                                    <GradientStop Color="{StaticResource Color.AccentGame}" Offset="0" />
+                                    <GradientStop Color="{StaticResource Color.AccentChat}" Offset="0" />
                                     <GradientStop Color="#5A74D3" Offset="0.5" />
-                                    <GradientStop Color="{StaticResource Color.AccentChat}" Offset="1" />
+                                    <GradientStop Color="{StaticResource Color.AccentGame}" Offset="1" />
                                 </LinearGradientBrush>
                             </Border.Background>
                         </Border>
@@ -142,37 +142,6 @@
 
                 <!-- 3) Arduino Settings ODER Software-Steuerung -->
                 <StackPanel x:Name="connectedControlsSection">
-                    <Grid Margin="0,0,0,8">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="Auto" />
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <TextBlock Text="&#xE7F5;"
-                                       FontFamily="Segoe MDL2 Assets"
-                                       FontSize="14"
-                                       Foreground="{StaticResource Brush.TextSecondary}"
-                                       VerticalAlignment="Center" />
-                            <TextBlock Text="Noise Reduction"
-                                       Margin="8,0,0,0"
-                                       FontFamily="Segoe UI"
-                                       FontSize="14"
-                                       FontWeight="SemiBold"
-                                       Foreground="{StaticResource Brush.TextPrimary}"
-                                       VerticalAlignment="Center" />
-                        </StackPanel>
-                        <ComboBox x:Name="noiseReductionCombo"
-                                  Grid.Column="1"
-                                  Width="120"
-                                  SelectionChanged="NoiseReductionCombo_SelectionChanged"
-                                  Style="{StaticResource HardwareComboBoxStyle}">
-                            <ComboBoxItem Content="Off" />
-                            <ComboBoxItem Content="Low" />
-                            <ComboBoxItem Content="Medium" />
-                            <ComboBoxItem Content="High" />
-                        </ComboBox>
-                    </Grid>
-
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />

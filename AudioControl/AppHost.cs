@@ -76,7 +76,7 @@ namespace AudioControl
                 "Low" => "NR=1",
                 "Medium" => "NR=2",
                 "High" => "NR=3",
-                _ => "NR=2"
+                _ => "NR=3"
             };
         }
     }

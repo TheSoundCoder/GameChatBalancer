@@ -70,6 +70,7 @@ Vor Umsetzung einer UI-Phase muss eine kurze Design-Spezifikation vorliegen (Pal
 - Für Software-Control sollen Hotkeys gelten: Ctrl+Shift+Left verschiebt Balance Richtung Chat, Ctrl+Shift+Right Richtung Game; dabei gilt der Arduino-Invert-Status nicht. 
 - Software-Control-Hotkeys sollen nur bei Arduino-Disconnected registriert sein und bei Connected vollständig deaktiviert werden, um Overhead zu minimieren. Im Disconnected-Zustand sind die Hotkeys erst nach Öffnen des MainWindows aktiv.
 - Beim ersten Schritt auf das 5%-Raster gesnappt werden (z.B. 42 -> Decrease 40, Increase 45), danach in 5%-Schritten weiter.
+- NoiseReduction soll standardmäßig dem Wert 3 entsprechen (entspricht High/NR=3).
 
 ## MainWindow Anpassungen
 - Ab jetzt keine ungefragten Änderungen im MainWindow vornehmen; MainWindow nur nach expliziter Anforderung anpassen.
