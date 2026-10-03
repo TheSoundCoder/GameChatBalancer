@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Runtime.InteropServices;
+using System.Threading;
 //using System.Security.Cryptography;
 
 // ReSharper disable SuspiciousTypeConversion.Global
@@ -20,6 +21,199 @@ namespace AudioManager
 
     public static class AudioManager
     {
+        public static event EventHandler? AudioSessionsChanged;
+        private static readonly object monitoringSync = new();
+        private static Thread? monitoringThread;
+        private static ManualResetEventSlim? monitoringStopSignal;
+        private static volatile bool monitoringActive;
+
+        private const uint COINIT_MULTITHREADED = 0x0;
+
+        [DllImport("ole32.dll")]
+        private static extern int CoInitializeEx(IntPtr pvReserved, uint dwCoInit);
+
+        [DllImport("ole32.dll")]
+        private static extern void CoUninitialize();
+
+        public static void StartAudioSessionMonitoring()
+        {
+            lock (monitoringSync)
+            {
+                if (monitoringThread is { IsAlive: true })
+                {
+                    return;
+                }
+
+                monitoringStopSignal = new ManualResetEventSlim(false);
+                monitoringThread = new Thread(MonitorAudioSessionsWorker)
+                {
+                    IsBackground = true,
+                    Name = "AudioSessionMonitoring"
+                };
+
+                monitoringThread.SetApartmentState(ApartmentState.MTA);
+                monitoringThread.Start();
+            }
+        }
+
+        public static void StopAudioSessionMonitoring()
+        {
+            Thread? threadToJoin;
+
+            lock (monitoringSync)
+            {
+                monitoringStopSignal?.Set();
+                threadToJoin = monitoringThread;
+            }
+
+            try
+            {
+                threadToJoin?.Join(1000);
+            }
+            catch
+            {
+            }
+            finally
+            {
+                lock (monitoringSync)
+                {
+                    monitoringThread = null;
+                    monitoringStopSignal?.Dispose();
+                    monitoringStopSignal = null;
+                    monitoringActive = false;
+                }
+            }
+        }
+
+        private static void MonitorAudioSessionsWorker()
+        {
+            IMMDeviceEnumerator? deviceEnumerator = null;
+            IMMDevice? speakers = null;
+            IAudioSessionManager2? sessionManager = null;
+            IAudioSessionEnumerator? sessionEnumerator = null;
+            AudioSessionNotificationClient? notificationClient = null;
+            var hr = CoInitializeEx(IntPtr.Zero, COINIT_MULTITHREADED);
+            var comInitialized = hr == 0 || hr == 1;
+
+            try
+            {
+                if (!comInitialized)
+                {
+                    return;
+                }
+
+                deviceEnumerator = (IMMDeviceEnumerator)(new MMDeviceEnumerator());
+                deviceEnumerator.GetDefaultAudioEndpoint(EDataFlow.eRender, ERole.eMultimedia, out speakers);
+                if (speakers == null)
+                {
+                    return;
+                }
+
+                var iid = typeof(IAudioSessionManager2).GUID;
+                speakers.Activate(ref iid, 0, IntPtr.Zero, out var o);
+                sessionManager = (IAudioSessionManager2)o;
+
+                notificationClient = new AudioSessionNotificationClient();
+                notificationClient.SessionCreated += (_, _) =>
+                {
+                    try
+                    {
+                        if (DiagnosticsSink != null && DiagnosticsSink.DebugEnabled)
+                        {
+                            DiagnosticsSink.Log("AudioSessionMonitoring: OnSessionCreated received.");
+                        }
+                    }
+                    catch
+                    {
+                    }
+
+                    AudioSessionsChanged?.Invoke(null, EventArgs.Empty);
+                };
+
+                var registerHr = sessionManager.RegisterSessionNotification(notificationClient);
+                try
+                {
+                    if (DiagnosticsSink != null && DiagnosticsSink.DebugEnabled)
+                    {
+                        DiagnosticsSink.Log($"AudioSessionMonitoring: RegisterSessionNotification HR=0x{registerHr:X8}");
+                    }
+                }
+                catch
+                {
+                }
+
+                // Laut Microsoft-Dokumentation muss GetCount einmal aufgerufen werden,
+                // damit neue Session-Notifications tatsächlich zugestellt werden.
+                sessionManager.GetSessionEnumerator(out sessionEnumerator);
+                var initialCount = 0;
+                sessionEnumerator?.GetCount(out initialCount);
+                try
+                {
+                    if (DiagnosticsSink != null && DiagnosticsSink.DebugEnabled)
+                    {
+                        DiagnosticsSink.Log($"AudioSessionMonitoring: Initial session count={initialCount}.");
+                    }
+                }
+                catch
+                {
+                }
+
+                monitoringActive = true;
+
+                monitoringStopSignal?.Wait();
+            }
+            catch
+            {
+            }
+            finally
+            {
+                try
+                {
+                    if (sessionManager != null && notificationClient != null)
+                    {
+                        var unregisterHr = sessionManager.UnregisterSessionNotification(notificationClient);
+                        try
+                        {
+                            if (DiagnosticsSink != null && DiagnosticsSink.DebugEnabled)
+                            {
+                                DiagnosticsSink.Log($"AudioSessionMonitoring: UnregisterSessionNotification HR=0x{unregisterHr:X8}");
+                            }
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+                catch
+                {
+                }
+
+                if (sessionManager != null)
+                {
+                    Marshal.ReleaseComObject(sessionManager);
+                }
+
+                if (sessionEnumerator != null)
+                {
+                    Marshal.ReleaseComObject(sessionEnumerator);
+                }
+
+                if (speakers != null)
+                {
+                    Marshal.ReleaseComObject(speakers);
+                }
+
+                if (deviceEnumerator != null)
+                {
+                    Marshal.ReleaseComObject(deviceEnumerator);
+                }
+
+                if (comInitialized)
+                {
+                    CoUninitialize();
+                }
+            }
+        }
         #region Master Volume Manipulation
 
         /// <summary>
@@ -27,10 +221,10 @@ namespace AudioManager
         /// </summary>
         /// <returns>-1 in case of an error, if successful the value will be between 0 and 100</returns>
 
-        static AudioControl.Form1 MainForm;     //holds a referende to Form1
-        public static void HandOverForm(Form1 f)
+        private static AudioControl.IDiagnosticsSink? DiagnosticsSink;
+        public static void HandOverDiagnosticsSink(AudioControl.IDiagnosticsSink diagnosticsSink)
         {
-            MainForm = f;
+            DiagnosticsSink = diagnosticsSink;
         }
 
 
@@ -571,7 +765,7 @@ namespace AudioManager
                             Guid guid = Guid.Empty;
                             volumeControl = ctl as ISimpleAudioVolume;
                             volumeControl.SetMasterVolume(level / 100, ref guid);
-                            if (MainForm.Debug) { MainForm.SendToLog(cAppName.ToString() + ".Volume=" + level.ToString()); }
+                            if (DiagnosticsSink != null && DiagnosticsSink.DebugEnabled) { DiagnosticsSink.Log(cAppName.ToString() + ".Volume=" + level.ToString()); }
                         }
                     }
                     catch { }
@@ -651,7 +845,40 @@ namespace AudioManager
         [PreserveSig]
         int GetSessionEnumerator(out IAudioSessionEnumerator SessionEnum);
 
+        [PreserveSig]
+        int RegisterSessionNotification(IAudioSessionNotification SessionNotification);
+
+        [PreserveSig]
+        int UnregisterSessionNotification(IAudioSessionNotification SessionNotification);
+
         // the rest is not implemented
+    }
+
+    [ComImport]
+    [ComVisible(true)]
+    [Guid("641DD20B-4D41-49CC-ABA3-174B9477BB08")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    internal interface IAudioSessionNotification
+    {
+        [PreserveSig]
+        int OnSessionCreated(IntPtr newSession);
+    }
+
+    [ComVisible(true)]
+    [ClassInterface(ClassInterfaceType.None)]
+    internal sealed class AudioSessionNotificationClient : IAudioSessionNotification, IDisposable
+    {
+        public event EventHandler? SessionCreated;
+
+        public int OnSessionCreated(IntPtr newSession)
+        {
+            SessionCreated?.Invoke(this, EventArgs.Empty);
+            return 0;
+        }
+
+        public void Dispose()
+        {
+        }
     }
 
     [Guid("E2F5BB11-0570-40CA-ACDD-3AA01277DEE8"), InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
