@@ -6,9 +6,9 @@ String incomingMsg = "";
 
 // Noise Reduction:
 // 0 = disabled (1 sample)
-// 1 = Low    (4 samples)
-// 2 = Medium (8 samples)
-// 3 = High   (12 samples)
+// 1 = Low    (16 samples)
+// 2 = Medium (32 samples)
+// 3 = High   (64 samples)
 //
 // DO NOT CHANGE.
 // This can be modified using the Systray application.
