@@ -717,6 +717,14 @@ namespace AudioControl
         {
             try
             {
+                var exeIcon = Icon.ExtractAssociatedIcon(Application.ExecutablePath);
+                if (exeIcon != null)
+                {
+                    trayIconResource = (Icon)exeIcon.Clone();
+                    exeIcon.Dispose();
+                    return trayIconResource;
+                }
+
                 var resourcesPath = Path.Combine(AppContext.BaseDirectory, "Resources");
                 var iconCandidates = new[]
                 {

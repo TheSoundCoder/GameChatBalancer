@@ -264,6 +264,71 @@ public partial class MainWindow : Window
         windowHandle = IntPtr.Zero;
     }
 
+    private void TitleBarRoot_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ChangedButton != MouseButton.Left)
+        {
+            return;
+        }
+
+        if (e.ClickCount == 2)
+        {
+            ToggleMaximizeRestore();
+            return;
+        }
+
+        try
+        {
+            DragMove();
+        }
+        catch
+        {
+            // no-op
+        }
+    }
+
+    private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+    {
+        WindowState = WindowState.Minimized;
+    }
+
+    private void MaxRestoreButton_Click(object sender, RoutedEventArgs e)
+    {
+        ToggleMaximizeRestore();
+    }
+
+    private void CloseButton_Click(object sender, RoutedEventArgs e)
+    {
+        Close();
+    }
+
+    private void MainWindow_StateChanged(object? sender, EventArgs e)
+    {
+        UpdateMaxRestoreGlyph();
+    }
+
+    private void ToggleMaximizeRestore()
+    {
+        WindowState = WindowState == WindowState.Maximized
+            ? WindowState.Normal
+            : WindowState.Maximized;
+        UpdateMaxRestoreGlyph();
+    }
+
+    private void UpdateMaxRestoreGlyph()
+    {
+        if (txtMaxRestoreGlyph is null)
+        {
+            return;
+        }
+
+        txtMaxRestoreGlyph.Text = WindowState == WindowState.Maximized ? "\uE923" : "\uE922";
+        if (btnMaxRestore is not null)
+        {
+            btnMaxRestore.ToolTip = WindowState == WindowState.Maximized ? "Restore" : "Maximize";
+        }
+    }
+
     private void UpdateSoftwareControlHotkeys(bool connected)
     {
         softwareHotkeysDesired = !connected;

@@ -74,6 +74,7 @@ Vor Umsetzung einer UI-Phase muss eine kurze Design-Spezifikation vorliegen (Pal
 
 ## MainWindow Anpassungen
 - Ab jetzt keine ungefragten Änderungen im MainWindow vornehmen; MainWindow nur nach expliziter Anforderung anpassen.
+- Für die kommende Änderung soll ausschließlich das MainWindow ein Custom Window Chrome erhalten; keine Funktions-/Logikänderungen an Audio, Arduino, Settings, Overlay, Systray, Tray, Hotkeys oder Persistenz. Erst Analyse+Plan, dann auf Bestätigung warten.
 
 ## Paritäts-Checkliste
 - Bei Punkt 7 (Arduino-Verbindung, Live-Wechsel auf Connected) hängt sich die Anwendung aktuell auf.
