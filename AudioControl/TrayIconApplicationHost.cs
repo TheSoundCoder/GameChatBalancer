@@ -717,7 +717,25 @@ namespace AudioControl
         {
             try
             {
-                var pngPath = Path.Combine(AppContext.BaseDirectory, "Resources", "GCB_icon.png");
+                var resourcesPath = Path.Combine(AppContext.BaseDirectory, "Resources");
+                var iconCandidates = new[]
+                {
+                    Path.Combine(resourcesPath, "GCB_Icon_dense.ico"),
+                    Path.Combine(resourcesPath, "GCB_Icon.ico")
+                };
+
+                foreach (var icoPath in iconCandidates)
+                {
+                    if (!File.Exists(icoPath))
+                    {
+                        continue;
+                    }
+
+                    trayIconResource = new Icon(icoPath);
+                    return trayIconResource;
+                }
+
+                var pngPath = Path.Combine(resourcesPath, "GCB_icon.png");
                 if (!File.Exists(pngPath))
                 {
                     return null;

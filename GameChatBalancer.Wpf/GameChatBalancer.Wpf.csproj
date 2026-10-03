@@ -12,6 +12,15 @@
     <Resource Include="..\AudioControl\Resources\Title_Background.png">
       <Link>Assets\Title_Background.png</Link>
     </Resource>
+    <Resource Include="..\AudioControl\Resources\GCB_icon.png">
+      <Link>Assets\GCB_icon.png</Link>
+    </Resource>
+    <Resource Include="..\AudioControl\Resources\Chat.png">
+      <Link>Assets\Chat.png</Link>
+    </Resource>
+    <Resource Include="..\AudioControl\Resources\Gamepad.png">
+      <Link>Assets\Gamepad.png</Link>
+    </Resource>
   </ItemGroup>
 
 </Project>

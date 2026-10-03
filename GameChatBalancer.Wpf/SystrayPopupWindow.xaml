@@ -22,11 +22,15 @@
 
             <StackPanel Grid.Row="0">
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <TextBlock Text="&#xE8D2;"
-                               FontFamily="Segoe MDL2 Assets"
-                               FontSize="18"
-                               Foreground="{StaticResource Brush.AccentGame}"
-                               VerticalAlignment="Center" />
+                    <Image x:Name="popupHeaderIcon"
+                           Source="pack://application:,,,/GameChatBalancer.Wpf;component/Assets/GCB_icon.png"
+                           Width="40"
+                           Height="40"
+                           Stretch="Uniform"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           SnapsToDevicePixels="True"
+                           UseLayoutRounding="True"
+                           VerticalAlignment="Center" />
                     <TextBlock Text="GameChatBalancer"
                                Margin="10,0,0,0"
                                FontSize="20"
@@ -78,13 +82,16 @@
 
                         <StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="&#xE8BD;"
-                                           FontFamily="Segoe MDL2 Assets"
-                                           FontSize="14"
-                                           VerticalAlignment="Center"
-                                           Foreground="{StaticResource Brush.AccentChat}" />
+                                <Image Source="pack://application:,,,/GameChatBalancer.Wpf;component/Assets/Chat.png"
+                                       Width="24"
+                                       Height="24"
+                                       Stretch="Uniform"
+                                       RenderOptions.BitmapScalingMode="HighQuality"
+                                       SnapsToDevicePixels="True"
+                                       UseLayoutRounding="True"
+                                       VerticalAlignment="Center" />
                                 <TextBlock Text="Chat"
-                                           Margin="6,0,0,0"
+                                           Margin="6,3,0,0"
                                            FontWeight="SemiBold"
                                            Foreground="{StaticResource Brush.TextPrimary}" />
                             </StackPanel>
@@ -98,14 +105,18 @@
                         <StackPanel Grid.Column="1" HorizontalAlignment="Right">
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                                 <TextBlock Text="Game"
+                                           Margin="0,3,0,0"
                                            FontWeight="SemiBold"
                                            Foreground="{StaticResource Brush.TextPrimary}" />
-                                <TextBlock Text="&#xE7FC;"
-                                           Margin="6,0,0,0"
-                                           FontFamily="Segoe MDL2 Assets"
-                                           FontSize="14"
-                                           VerticalAlignment="Center"
-                                           Foreground="{StaticResource Brush.AccentGame}" />
+                                <Image Source="pack://application:,,,/GameChatBalancer.Wpf;component/Assets/Gamepad.png"
+                                       Width="24"
+                                       Height="24"
+                                       Margin="6,0,0,0"
+                                       Stretch="Uniform"
+                                       RenderOptions.BitmapScalingMode="HighQuality"
+                                       SnapsToDevicePixels="True"
+                                       UseLayoutRounding="True"
+                                       VerticalAlignment="Center" />
                             </StackPanel>
                             <TextBlock x:Name="txtGamePercent"
                                        Text="70%"

@@ -2,6 +2,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
+using System.Windows.Media.Imaging;
+using System.IO;
 
 namespace GameChatBalancer.Wpf;
 
@@ -42,6 +44,8 @@ public partial class SystrayPopupWindow : Window
 
         Loaded += (_, _) =>
         {
+            TryApplyHeaderIconFromFile();
+
             var toggle = GetStartWithWindowsToggle();
             if (toggle != null)
             {
@@ -51,6 +55,35 @@ public partial class SystrayPopupWindow : Window
             InitializeHardwareOptions();
             UpdateIndicatorPosition();
         };
+    }
+
+    private void TryApplyHeaderIconFromFile()
+    {
+        try
+        {
+            if (popupHeaderIcon is null)
+            {
+                return;
+            }
+
+            var iconPath = Path.Combine(AppContext.BaseDirectory, "Resources", "GCB_icon.png");
+            if (!File.Exists(iconPath))
+            {
+                return;
+            }
+
+            var bitmap = new BitmapImage();
+            bitmap.BeginInit();
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            bitmap.UriSource = new Uri(iconPath, UriKind.Absolute);
+            bitmap.EndInit();
+            bitmap.Freeze();
+
+            popupHeaderIcon.Source = bitmap;
+        }
+        catch
+        {
+        }
     }
 
     public void SetConnectedState(bool connected, string? currentPort = null)

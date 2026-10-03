@@ -53,8 +53,8 @@ public partial class OverlayWindow : Window
         pendingGameLevel = game;
         pendingChatLevel = chat;
 
-        GameValueText.Text = $"🎮 {game:0}%";
-        ChatValueText.Text = $"💬 {chat:0}%";
+        GameValueText.Text = $"{game:0}%";
+        ChatValueText.Text = $"{chat:0}%";
 
         ApplyBarWidths();
     }

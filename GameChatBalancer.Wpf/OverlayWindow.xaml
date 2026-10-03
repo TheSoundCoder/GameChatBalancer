@@ -30,19 +30,38 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock x:Name="GameValueText"
-                           Text="🎮 100%"
-                           FontSize="22"
-                           FontWeight="Bold"
-                           Foreground="#FF60A5FA" />
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+					<Image Source="pack://application:,,,/GameChatBalancer.Wpf;component/Assets/Chat.png"
+	                       Width="40"
+	                       Height="40"
+	                       Margin="0,0,6,0"
+	                       Stretch="Uniform"
+	                       RenderOptions.BitmapScalingMode="HighQuality"
+	                       SnapsToDevicePixels="True"
+	                       UseLayoutRounding="True" />
+					<TextBlock x:Name="ChatValueText"
+                               Text="100%"
+                               FontSize="22"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Right"
+                               Foreground="#FFB388FF" />
 
-                <TextBlock x:Name="ChatValueText"
-                           Grid.Column="1"
-                           Text="💬 100%"
-                           FontSize="22"
-                           FontWeight="Bold"
-                           HorizontalAlignment="Right"
-                           Foreground="#FFB388FF" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+					<Image Source="pack://application:,,,/GameChatBalancer.Wpf;component/Assets/Gamepad.png"
+                           Width="40"
+                           Height="40"
+                           Margin="0,0,6,0"
+                           Stretch="Uniform"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           SnapsToDevicePixels="True"
+                           UseLayoutRounding="True" />
+					<TextBlock x:Name="GameValueText"
+                               Text="100%"
+                               FontSize="22"
+                               FontWeight="Bold"
+                               Foreground="#FF60A5FA" />
+                </StackPanel>
             </Grid>
 
             <StackPanel Margin="0,14,0,0">

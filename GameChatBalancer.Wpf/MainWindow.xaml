@@ -160,16 +160,14 @@
 
                             <StackPanel Margin="0,0,12,0" VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                    <TextBlock Text="&#xE8BD;"
-                                               FontFamily="Segoe MDL2 Assets"
-                                               Foreground="{StaticResource Brush.AccentChat}"
-                                               FontSize="22"
-                                               Margin="0,0,6,0"
-                                               VerticalAlignment="Bottom" />
-                                    <TextBlock Text="Chat"
-                                               Foreground="{StaticResource Brush.AccentChat}"
-                                               FontSize="22"
-                                               FontWeight="Bold" />
+                                    <Image Source="pack://application:,,,/GameChatBalancer.Wpf;component/Assets/Chat.png"
+                                           Width="56"
+                                           Height="56"
+                                           Stretch="Uniform"
+                                           RenderOptions.BitmapScalingMode="HighQuality"
+                                           SnapsToDevicePixels="True"
+                                           UseLayoutRounding="True"
+                                           VerticalAlignment="Bottom" />
                                 </StackPanel>
                                 <TextBlock x:Name="txtChatPercent"
                                            Text="100%"
@@ -216,17 +214,14 @@
 
                             <StackPanel Grid.Column="2" Margin="12,0,0,0" VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <TextBlock Text="Game"
-                                               Foreground="{StaticResource Brush.AccentGame}"
-                                               FontSize="22"
-                                               FontWeight="Bold"
-                                               Margin="0,0,6,0"
-                                               HorizontalAlignment="Right" />
-                                    <TextBlock Text="&#xE7FC;"
-                                               FontFamily="Segoe MDL2 Assets"
-                                               Foreground="{StaticResource Brush.AccentGame}"
-                                               FontSize="22"
-                                               VerticalAlignment="Bottom" />
+                                    <Image Source="pack://application:,,,/GameChatBalancer.Wpf;component/Assets/Gamepad.png"
+                                           Width="56"
+                                           Height="56"
+                                           Stretch="Uniform"
+                                           RenderOptions.BitmapScalingMode="HighQuality"
+                                           SnapsToDevicePixels="True"
+                                           UseLayoutRounding="True"
+                                           VerticalAlignment="Bottom" />
                                 </StackPanel>
                                 <TextBlock x:Name="txtGamePercent"
                                            Text="100%"
